@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="fill_parent" >
+
+    <RadioGroup android:id="@+id/radio_group_suit"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:gravity="center_horizontal" >
+		
+		<RadioButton android:id="@+id/radio_diamond"
+			android:background="@drawable/diamond_radio"
+			android:button="@null"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="5dp" />
+		    
+		<RadioButton android:id="@+id/radio_club"
+		    android:background="@drawable/club_radio"
+			android:button="@null"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="5dp"
+			android:buttonTintMode="add"/>
+		    
+		<RadioButton android:id="@+id/radio_heart"
+		    android:background="@drawable/heart_radio"
+			android:button="@null"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="5dp"
+			android:buttonTintMode="add"/>
+		    
+		<RadioButton android:id="@+id/radio_spade"
+		    android:background="@drawable/spade_radio"
+			android:button="@null"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_margin="5dp"
+			android:buttonTintMode="add"/>
+		    
+    </RadioGroup>
+
+	<ScrollView
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+		android:layout_weight="1" >
+
+	    <LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+		    <LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<RadioButton android:id="@+id/radio_2"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="2" />
+
+				<RadioButton android:id="@+id/radio_3"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="3" />
+
+				<RadioButton android:id="@+id/radio_4"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="4" />
+
+				<RadioButton android:id="@+id/radio_5"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="5" />
+
+				<RadioButton android:id="@+id/radio_6"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="6" />
+
+		    </LinearLayout>
+
+		    <LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<RadioButton android:id="@+id/radio_7"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="7" />
+
+				<RadioButton android:id="@+id/radio_8"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="8" />
+
+				<RadioButton android:id="@+id/radio_9"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="9" />
+
+				<RadioButton android:id="@+id/radio_10"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="10" />
+
+				<RadioButton android:id="@+id/radio_11"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="J" />
+
+		    </LinearLayout>
+
+		    <LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<RadioButton android:id="@+id/radio_12"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="Q" />
+
+				<RadioButton android:id="@+id/radio_13"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="K" />
+
+				<RadioButton android:id="@+id/radio_14"
+				    android:layout_width="wrap_content"
+				    android:layout_height="wrap_content"
+				    android:layout_margin="5dp"
+				    android:text="A" />
+
+		    </LinearLayout>
+
+	    </LinearLayout>
+
+	</ScrollView>
+
+    <Button
+	    android:id="@+id/button_unknown"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+		android:gravity="center_vertical|center_horizontal"
+	    android:text="Unkown Card" />
+    
+</LinearLayout>
