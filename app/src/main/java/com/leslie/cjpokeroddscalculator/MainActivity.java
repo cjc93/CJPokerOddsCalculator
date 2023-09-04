@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             private final Runnable doBackgroundProc = new Runnable(){
                 public void run(){
 
-                    no_of_simulations = 30000;
+                    no_of_simulations = 3000;
 
                     poker_calculation(cards, players_remaining_no, no_of_simulations);
 
