@@ -3,7 +3,6 @@ package com.leslie.cjpokeroddscalculator;
 import java.util.Random;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     final private Handler handler = new Handler();
-    ProgressDialog myProgressDialog = null;
+
     float[] equity = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    int players_remaining_no = 3, rank_checked_id = -1, no_of_simulations;
+    int players_remaining_no = 2, rank_checked_id = -1, no_of_simulations;
 
     int[][][] cards = {
             {
@@ -99,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         final ImageButton[][] player_cards_array = {
+            {binding.player11, binding.player12},
             {binding.player21, binding.player22},
             {binding.player31, binding.player32},
             {binding.player41, binding.player42},
@@ -110,13 +110,13 @@ public class MainActivity extends AppCompatActivity {
             {binding.player101, binding.player102},
         };
 
-        binding.mycard1.setOnClickListener(selector_listener);
-        binding.mycard2.setOnClickListener(selector_listener);
         binding.flop1.setOnClickListener(selector_listener);
         binding.flop2.setOnClickListener(selector_listener);
         binding.flop3.setOnClickListener(selector_listener);
         binding.turn.setOnClickListener(selector_listener);
         binding.river.setOnClickListener(selector_listener);
+        binding.player11.setOnClickListener(selector_listener);
+        binding.player12.setOnClickListener(selector_listener);
         binding.player21.setOnClickListener(selector_listener);
         binding.player22.setOnClickListener(selector_listener);
         binding.player31.setOnClickListener(selector_listener);
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         final TextView[] win_array = {
-            binding.win,
+            binding.winplayer1,
             binding.winplayer2,
             binding.winplayer3,
             binding.winplayer4,
@@ -177,21 +177,18 @@ public class MainActivity extends AppCompatActivity {
                         cards[i][0][1] = cards[i + 1][0][1];
                         cards[i][1][0] = cards[i + 1][1][0];
                         cards[i][1][1] = cards[i + 1][1][1];
-                        player_cards_array[i - 2][0].setBackgroundResource(getResources().getIdentifier(convert_number_to_suit(cards[i][0][0]) + convert_number_to_rank(cards[i][0][1]) + "_button", "drawable", "com.leslie.cjpokeroddscalculator"));
-                        player_cards_array[i - 2][1].setBackgroundResource(getResources().getIdentifier(convert_number_to_suit(cards[i][1][0]) + convert_number_to_rank(cards[i][1][1]) + "_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                        player_cards_array[i - 1][0].setBackgroundResource(getResources().getIdentifier(convert_number_to_suit(cards[i][0][0]) + convert_number_to_rank(cards[i][0][1]) + "_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                        player_cards_array[i - 1][1].setBackgroundResource(getResources().getIdentifier(convert_number_to_suit(cards[i][1][0]) + convert_number_to_rank(cards[i][1][1]) + "_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                     }
 
                     cards[players_remaining_no + 1][0][0] = 0;
                     cards[players_remaining_no + 1][0][1] = 0;
                     cards[players_remaining_no + 1][1][0] = 0;
                     cards[players_remaining_no + 1][1][1] = 0;
-                    player_cards_array[players_remaining_no - 1][0].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
-                    player_cards_array[players_remaining_no - 1][1].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                    player_cards_array[players_remaining_no][0].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                    player_cards_array[players_remaining_no][1].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
 
-                    binding.win.setText("My Win%:");
-                    binding.win.setTextColor(Color.WHITE);
-
-                    for(i = 1; i < players_remaining_no + 1; i++) {
+                    for(i = 0; i < players_remaining_no + 1; i++) {
                         win_array[i].setText("Win%:");
                         win_array[i].setTextColor(Color.WHITE);
                     }
@@ -202,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        binding.removeplayer1.setOnClickListener(remove_player_listener);
         binding.removeplayer2.setOnClickListener(remove_player_listener);
         binding.removeplayer3.setOnClickListener(remove_player_listener);
         binding.removeplayer4.setOnClickListener(remove_player_listener);
@@ -220,7 +218,8 @@ public class MainActivity extends AppCompatActivity {
                 binding.calculate.setEnabled(false);
                 Thread thread =  new Thread(null, doBackgroundProc);
                 thread.start();
-                myProgressDialog = ProgressDialog.show(MainActivity.this, "", "Calculating...", true);
+
+                binding.progressBar.setVisibility(View.VISIBLE);
             }
 
             private final Runnable doBackgroundProc = new Runnable(){
@@ -233,17 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
 
-                            binding.win.setText("My Win%: " + String.valueOf((float) Math.round(equity[0] * 1000) / 10) + "%");
-                            binding.win.setTextSize(28);
-                            if(equity[0] > (float) 1 / (float) players_remaining_no + 0.02) {
-                                binding.win.setTextColor(Color.GREEN);
-                            } else if (equity[0] < 1 / (float) players_remaining_no - 0.02) {
-                                binding.win.setTextColor(Color.RED);
-                            } else {
-                                binding.win.setTextColor(Color.WHITE);
-                            }
-
-                            for(int i = 1; i < players_remaining_no; i++) {
+                            for(int i = 0; i < players_remaining_no; i++) {
                                 win_array[i].setText("Win%: " + String.valueOf((float) Math.round(equity[i] * 1000) / 10) + "%");
 
                                 if(equity[i] > 1 / (float) players_remaining_no + 0.02) {
@@ -256,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                             binding.calculate.setEnabled(true);
 
-                            myProgressDialog.dismiss();
+                            binding.progressBar.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -842,8 +831,8 @@ public class MainActivity extends AppCompatActivity {
 
                 int i;
 
-                binding.mycard1.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
-                binding.mycard2.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                binding.player11.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
+                binding.player12.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 binding.flop1.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 binding.flop2.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 binding.flop3.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
@@ -868,10 +857,7 @@ public class MainActivity extends AppCompatActivity {
                 binding.player101.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 binding.player102.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
 
-                binding.win.setText("My Win%:");
-                binding.win.setTextColor(Color.WHITE);
-
-                for(i = 1; i < players_remaining_no; i++) {
+                for(i = 0; i < players_remaining_no; i++) {
                     win_array[i].setText("Win%:");
                     win_array[i].setTextColor(Color.WHITE);
                 }
@@ -1138,7 +1124,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public int convert_selector_to_player(int ButtonId) {
-        if (ButtonId == R.id.mycard1 || ButtonId == R.id.mycard2) {
+        if (ButtonId == R.id.player11 || ButtonId == R.id.player12) {
             return 1;
         }
         else if (ButtonId == R.id.flop1 || ButtonId == R.id.flop2 || ButtonId == R.id.flop3 || ButtonId == R.id.turn || ButtonId == R.id.river ) {
@@ -1177,7 +1163,7 @@ public class MainActivity extends AppCompatActivity {
 
     public int convert_selector_to_position(int ButtonId) {
         if (
-            ButtonId == R.id.mycard1 ||
+            ButtonId == R.id.player11 ||
             ButtonId == R.id.flop1 ||
             ButtonId == R.id.player21 ||
             ButtonId == R.id.player31 ||
@@ -1192,7 +1178,7 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
         else if (
-            ButtonId == R.id.mycard2 ||
+            ButtonId == R.id.player12 ||
             ButtonId == R.id.flop2 ||
             ButtonId == R.id.player22 ||
             ButtonId == R.id.player32 ||
@@ -1220,7 +1206,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public int convert_remove_to_player(int ButtonId) {
-        if (ButtonId == R.id.removeplayer2) {
+        if (ButtonId == R.id.removeplayer1) {
+            return 1;
+        }
+        else if (ButtonId == R.id.removeplayer2) {
             return 2;
         }
         else if (ButtonId == R.id.removeplayer3) {
