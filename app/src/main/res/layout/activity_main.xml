@@ -804,14 +804,6 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/calculate"
-            android:text="Calculate"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
             android:id="@+id/addplayer"
             android:text="Add Player"
             android:gravity="center_vertical|center_horizontal"
