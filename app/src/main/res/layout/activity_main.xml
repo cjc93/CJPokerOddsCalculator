@@ -3,106 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/top_row"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content" >
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:text="Flop"
-                        android:gravity="center_horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#696969" />
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" >
-
-                        <ImageButton
-                            android:id="@+id/flop1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
-
-                        <ImageButton
-                            android:id="@+id/flop2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
-
-                        <ImageButton
-                            android:id="@+id/flop3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
                 <TextView
-                    android:text=" "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:text="Flop"
+                    android:gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:text="Turn"
-                        android:gravity="center_horizontal"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#696969" />
 
                     <ImageButton
-                        android:id="@+id/turn"
+                        android:id="@+id/flop1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/unknown_button" />
 
-                </LinearLayout>
-
-                <TextView
-                    android:text=" "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:text="River"
-                        android:gravity="center_horizontal"
-                        android:layout_width="fill_parent"
+                    <ImageButton
+                        android:id="@+id/flop2"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#696969" />
+                        android:background="@drawable/unknown_button" />
 
                     <ImageButton
-                        android:id="@+id/river"
+                        android:id="@+id/flop3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/unknown_button" />
@@ -111,33 +53,84 @@
 
             </LinearLayout>
 
-            <TextView
-                android:text=" "
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" >
 
-            <TextView
-                android:id="@+id/playersremaining"
-                android:textSize="28sp"
-                android:text="Players remaining: 2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:text="Turn"
+                    android:gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
 
-            <TextView
-                android:text=" "
+                <ImageButton
+                    android:id="@+id/turn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/unknown_button" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:text="River"
+                    android:gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
+
+                <ImageButton
+                    android:id="@+id/river"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/unknown_button" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/playersremaining"
+            android:textSize="26sp"
+            android:text="Players remaining: 2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="4dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_row"
+        android:layout_above="@+id/bottom_bar">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
             <LinearLayout
                 android:id="@+id/player1row"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 1"
@@ -164,11 +157,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -198,12 +186,14 @@
                 android:id="@+id/player2row"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 2"
@@ -230,11 +220,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -265,12 +250,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 3"
@@ -297,11 +284,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -332,12 +314,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 4"
@@ -364,11 +348,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -399,12 +378,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 5"
@@ -431,11 +412,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -466,12 +442,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 6"
@@ -498,11 +476,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -533,12 +506,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 7"
@@ -565,11 +540,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -600,12 +570,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 8"
@@ -632,11 +604,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -667,12 +634,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 9"
@@ -699,11 +668,6 @@
                             android:background="@drawable/unknown_button" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:text=" "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
@@ -734,12 +698,14 @@
                 android:visibility="gone"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp" >
 
                     <TextView
                         android:text="Player 10"
@@ -794,7 +760,6 @@
         </LinearLayout>
 
     </ScrollView>
-
 
     <LinearLayout
         android:id="@+id/bottom_bar"
