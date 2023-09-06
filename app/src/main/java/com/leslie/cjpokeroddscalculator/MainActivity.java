@@ -35,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private Dialog dialog;
     private Thread thread = null;
 
-    float[] equity = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    double[] equity_total = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    double[] equity_perc = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    int players_remaining_no = 2, rank_checked_id = -1, no_of_simulations=3000;
+    int players_remaining_no = 2, rank_checked_id = -1, total_simulations = 2000000000;
 
     final Random myRandom = new Random();
 
@@ -228,11 +229,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.player101.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 binding.player102.setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
 
-                for(i = 0; i < players_remaining_no; i++) {
-                    win_array[i].setText("Win%:");
-                    win_array[i].setTextColor(Color.WHITE);
-                }
-
                 for(i = 0; i < 5; i++){
                     cards[0][i][0] = 0;
                     cards[0][i][1] = 0;
@@ -277,11 +273,6 @@ public class MainActivity extends AppCompatActivity {
                 cards[players_remaining_no + 1][1][1] = 0;
                 player_cards_array[players_remaining_no][0].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
                 player_cards_array[players_remaining_no][1].setBackgroundResource(getResources().getIdentifier("unknown_button", "drawable", "com.leslie.cjpokeroddscalculator"));
-
-                for(i = 0; i < players_remaining_no + 1; i++) {
-                    win_array[i].setText("Win%:");
-                    win_array[i].setTextColor(Color.WHITE);
-                }
 
                 calculate_odds();
             }
@@ -494,55 +485,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculate_odds() {
+        for(int i = 0; i < players_remaining_no; i++) {
+            win_array[i].setText("Win%:");
+            win_array[i].setTextColor(Color.WHITE);
+        }
+
         if (thread != null) {
             thread.interrupt();
         }
         thread = new Thread(null, doBackgroundProc);
         thread.start();
-        binding.progressBar.setVisibility(View.VISIBLE);
     }
 
     private final Runnable doBackgroundProc = new Runnable(){
         public void run(){
             try {
-                poker_calculation(cards, players_remaining_no, no_of_simulations);
-
-                handler.post(new Runnable() {
-                    public void run() {
-
-                        for(int i = 0; i < players_remaining_no; i++) {
-                            win_array[i].setText("Win%: " + String.valueOf((float) Math.round(equity[i] * 1000) / 10) + "%");
-
-                            if(equity[i] > 1 / (float) players_remaining_no + 0.02) {
-                                win_array[i].setTextColor(Color.GREEN);
-                            } else if (equity[i] < 1 / (float) players_remaining_no - 0.02) {
-                                win_array[i].setTextColor(Color.RED);
-                            } else {
-                                win_array[i].setTextColor(Color.WHITE);
-                            }
-                        }
-
-                        binding.progressBar.setVisibility(View.GONE);
-                    }
-                });
+                poker_calculation(cards, players_remaining_no, total_simulations);
             } catch (InterruptedException e) {
                 return ;
             }
         }
     };
 
-    private void poker_calculation(int[][][] all_cards, int players_remaining_no, int no_of_simulations) throws InterruptedException {
-
+    private void poker_calculation(int[][][] all_cards, int players_remaining_no, int total_simulations) throws InterruptedException {
         int i, j, split_total, no_of_known = 0, no_of_unknown = 0, no_of_unknown_players = 0;
         int[][] unknown_positions = new int[25][2];
         int[] game_stats = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int[] known_players = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int[] deck = new int[52];
-        float known_players_equity = 0;
+        double known_players_equity = 0;
         int[][][] all_cards_copy = new int[11][][];
+        long current_time, last_update_time;
 
         for(i = 0; i < 10; i++) {
-            equity[i] = 0;
+            equity_total[i] = 0;
+            equity_perc[i] = 0;
         }
 
         for(i = 0; i < 52; i++) {
@@ -592,7 +569,8 @@ public class MainActivity extends AppCompatActivity {
 
 //		    	no_of_simulations = 1;
 
-        for(i = 0; i < no_of_simulations; i++){
+        last_update_time = System.currentTimeMillis();
+        for(int simulation_count = 1; simulation_count <= total_simulations; simulation_count++){
             if (Thread.interrupted()) {
                 throw new InterruptedException();
             }
@@ -613,21 +591,44 @@ public class MainActivity extends AppCompatActivity {
 
             for(j = 0; j < players_remaining_no; j++) {
                 if(known_players[j] == 1) {
-                    equity[j] += (float) game_stats[j] / (float) split_total;
+                    equity_total[j] += (double) game_stats[j] / (double) split_total;
                 }
             }
-        }
 
-        for(i = 0; i < players_remaining_no; i++) {
-            if(known_players[i] == 1) {
-                equity[i] = equity[i] / no_of_simulations;
-                known_players_equity += equity[i];
-            }
-        }
+            current_time = System.currentTimeMillis();
+            if (current_time - last_update_time > 300) {
+                known_players_equity = 0;
+                for(i = 0; i < players_remaining_no; i++) {
+                    if(known_players[i] == 1) {
+                        equity_perc[i] = equity_total[i] / simulation_count;
+                        known_players_equity += equity_perc[i];
+                    }
+                }
 
-        for(i = 0; i < players_remaining_no; i++) {
-            if(known_players[i] == 0) {
-                equity[i] = (1 - known_players_equity) / no_of_unknown_players;
+                for(i = 0; i < players_remaining_no; i++) {
+                    if(known_players[i] == 0) {
+                        equity_perc[i] = (1 - known_players_equity) / no_of_unknown_players;
+                    }
+                }
+
+                handler.post(new Runnable() {
+                    public void run() {
+
+                        for(int i = 0; i < players_remaining_no; i++) {
+                            win_array[i].setText("Win%: " + String.valueOf((double) Math.round(equity_perc[i] * 1000) / 10) + "%");
+
+                            if(equity_perc[i] > 1 / (double) players_remaining_no + 0.02) {
+                                win_array[i].setTextColor(Color.GREEN);
+                            } else if (equity_perc[i] < 1 / (double) players_remaining_no - 0.02) {
+                                win_array[i].setTextColor(Color.RED);
+                            } else {
+                                win_array[i].setTextColor(Color.WHITE);
+                            }
+                        }
+                    }
+                });
+
+                last_update_time = System.currentTimeMillis();
             }
         }
     }
