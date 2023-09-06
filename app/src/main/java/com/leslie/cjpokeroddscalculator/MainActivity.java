@@ -519,7 +519,6 @@ public class MainActivity extends AppCompatActivity {
 
         for(i = 0; i < 10; i++) {
             equity_total[i] = 0;
-            equity_perc[i] = 0;
         }
 
         for(i = 0; i < 52; i++) {
