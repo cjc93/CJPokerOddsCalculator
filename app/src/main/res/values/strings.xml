@@ -2,4 +2,7 @@
     <string name="app_name">CJ Poker Odds Calculator</string>
     <!-- Strings used for fragments for navigation -->
 
+    <string name="players_remaining">Players remaining: %d</string>
+    <string name="win_perc_empty">Win%:</string>
+    <string name="win_perc_populated">Win%%: %.1f%%</string>
 </resources>
