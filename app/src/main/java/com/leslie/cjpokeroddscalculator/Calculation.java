@@ -9,7 +9,7 @@ public class Calculation {
     private int players_remaining_no;
     private int[] known_players;
     private double[] equity_total;
-    private int simulation_count;
+    public int simulation_count;
     private int no_of_unknown_players;
     private int no_of_unknown_cards;
     private int no_of_known_cards;
@@ -17,25 +17,25 @@ public class Calculation {
     private int[][][] all_cards_copy;
     private int[][] unknown_positions;
     private final int max_simulation = 2000000000;
-    private long start_time;
-    private boolean is_starting_period;
-    private int total_simulations;
+    public int total_simulations;
+    private ExactCalcUpdate exactCalcUpdate;
 
-    public void poker_calculation(int[][][] all_cards, int players_remaining_no, LiveUpdate live_update_obj) throws InterruptedException {
+    public void monte_carl_calc(int[][][] all_cards, int players_remaining_no, MonteCarloUpdate monte_carlo_update_obj) throws InterruptedException {
         pre_simulation_calc(all_cards, players_remaining_no);
 
-        live_update_obj.before_all_simulation();
+        monte_carlo_update_obj.before_all_simulation();
 
         for(this.simulation_count = 1; simulation_count <= max_simulation; simulation_count++){
             int[] random_numbers = Calculation.random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
 
             scenario_calc(random_numbers);
 
-            live_update_obj.after_every_simulation();
+            monte_carlo_update_obj.after_every_simulation();
         }
     }
 
-    public void exact_calculation(int[][][] all_cards, int players_remaining_no) throws InterruptedException {
+    public void exact_calc(int[][][] all_cards, int players_remaining_no, ExactCalcUpdate exactCalcUpdate) throws InterruptedException {
+        this.exactCalcUpdate = exactCalcUpdate;
         pre_simulation_calc(all_cards, players_remaining_no);
 
         simulation_count = 1;
@@ -49,8 +49,7 @@ public class Calculation {
             if (52 - no_of_known_cards >= 0)
                 System.arraycopy(deck, 0, remaining_cards_in_deck, 0, 52 - no_of_known_cards);
 
-            this.start_time = System.currentTimeMillis();
-            is_starting_period = true;
+            this.exactCalcUpdate.before_all_simulation();
 
             choose(remaining_cards_in_deck, no_of_unknown_cards);
         }
@@ -81,20 +80,7 @@ public class Calculation {
 
             scenario_calc(singlePermutation);
 
-            if (Thread.interrupted()) {
-                throw new InterruptedException();
-            }
-
-            if (this.is_starting_period) {
-                long current_time = System.currentTimeMillis();
-                if (current_time - start_time > 300) {
-                    is_starting_period = false;
-
-                    if ((double) (current_time - start_time) / (double) simulation_count > 4000000 / (double) this.total_simulations) {
-                        throw new InterruptedException();
-                    }
-                }
-            }
+            this.exactCalcUpdate.after_every_simulation();
 
             simulation_count++;
 

@@ -2,12 +2,12 @@ package com.leslie.cjpokeroddscalculator;
 
 import android.graphics.Color;
 
-public class LiveUpdate {
+public class MonteCarloUpdate {
     private final Calculation calc_obj;
     private long last_update_time;
     private final MainActivity main_activity;
 
-    public LiveUpdate(MainActivity main_activity, Calculation calc_obj) {
+    public MonteCarloUpdate(MainActivity main_activity, Calculation calc_obj) {
         this.main_activity = main_activity;
         this.calc_obj = calc_obj;
     }

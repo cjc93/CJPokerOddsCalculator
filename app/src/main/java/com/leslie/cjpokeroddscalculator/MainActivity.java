@@ -420,14 +420,14 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable monte_carlo_proc = () -> {
         try {
             Calculation calc_obj = new Calculation();
-            calc_obj.poker_calculation(cards, players_remaining_no, new LiveUpdate(this, calc_obj));
+            calc_obj.monte_carl_calc(cards, players_remaining_no, new MonteCarloUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
             Calculation calc_obj = new Calculation();
-            calc_obj.exact_calculation(cards, players_remaining_no);
+            calc_obj.exact_calc(cards, players_remaining_no, new ExactCalcUpdate(calc_obj));
 
             if (monte_carlo_thread != null) {
                 monte_carlo_thread.interrupt();
