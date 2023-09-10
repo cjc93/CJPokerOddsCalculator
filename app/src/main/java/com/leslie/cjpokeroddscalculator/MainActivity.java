@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton[] rank_radio_array;
     private ImageButton selector_input;
     private Dialog dialog;
-    private Thread thread = null;
+    private Thread monte_carlo_thread = null;
+    private Thread exact_calc_thread = null;
 
     int players_remaining_no = 2, rank_checked_id = -1;
 
@@ -396,8 +397,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void calculate_odds() {
-        if (thread != null) {
-            thread.interrupt();
+        if (monte_carlo_thread != null) {
+            monte_carlo_thread.interrupt();
+        }
+
+        if (exact_calc_thread != null) {
+            exact_calc_thread.interrupt();
         }
 
         for(int i = 0; i < players_remaining_no; i++) {
@@ -405,14 +410,45 @@ public class MainActivity extends AppCompatActivity {
             win_array[i].setTextColor(Color.WHITE);
         }
 
-        thread = new Thread(null, doBackgroundProc);
-        thread.start();
+        monte_carlo_thread = new Thread(null, monte_carlo_proc);
+        exact_calc_thread = new Thread(null, exact_calc_proc);
+
+        monte_carlo_thread.start();
+        exact_calc_thread.start();
     }
 
-    private final Runnable doBackgroundProc = () -> {
+    private final Runnable monte_carlo_proc = () -> {
         try {
             Calculation calc_obj = new Calculation();
             calc_obj.poker_calculation(cards, players_remaining_no, new LiveUpdate(this, calc_obj));
+        } catch (InterruptedException ignored) { }
+    };
+
+    private final Runnable exact_calc_proc = () -> {
+        try {
+            Calculation calc_obj = new Calculation();
+            calc_obj.exact_calculation(cards, players_remaining_no);
+
+            if (monte_carlo_thread != null) {
+                monte_carlo_thread.interrupt();
+            }
+
+            double[] equity_perc = calc_obj.calc_equity_perc();
+
+            handler.post(() -> {
+                for(int i = 0; i < players_remaining_no; i++) {
+                    win_array[i].setText(getString(R.string.win_perc_populated, equity_perc[i] * 100));
+
+                    if(equity_perc[i] > 1 / (double) players_remaining_no + 0.02) {
+                        win_array[i].setTextColor(Color.GREEN);
+                    } else if (equity_perc[i] < 1 / (double) players_remaining_no - 0.02) {
+                        win_array[i].setTextColor(Color.RED);
+                    } else {
+                        win_array[i].setTextColor(Color.WHITE);
+                    }
+                }
+            });
+
         } catch (InterruptedException ignored) { }
     };
 

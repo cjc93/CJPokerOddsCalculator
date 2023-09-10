@@ -11,13 +11,116 @@ public class Calculation {
     private double[] equity_total;
     private int simulation_count;
     private int no_of_unknown_players;
+    private int no_of_unknown_cards;
+    private int no_of_known_cards;
+    private int[] deck;
+    private int[][][] all_cards_copy;
+    private int[][] unknown_positions;
+    private final int max_simulation = 2000000000;
+    private long start_time;
+    private boolean is_starting_period;
+    private int total_simulations;
 
     public void poker_calculation(int[][][] all_cards, int players_remaining_no, LiveUpdate live_update_obj) throws InterruptedException {
+        pre_simulation_calc(all_cards, players_remaining_no);
+
+        live_update_obj.before_all_simulation();
+
+        for(this.simulation_count = 1; simulation_count <= max_simulation; simulation_count++){
+            int[] random_numbers = Calculation.random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
+
+            scenario_calc(random_numbers);
+
+            live_update_obj.after_every_simulation();
+        }
+    }
+
+    public void exact_calculation(int[][][] all_cards, int players_remaining_no) throws InterruptedException {
+        pre_simulation_calc(all_cards, players_remaining_no);
+
+        simulation_count = 1;
+        this.total_simulations = calc_total_simulations(52 - no_of_known_cards, no_of_unknown_cards);
+
+        if (this.total_simulations == -1) {
+            throw new InterruptedException();
+        }
+        else {
+            int[] remaining_cards_in_deck = new int[52 - no_of_known_cards];
+            if (52 - no_of_known_cards >= 0)
+                System.arraycopy(deck, 0, remaining_cards_in_deck, 0, 52 - no_of_known_cards);
+
+            this.start_time = System.currentTimeMillis();
+            is_starting_period = true;
+
+            choose(remaining_cards_in_deck, no_of_unknown_cards);
+        }
+    }
+
+    public int calc_total_simulations(int n, int r) {
+        // nPr calculation
+        int res = 1;
+        for (int i = n; i > n - r; i--) {
+            if (res < max_simulation / i) {
+                res *= i;
+            }
+            else {
+                return -1;
+            }
+        }
+
+        return res;
+    }
+    public void choose(int[] a, int k) throws InterruptedException {
+        enumerate(a, a.length, k);
+    }
+
+    private void enumerate(int[] a, int n, int k) throws InterruptedException {
+        if (k == 0) {
+            int[] singlePermutation = new int[a.length - n];
+            if (a.length - n >= 0) System.arraycopy(a, n, singlePermutation, 0, a.length - n);
+
+            scenario_calc(singlePermutation);
+
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
+
+            if (this.is_starting_period) {
+                long current_time = System.currentTimeMillis();
+                if (current_time - start_time > 300) {
+                    is_starting_period = false;
+
+                    if ((double) (current_time - start_time) / (double) simulation_count > 4000000 / (double) this.total_simulations) {
+                        throw new InterruptedException();
+                    }
+                }
+            }
+
+            simulation_count++;
+
+            return;
+        }
+
+        for (int i = 0; i < n; i++) {
+            swap(a, i, n-1);
+            enumerate(a, n-1, k-1);
+            swap(a, i, n-1);
+        }
+    }
+
+    public static void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    public void pre_simulation_calc(int[][][] all_cards, int players_remaining_no) {
         this.players_remaining_no = players_remaining_no;
 
-        int[][] unknown_positions = new int[players_remaining_no * 2 + 5][2];
-        int no_of_unknown_cards = 0, no_of_known_cards = 0;
-        int[] deck = IntStream.rangeClosed(0, 51).toArray();
+        this.unknown_positions = new int[players_remaining_no * 2 + 5][2];
+        this.no_of_unknown_cards = 0;
+        this.no_of_known_cards = 0;
+        this.deck = IntStream.rangeClosed(0, 51).toArray();
 
         for (int row = 0; row <= players_remaining_no; row++) {
             for (int card = 0; card < all_cards[row].length; card++) {
@@ -45,7 +148,7 @@ public class Calculation {
 
         Calculation.insertion_srt_array(deck, 52);
 
-        int[][][] all_cards_copy = new int[players_remaining_no + 1][][];
+        this.all_cards_copy = new int[players_remaining_no + 1][][];
         for (int i = 0; i <= players_remaining_no; i++) {
             all_cards_copy[i] = new int[all_cards[i].length][];
             for (int j = 0; j < all_cards[i].length; j++) {
@@ -54,31 +157,25 @@ public class Calculation {
         }
 
         this.equity_total = new double[players_remaining_no];
+    }
 
-        live_update_obj.before_all_simulation();
+    public void scenario_calc(int[] scenario_numbers) {
+        for(int j = 0; j < no_of_unknown_cards; j++){
+            this.all_cards_copy[this.unknown_positions[j][0]][unknown_positions[j][1]][0] = scenario_numbers[j] / 13 + 1;
+            all_cards_copy[unknown_positions[j][0]][unknown_positions[j][1]][1] = scenario_numbers[j] % 13 + 2;
+        }
 
-        for(this.simulation_count = 1; simulation_count <= 2000000000; simulation_count++){
-            int[] random_numbers = Calculation.random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
+        int[] game_stats = Calculation.game_judge(all_cards_copy, players_remaining_no, known_players);
 
-            for(int j = 0; j < no_of_unknown_cards; j++){
-                all_cards_copy[unknown_positions[j][0]][unknown_positions[j][1]][0] = random_numbers[j] / 13 + 1;
-                all_cards_copy[unknown_positions[j][0]][unknown_positions[j][1]][1] = random_numbers[j] % 13 + 2;
+        int split_total = 0;
+        for(int i : game_stats) {
+            split_total += i;
+        }
+
+        for(int j = 0; j < players_remaining_no; j++) {
+            if(known_players[j] == 1) {
+                equity_total[j] += (double) game_stats[j] / (double) split_total;
             }
-
-            int[] game_stats = Calculation.game_judge(all_cards_copy, players_remaining_no, known_players);
-
-            int split_total = 0;
-            for(int i : game_stats) {
-                split_total += i;
-            }
-
-            for(int j = 0; j < players_remaining_no; j++) {
-                if(known_players[j] == 1) {
-                    equity_total[j] += (double) game_stats[j] / (double) split_total;
-                }
-            }
-
-            live_update_obj.after_every_simulation();
         }
     }
 
@@ -546,21 +643,21 @@ public class Calculation {
         return decision;
     }
 
-    public static int[] random_no_generator(int no_of_unknown, int no_of_known, int[] deck) {
+    public static int[] random_no_generator(int no_of_unknown_cards, int no_of_known_cards, int[] deck) {
 
         int i, temp;
-        int[] random_numbers = new int[no_of_unknown];
+        int[] random_numbers = new int[no_of_unknown_cards];
         int[] deck2 = new int[52];
 
         for(i = 0; i < 52; i++) {
             deck2[i] = deck[i];
         }
 
-        for(i = 0; i < no_of_unknown; i++){
-            temp = myRandom.nextInt(52 - no_of_known - i);
+        for(i = 0; i < no_of_unknown_cards; i++){
+            temp = myRandom.nextInt(52 - no_of_known_cards - i);
             random_numbers[i] = deck2[temp];
 
-            deck2[temp] = deck2[51 - no_of_known - i];
+            deck2[temp] = deck2[51 - no_of_known_cards - i];
         }
 
         return random_numbers;
