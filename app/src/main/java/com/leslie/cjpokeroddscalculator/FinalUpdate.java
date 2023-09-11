@@ -1,12 +1,11 @@
 package com.leslie.cjpokeroddscalculator;
 
-public class ExactCalcUpdate {
-    private final Calculation calcObj;
+public class FinalUpdate extends OutputResult {
     private long start_time;
     private boolean is_starting_period;
 
-    public ExactCalcUpdate(Calculation calcObj) {
-        this.calcObj = calcObj;
+    public FinalUpdate(MainActivity mainActivity, Calculation calcObj) {
+        super(mainActivity, calcObj);
     }
 
     public void before_all_simulation() {
@@ -29,5 +28,13 @@ public class ExactCalcUpdate {
                 }
             }
         }
+    }
+
+    public void after_all_simulation() {
+        if (mainActivity.monte_carlo_thread != null) {
+            mainActivity.monte_carlo_thread.interrupt();
+        }
+
+        update_win_perc();
     }
 }
