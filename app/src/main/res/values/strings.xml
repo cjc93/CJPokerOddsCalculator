@@ -5,4 +5,67 @@
     <string name="players_remaining">Players remaining: %d</string>
     <string name="win_perc_empty">Win%:</string>
     <string name="win_perc_populated">Win%%: %.1f%%</string>
+    <string name="flop">Flop</string>
+    <string name="flop1">Flop1</string>
+    <string name="flop2">Flop2</string>
+    <string name="flop3">Flop3</string>
+    <string name="turn">Turn</string>
+    <string name="river">River</string>
+    <string name="remove_player">Remove Player</string>
+
+    <string name="player_1">Player 1</string>
+    <string name="player11">Player11</string>
+    <string name="player12">Player12</string>
+
+    <string name="player_2">Player 2</string>
+    <string name="player21">Player21</string>
+    <string name="player22">Player22</string>
+
+    <string name="player_3">Player 3</string>
+    <string name="player31">Player31</string>
+    <string name="player32">Player32</string>
+
+    <string name="player_4">Player 4</string>
+    <string name="player41">Player41</string>
+    <string name="player42">Player42</string>
+
+    <string name="player_5">Player 5</string>
+    <string name="player51">Player51</string>
+    <string name="player52">Player52</string>
+
+    <string name="player_6">Player 6</string>
+    <string name="player61">Player61</string>
+    <string name="player62">Player62</string>
+
+    <string name="player_7">Player 7</string>
+    <string name="player71">Player71</string>
+    <string name="player72">Player72</string>
+
+    <string name="player_8">Player 8</string>
+    <string name="player81">Player81</string>
+    <string name="player82">Player82</string>
+
+    <string name="player_9">Player 9</string>
+    <string name="player91">Player91</string>
+    <string name="player92">Player92</string>
+
+    <string name="player_10">Player 10</string>
+    <string name="player101">Player101</string>
+    <string name="player102">Player102</string>
+    <string name="add_player">Add Player</string>
+    <string name="clear">Clear</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="_10">10</string>
+    <string name="j">J</string>
+    <string name="q">Q</string>
+    <string name="k">K</string>
+    <string name="a">A</string>
+    <string name="unkown_card">Unkown Card</string>
 </resources>

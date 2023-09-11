@@ -1,4 +1,6 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -11,16 +13,18 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_weight="3">
 
                 <TextView
-                    android:text="Flop"
+                    android:text="@string/flop"
                     android:gravity="center_horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -28,26 +32,41 @@
 
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
 
                     <ImageButton
                         android:id="@+id/flop1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/unknown_button" />
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_weight="1"
+                        android:scaleType="fitXY"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/flop1" />
 
                     <ImageButton
                         android:id="@+id/flop2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/unknown_button" />
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_weight="1"
+                        android:scaleType="fitXY"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/flop2" />
 
                     <ImageButton
                         android:id="@+id/flop3"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/unknown_button" />
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_weight="1"
+                        android:scaleType="fitXY"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/flop3" />
 
                 </LinearLayout>
 
@@ -56,12 +75,13 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp" >
+                android:layout_marginRight="2dp"
+                android:layout_weight="1">
 
                 <TextView
-                    android:text="Turn"
+                    android:text="@string/turn"
                     android:gravity="center_horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -69,19 +89,25 @@
 
                 <ImageButton
                     android:id="@+id/turn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/unknown_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/turn" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <TextView
-                    android:text="River"
+                    android:text="@string/river"
                     android:gravity="center_horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -89,9 +115,14 @@
 
                 <ImageButton
                     android:id="@+id/river"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/unknown_button" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/river" />
 
             </LinearLayout>
 
@@ -100,7 +131,7 @@
         <TextView
             android:id="@+id/playersremaining"
             android:textSize="26sp"
-            android:text="Players remaining: 2"
+            android:text="@string/players_remaining"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
@@ -109,6 +140,7 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -123,17 +155,20 @@
             <LinearLayout
                 android:id="@+id/player1row"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 1"
+                        android:text="@string/player_1"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -141,62 +176,81 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player11" />
 
                         <ImageButton
                             android:id="@+id/player12"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player12" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer1"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer1" />
 
                     <Button
                         android:id="@+id/removeplayer1"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/player2row"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 2"
+                        android:text="@string/player_2"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -204,44 +258,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player21"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player21" />
 
                         <ImageButton
                             android:id="@+id/player22"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player22" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer2"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer2"/>
 
                     <Button
                         android:id="@+id/removeplayer2"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -249,18 +320,20 @@
                 android:id="@+id/player3row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 3"
+                        android:text="@string/player_3"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -268,44 +341,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player31"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player31" />
 
                         <ImageButton
                             android:id="@+id/player32"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player32" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer3"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer3"/>
 
                     <Button
                         android:id="@+id/removeplayer3"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -313,18 +403,20 @@
                 android:id="@+id/player4row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 4"
+                        android:text="@string/player_4"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -332,44 +424,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player41"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player41" />
 
                         <ImageButton
                             android:id="@+id/player42"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player42" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer4"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer4"/>
 
                     <Button
                         android:id="@+id/removeplayer4"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -377,18 +486,20 @@
                 android:id="@+id/player5row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 5"
+                        android:text="@string/player_5"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -396,44 +507,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player51"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player51" />
 
                         <ImageButton
                             android:id="@+id/player52"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player52" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer5"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer5"/>
 
                     <Button
                         android:id="@+id/removeplayer5"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -441,18 +569,20 @@
                 android:id="@+id/player6row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 6"
+                        android:text="@string/player_6"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -460,44 +590,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player61"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player61" />
 
                         <ImageButton
                             android:id="@+id/player62"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player62" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer6"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer6"/>
 
                     <Button
                         android:id="@+id/removeplayer6"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -505,18 +652,20 @@
                 android:id="@+id/player7row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 7"
+                        android:text="@string/player_7"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -524,44 +673,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player71"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player71" />
 
                         <ImageButton
                             android:id="@+id/player72"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player72" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer7"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer7"/>
 
                     <Button
                         android:id="@+id/removeplayer7"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -569,18 +735,20 @@
                 android:id="@+id/player8row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 8"
+                        android:text="@string/player_8"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -588,44 +756,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player81"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player81" />
 
                         <ImageButton
                             android:id="@+id/player82"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player82" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer8"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer8"/>
 
                     <Button
                         android:id="@+id/removeplayer8"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -633,18 +818,20 @@
                 android:id="@+id/player9row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 9"
+                        android:text="@string/player_9"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -652,44 +839,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player91"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player91" />
 
                         <ImageButton
                             android:id="@+id/player92"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player92" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer9"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer9"/>
 
                     <Button
                         android:id="@+id/removeplayer9"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -697,18 +901,20 @@
                 android:id="@+id/player10row"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:layout_marginTop="13dp" >
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="3" >
 
                     <TextView
-                        android:text="Player 10"
+                        android:text="@string/player_10"
                         android:gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -716,44 +922,61 @@
 
                     <LinearLayout
                         android:orientation="horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" >
 
                         <ImageButton
                             android:id="@+id/player101"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player101" />
 
                         <ImageButton
                             android:id="@+id/player102"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/unknown_button" />
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/player102" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" >
 
                     <TextView
                         android:id="@+id/winplayer10"
-                        android:textSize="28sp"
-                        android:text="Win%:"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/win_perc_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:layout_alignParentTop="true"
+                        android:layout_above="@+id/removeplayer10"/>
 
                     <Button
                         android:id="@+id/removeplayer10"
-                        android:text="Remove Player"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        app:autoSizeTextType="uniform"
+                        android:text="@string/remove_player"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -766,21 +989,23 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true" >
 
         <Button
             android:id="@+id/addplayer"
-            android:text="Add Player"
+            app:autoSizeTextType="uniform"
+            android:text="@string/add_player"
             android:gravity="center_vertical|center_horizontal"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Button
-            android:text="Clear"
-            android:gravity="center_vertical|center_horizontal"
             android:id="@+id/clear"
-            android:layout_width="fill_parent"
+            app:autoSizeTextType="uniform"
+            android:text="@string/clear"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
