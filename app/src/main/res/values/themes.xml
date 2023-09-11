@@ -6,6 +6,7 @@
 
         <item name="colorPrimary">#449DEF</item>
         <item name="colorOnPrimary">#000080</item>
+        <item name="colorPrimaryDark">#000000</item>
     </style>
 
     <style name="Theme.CJPokerOddsCalculator" parent="Base.Theme.CJPokerOddsCalculator" />
