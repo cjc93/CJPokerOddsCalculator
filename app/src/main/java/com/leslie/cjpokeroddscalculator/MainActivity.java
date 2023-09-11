@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
         setContentView(binding.getRoot());
 
 
@@ -325,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
         int card_idx = convert_selector_to_position(card_button.getId());
         cards[row_idx][card_idx][0] = suit;
         cards[row_idx][card_idx][1] = rank;
-        card_button.setBackgroundResource(get_card_id(suit, rank));
+        card_button.setImageResource(get_card_id(suit, rank));
     }
 
     public void card_selected(int suit, int rank) {
