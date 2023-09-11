@@ -1,110 +1,21 @@
 package com.leslie.cjpokeroddscalculator;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Calculation {
-    static Random myRandom = new Random();
     private int players_remaining_no;
     private int[] known_players;
     private double[] equity_total;
     public int simulation_count;
     private int no_of_unknown_players;
-    private int no_of_unknown_cards;
-    private int no_of_known_cards;
-    private int[] deck;
+    public int no_of_unknown_cards;
+    public int no_of_known_cards;
+    public int[] deck;
     private int[][][] all_cards_copy;
     private int[][] unknown_positions;
-    private final int max_simulation = 2000000000;
+    public final int max_simulation = 2000000000;
     public int total_simulations;
-    private OutputResult outputResultObj;
-
-    public void monte_carl_calc(int[][][] all_cards, int players_remaining_no, OutputResult output_result_obj) throws InterruptedException {
-        pre_simulation_calc(all_cards, players_remaining_no);
-
-        total_simulations = max_simulation;
-
-        output_result_obj.before_all_simulation();
-
-        for(this.simulation_count = 1; simulation_count <= total_simulations; simulation_count++){
-            int[] random_numbers = Calculation.random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
-
-            scenario_calc(random_numbers);
-
-            output_result_obj.after_every_simulation();
-        }
-
-        output_result_obj.after_all_simulation();
-    }
-
-    public void exact_calc(int[][][] all_cards, int players_remaining_no, OutputResult output_result_obj) throws InterruptedException {
-        this.outputResultObj = output_result_obj;
-        pre_simulation_calc(all_cards, players_remaining_no);
-
-        simulation_count = 1;
-        this.total_simulations = calc_total_simulations(52 - no_of_known_cards, no_of_unknown_cards);
-
-        if (this.total_simulations == -1) {
-            throw new InterruptedException();
-        }
-        else {
-            int[] remaining_cards_in_deck = new int[52 - no_of_known_cards];
-            if (52 - no_of_known_cards >= 0)
-                System.arraycopy(deck, 0, remaining_cards_in_deck, 0, 52 - no_of_known_cards);
-
-            this.outputResultObj.before_all_simulation();
-
-            choose(remaining_cards_in_deck, no_of_unknown_cards);
-
-            outputResultObj.after_all_simulation();
-        }
-    }
-
-    public int calc_total_simulations(int n, int r) {
-        // nPr calculation
-        int res = 1;
-        for (int i = n; i > n - r; i--) {
-            if (res < max_simulation / i) {
-                res *= i;
-            }
-            else {
-                return -1;
-            }
-        }
-
-        return res;
-    }
-    public void choose(int[] a, int k) throws InterruptedException {
-        enumerate(a, a.length, k);
-    }
-
-    private void enumerate(int[] a, int n, int k) throws InterruptedException {
-        if (k == 0) {
-            int[] singlePermutation = new int[a.length - n];
-            if (a.length - n >= 0) System.arraycopy(a, n, singlePermutation, 0, a.length - n);
-
-            scenario_calc(singlePermutation);
-
-            this.outputResultObj.after_every_simulation();
-
-            simulation_count++;
-
-            return;
-        }
-
-        for (int i = 0; i < n; i++) {
-            swap(a, i, n-1);
-            enumerate(a, n-1, k-1);
-            swap(a, i, n-1);
-        }
-    }
-
-    public static void swap(int[] a, int i, int j) {
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-    }
 
     public void pre_simulation_calc(int[][][] all_cards, int players_remaining_no) {
         this.players_remaining_no = players_remaining_no;
@@ -127,6 +38,8 @@ public class Calculation {
             }
         }
 
+        Calculation.insertion_srt_array(deck, 52);
+
         this.known_players = new int[players_remaining_no];
         this.no_of_unknown_players = 0;
 
@@ -137,8 +50,6 @@ public class Calculation {
                 no_of_unknown_players++;
             }
         }
-
-        Calculation.insertion_srt_array(deck, 52);
 
         this.all_cards_copy = new int[players_remaining_no + 1][][];
         for (int i = 0; i <= players_remaining_no; i++) {
@@ -634,25 +545,4 @@ public class Calculation {
         }
         return decision;
     }
-
-    public static int[] random_no_generator(int no_of_unknown_cards, int no_of_known_cards, int[] deck) {
-
-        int i, temp;
-        int[] random_numbers = new int[no_of_unknown_cards];
-        int[] deck2 = new int[52];
-
-        for(i = 0; i < 52; i++) {
-            deck2[i] = deck[i];
-        }
-
-        for(i = 0; i < no_of_unknown_cards; i++){
-            temp = myRandom.nextInt(52 - no_of_known_cards - i);
-            random_numbers[i] = deck2[temp];
-
-            deck2[temp] = deck2[51 - no_of_known_cards - i];
-        }
-
-        return random_numbers;
-    }
-
 }

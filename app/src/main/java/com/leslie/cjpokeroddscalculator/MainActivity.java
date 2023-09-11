@@ -419,14 +419,14 @@ public class MainActivity extends AppCompatActivity {
 
     private final Runnable monte_carlo_proc = () -> {
         try {
-            Calculation calc_obj = new Calculation();
+            MonteCarloCalc calc_obj = new MonteCarloCalc();
             calc_obj.monte_carl_calc(cards, players_remaining_no, new LiveUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
-            Calculation calc_obj = new Calculation();
+            ExactCalc calc_obj = new ExactCalc();
             calc_obj.exact_calc(cards, players_remaining_no, new FinalUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
