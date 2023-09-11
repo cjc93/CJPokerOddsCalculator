@@ -18,24 +18,28 @@ public class Calculation {
     private int[][] unknown_positions;
     private final int max_simulation = 2000000000;
     public int total_simulations;
-    private ExactCalcUpdate exactCalcUpdate;
+    private OutputResult outputResultObj;
 
-    public void monte_carl_calc(int[][][] all_cards, int players_remaining_no, MonteCarloUpdate monte_carlo_update_obj) throws InterruptedException {
+    public void monte_carl_calc(int[][][] all_cards, int players_remaining_no, OutputResult output_result_obj) throws InterruptedException {
         pre_simulation_calc(all_cards, players_remaining_no);
 
-        monte_carlo_update_obj.before_all_simulation();
+        total_simulations = max_simulation;
 
-        for(this.simulation_count = 1; simulation_count <= max_simulation; simulation_count++){
+        output_result_obj.before_all_simulation();
+
+        for(this.simulation_count = 1; simulation_count <= total_simulations; simulation_count++){
             int[] random_numbers = Calculation.random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
 
             scenario_calc(random_numbers);
 
-            monte_carlo_update_obj.after_every_simulation();
+            output_result_obj.after_every_simulation();
         }
+
+        output_result_obj.after_all_simulation();
     }
 
-    public void exact_calc(int[][][] all_cards, int players_remaining_no, ExactCalcUpdate exactCalcUpdate) throws InterruptedException {
-        this.exactCalcUpdate = exactCalcUpdate;
+    public void exact_calc(int[][][] all_cards, int players_remaining_no, OutputResult output_result_obj) throws InterruptedException {
+        this.outputResultObj = output_result_obj;
         pre_simulation_calc(all_cards, players_remaining_no);
 
         simulation_count = 1;
@@ -49,9 +53,11 @@ public class Calculation {
             if (52 - no_of_known_cards >= 0)
                 System.arraycopy(deck, 0, remaining_cards_in_deck, 0, 52 - no_of_known_cards);
 
-            this.exactCalcUpdate.before_all_simulation();
+            this.outputResultObj.before_all_simulation();
 
             choose(remaining_cards_in_deck, no_of_unknown_cards);
+
+            outputResultObj.after_all_simulation();
         }
     }
 
@@ -80,7 +86,7 @@ public class Calculation {
 
             scenario_calc(singlePermutation);
 
-            this.exactCalcUpdate.after_every_simulation();
+            this.outputResultObj.after_every_simulation();
 
             simulation_count++;
 

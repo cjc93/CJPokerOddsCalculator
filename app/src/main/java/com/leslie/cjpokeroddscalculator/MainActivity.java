@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton[] rank_radio_array;
     private ImageButton selector_input;
     private Dialog dialog;
-    private Thread monte_carlo_thread = null;
-    private Thread exact_calc_thread = null;
+    public Thread monte_carlo_thread = null;
+    public Thread exact_calc_thread = null;
 
     int players_remaining_no = 2, rank_checked_id = -1;
 
@@ -420,35 +420,14 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable monte_carlo_proc = () -> {
         try {
             Calculation calc_obj = new Calculation();
-            calc_obj.monte_carl_calc(cards, players_remaining_no, new MonteCarloUpdate(this, calc_obj));
+            calc_obj.monte_carl_calc(cards, players_remaining_no, new LiveUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
             Calculation calc_obj = new Calculation();
-            calc_obj.exact_calc(cards, players_remaining_no, new ExactCalcUpdate(calc_obj));
-
-            if (monte_carlo_thread != null) {
-                monte_carlo_thread.interrupt();
-            }
-
-            double[] equity_perc = calc_obj.calc_equity_perc();
-
-            handler.post(() -> {
-                for(int i = 0; i < players_remaining_no; i++) {
-                    win_array[i].setText(getString(R.string.win_perc_populated, equity_perc[i] * 100));
-
-                    if(equity_perc[i] > 1 / (double) players_remaining_no + 0.02) {
-                        win_array[i].setTextColor(Color.GREEN);
-                    } else if (equity_perc[i] < 1 / (double) players_remaining_no - 0.02) {
-                        win_array[i].setTextColor(Color.RED);
-                    } else {
-                        win_array[i].setTextColor(Color.WHITE);
-                    }
-                }
-            });
-
+            calc_obj.exact_calc(cards, players_remaining_no, new FinalUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
 
