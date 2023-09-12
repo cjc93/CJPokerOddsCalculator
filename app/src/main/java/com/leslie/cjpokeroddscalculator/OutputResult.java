@@ -18,7 +18,7 @@ public class OutputResult {
     public void update_win_perc() {
         double[] equity_perc = calcObj.calc_equity_perc();
 
-        mainActivity.handler.post(() -> {
+        mainActivity.runOnUiThread(() -> {
             for(int i = 0; i < mainActivity.players_remaining_no; i++) {
                 mainActivity.win_array[i].setText(mainActivity.getString(R.string.win_perc_populated, equity_perc[i] * 100));
 
