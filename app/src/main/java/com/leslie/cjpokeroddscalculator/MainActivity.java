@@ -3,7 +3,6 @@ package com.leslie.cjpokeroddscalculator;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +20,6 @@ import com.leslie.cjpokeroddscalculator.databinding.CardselectorBinding;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private CardselectorBinding binding_card_selector;
-
-    final public Handler handler = new Handler();
 
     private ImageButton[][] player_cards_array;
     private ImageButton[] all_cards_array;
