@@ -7,7 +7,7 @@ public class ExactCalc extends Calculation {
         this.outputResultObj = output_result_obj;
         pre_simulation_calc(all_cards, players_remaining_no);
 
-        simulation_count = 1;
+        simulation_count = 0;
         this.total_simulations = calc_total_simulations(52 - no_of_known_cards, no_of_unknown_cards);
 
         if (this.total_simulations == -1) {
