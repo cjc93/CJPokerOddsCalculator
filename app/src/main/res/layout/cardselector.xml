@@ -162,6 +162,6 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 		android:gravity="center_vertical|center_horizontal"
-	    android:text="@string/unkown_card" />
+	    android:text="@string/unknown_card" />
     
 </LinearLayout>
