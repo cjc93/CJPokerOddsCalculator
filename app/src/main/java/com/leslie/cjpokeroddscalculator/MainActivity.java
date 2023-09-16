@@ -16,15 +16,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
 import com.leslie.cjpokeroddscalculator.databinding.CardselectorBinding;
+import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private CardselectorBinding binding_card_selector;
 
-    private ImageButton[][] player_cards_array;
-    private ImageButton[] all_cards_array;
-    private LinearLayout[] player_row_array;
-    public TextView[] win_array;
+    private final ImageButton[][] player_cards_array = new ImageButton[10][];
+    private final ImageButton[] all_cards_array = new ImageButton[25];
+    private final LinearLayout[] player_row_array = new LinearLayout[10];
+    public TextView[] win_array = new TextView[10];
     private RadioButton[] rank_radio_array;
     private ImageButton selector_input;
     private Dialog dialog;
@@ -32,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     public Thread exact_calc_thread = null;
 
     int players_remaining_no = 2, rank_checked_id = -1;
+
+    HashMap<Integer, int[]> card_id_position_map = new HashMap<>();
+    HashMap<Integer, Integer> remove_id_row_map = new HashMap<>();
 
     int[][][] cards = {
         {
@@ -88,95 +95,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
         setContentView(binding.getRoot());
 
+        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
 
-        player_cards_array = new ImageButton[][] {
-            {binding.player11, binding.player12},
-            {binding.player21, binding.player22},
-            {binding.player31, binding.player32},
-            {binding.player41, binding.player42},
-            {binding.player51, binding.player52},
-            {binding.player61, binding.player62},
-            {binding.player71, binding.player72},
-            {binding.player81, binding.player82},
-            {binding.player91, binding.player92},
-            {binding.player101, binding.player102},
-        };
+        all_cards_array[0] = binding.flop1;
+        all_cards_array[1] = binding.flop2;
+        all_cards_array[2] = binding.flop3;
+        all_cards_array[3] = binding.turn;
+        all_cards_array[4] = binding.river;
 
-        player_row_array = new LinearLayout[] {
-            binding.player3row,
-            binding.player4row,
-            binding.player5row,
-            binding.player6row,
-            binding.player7row,
-            binding.player8row,
-            binding.player9row,
-            binding.player10row
-        };
+        card_id_position_map.put(binding.flop1.getId(), new int[] {0, 0});
+        card_id_position_map.put(binding.flop2.getId(), new int[] {0, 1});
+        card_id_position_map.put(binding.flop3.getId(), new int[] {0, 2});
+        card_id_position_map.put(binding.turn.getId(), new int[] {0, 3});
+        card_id_position_map.put(binding.river.getId(), new int[] {0, 4});
 
-        win_array = new TextView[] {
-            binding.winplayer1,
-            binding.winplayer2,
-            binding.winplayer3,
-            binding.winplayer4,
-            binding.winplayer5,
-            binding.winplayer6,
-            binding.winplayer7,
-            binding.winplayer8,
-            binding.winplayer9,
-            binding.winplayer10
-        };
 
-        all_cards_array = new ImageButton[] {
-            binding.flop1,
-            binding.flop2,
-            binding.flop3,
-            binding.turn,
-            binding.river,
-            binding.player11,
-            binding.player12,
-            binding.player21,
-            binding.player22,
-            binding.player31,
-            binding.player32,
-            binding.player41,
-            binding.player42,
-            binding.player51,
-            binding.player52,
-            binding.player61,
-            binding.player62,
-            binding.player71,
-            binding.player72,
-            binding.player81,
-            binding.player82,
-            binding.player91,
-            binding.player92,
-            binding.player101,
-            binding.player102,
-        };
+        for (int i = 0; i < 10; i++) {
+            com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
+            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
+            player_cards_array[i] = new ImageButton[] {binding_player_row.card1, binding_player_row.card2};
+            player_row_array[i] = binding_player_row.getRoot();
+            win_array[i] = binding_player_row.win;
+            all_cards_array[i * 2 + 5] = binding_player_row.card1;
+            all_cards_array[i * 2 + 6] = binding_player_row.card2;
+            binding_player_row.remove.setOnClickListener(remove_player_listener);
+            binding_player_row.card1.setId(View.generateViewId());
+            binding_player_row.card2.setId(View.generateViewId());
+            binding_player_row.remove.setId(View.generateViewId());
+            card_id_position_map.put(binding_player_row.card1.getId(), new int[] {i + 1, 0});
+            card_id_position_map.put(binding_player_row.card2.getId(), new int[] {i + 1, 1});
+            remove_id_row_map.put(binding_player_row.remove.getId(), i + 1);
+        }
+
+        for (int i = 2; i < 10; i++) {
+            player_row_array[i].setVisibility(View.GONE);
+        }
 
         for (ImageButton b : all_cards_array) {
             b.setOnClickListener(selector_listener);
         }
 
-        binding.removeplayer1.setOnClickListener(remove_player_listener);
-        binding.removeplayer2.setOnClickListener(remove_player_listener);
-        binding.removeplayer3.setOnClickListener(remove_player_listener);
-        binding.removeplayer4.setOnClickListener(remove_player_listener);
-        binding.removeplayer5.setOnClickListener(remove_player_listener);
-        binding.removeplayer6.setOnClickListener(remove_player_listener);
-        binding.removeplayer7.setOnClickListener(remove_player_listener);
-        binding.removeplayer8.setOnClickListener(remove_player_listener);
-        binding.removeplayer9.setOnClickListener(remove_player_listener);
-        binding.removeplayer10.setOnClickListener(remove_player_listener);
-
         binding.addplayer.setOnClickListener(v -> {
             if(players_remaining_no < 10){
                 players_remaining_no++;
                 binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                player_row_array[players_remaining_no - 3].setVisibility(View.VISIBLE);
+                player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 calculate_odds();
             }
             else{
@@ -197,12 +162,12 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
 
             final Button remove_input = (Button) v;
-            int player_remove_number = convert_remove_to_player(remove_input.getId());
+            int player_remove_number = remove_id_row_map.get(remove_input.getId());
 
             if(players_remaining_no > 2){
                 players_remaining_no--;
                 binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                player_row_array[players_remaining_no - 2].setVisibility(View.GONE);
+                player_row_array[players_remaining_no].setVisibility(View.GONE);
 
                 for (int i = player_remove_number; i <= players_remaining_no; i++) {
                     set_card(player_cards_array[i - 1][0], cards[i + 1][0][0], cards[i + 1][0][1]);
@@ -248,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 binding_card_selector.radio13,
                 binding_card_selector.radio14
             };
-
 
             binding_card_selector.radioGroupSuit.setOnCheckedChangeListener((group, checkedId) -> {
                 if(rank_checked_id != -1) {
@@ -319,8 +283,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void set_card(ImageButton card_button, int suit, int rank) {
-        int row_idx = convert_selector_to_player(card_button.getId());
-        int card_idx = convert_selector_to_position(card_button.getId());
+        int row_idx = Objects.requireNonNull(card_id_position_map.get(card_button.getId()))[0];
+        int card_idx = Objects.requireNonNull(card_id_position_map.get(card_button.getId()))[1];
         cards[row_idx][card_idx][0] = suit;
         cards[row_idx][card_idx][1] = rank;
         card_button.setImageResource(get_card_id(suit, rank));
@@ -428,123 +392,6 @@ public class MainActivity extends AppCompatActivity {
             calc_obj.exact_calc(cards, players_remaining_no, new FinalUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
-
-    public int convert_selector_to_player(int ButtonId) {
-        if (ButtonId == R.id.player11 || ButtonId == R.id.player12) {
-            return 1;
-        }
-        else if (ButtonId == R.id.flop1 || ButtonId == R.id.flop2 || ButtonId == R.id.flop3 || ButtonId == R.id.turn || ButtonId == R.id.river ) {
-            return 0;
-        }
-        else if (ButtonId == R.id.player21 || ButtonId == R.id.player22) {
-            return 2;
-        }
-        else if (ButtonId == R.id.player31 || ButtonId == R.id.player32) {
-            return 3;
-        }
-        else if (ButtonId == R.id.player41 || ButtonId == R.id.player42) {
-            return 4;
-        }
-        else if (ButtonId == R.id.player51 || ButtonId == R.id.player52) {
-            return 5;
-        }
-        else if (ButtonId == R.id.player61 || ButtonId == R.id.player62) {
-            return 6;
-        }
-        else if (ButtonId == R.id.player71 || ButtonId == R.id.player72) {
-            return 7;
-        }
-        else if (ButtonId == R.id.player81 || ButtonId == R.id.player82) {
-            return 8;
-        }
-        else if (ButtonId == R.id.player91 || ButtonId == R.id.player92) {
-            return 9;
-        }
-        else if (ButtonId == R.id.player101 || ButtonId == R.id.player102) {
-            return 10;
-        }
-
-        return ButtonId;
-    }
-
-    public int convert_selector_to_position(int ButtonId) {
-        if (
-            ButtonId == R.id.player11 ||
-            ButtonId == R.id.flop1 ||
-            ButtonId == R.id.player21 ||
-            ButtonId == R.id.player31 ||
-            ButtonId == R.id.player41 ||
-            ButtonId == R.id.player51 ||
-            ButtonId == R.id.player61 ||
-            ButtonId == R.id.player71 ||
-            ButtonId == R.id.player81 ||
-            ButtonId == R.id.player91 ||
-            ButtonId == R.id.player101
-        ) {
-            return 0;
-        }
-        else if (
-            ButtonId == R.id.player12 ||
-            ButtonId == R.id.flop2 ||
-            ButtonId == R.id.player22 ||
-            ButtonId == R.id.player32 ||
-            ButtonId == R.id.player42 ||
-            ButtonId == R.id.player52 ||
-            ButtonId == R.id.player62 ||
-            ButtonId == R.id.player72 ||
-            ButtonId == R.id.player82 ||
-            ButtonId == R.id.player92 ||
-            ButtonId == R.id.player102
-        ) {
-            return 1;
-        }
-        else if (ButtonId == R.id.flop3) {
-            return 2;
-        }
-        else if (ButtonId == R.id.turn) {
-            return 3;
-        }
-        else if (ButtonId == R.id.river) {
-            return 4;
-        }
-
-        return ButtonId;
-    }
-
-    public int convert_remove_to_player(int ButtonId) {
-        if (ButtonId == R.id.removeplayer1) {
-            return 1;
-        }
-        else if (ButtonId == R.id.removeplayer2) {
-            return 2;
-        }
-        else if (ButtonId == R.id.removeplayer3) {
-            return 3;
-        }
-        else if (ButtonId == R.id.removeplayer4) {
-            return 4;
-        }
-        else if (ButtonId == R.id.removeplayer5) {
-            return 5;
-        }
-        else if (ButtonId == R.id.removeplayer6) {
-            return 6;
-        }
-        else if (ButtonId == R.id.removeplayer7) {
-            return 7;
-        }
-        else if (ButtonId == R.id.removeplayer8) {
-            return 8;
-        }
-        else if (ButtonId == R.id.removeplayer9) {
-            return 9;
-        }
-        else if (ButtonId == R.id.removeplayer10) {
-            return 10;
-        }
-
-        return ButtonId;
-    }
 
     public int convert_id_to_number(int checkedRadioButtonId) {
         if (checkedRadioButtonId == R.id.radio_diamond) {
