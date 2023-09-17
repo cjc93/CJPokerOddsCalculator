@@ -18,18 +18,17 @@ import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
 import com.leslie.cjpokeroddscalculator.databinding.CardselectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
+
+import com.google.common.collect.HashBiMap;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private CardselectorBinding binding_card_selector;
 
-    private final ImageButton[][] player_cards_array = new ImageButton[10][];
-    private final ImageButton[] all_cards_array = new ImageButton[25];
-    private final LinearLayout[] player_row_array = new LinearLayout[10];
-    public TextView[] win_array = new TextView[10];
-    private RadioButton[] rank_radio_array;
     private ImageButton selector_input;
     private Dialog dialog;
     public Thread monte_carlo_thread = null;
@@ -37,58 +36,17 @@ public class MainActivity extends AppCompatActivity {
 
     int players_remaining_no = 2, rank_checked_id = -1;
 
-    HashMap<Integer, int[]> card_id_position_map = new HashMap<>();
-    HashMap<Integer, Integer> remove_id_row_map = new HashMap<>();
+    private final LinearLayout[] player_row_array = new LinearLayout[10];
+    public TextView[] win_array = new TextView[10];
 
-    int[][][] cards = {
-        {
-            {0, 0},
-            {0, 0},
-            {0, 0},
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-        {
-            {0, 0},
-            {0, 0},
-        },
-    };
+    HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
+    HashMap<Button, Integer> remove_row_map = new HashMap<>();
+    HashMap<Integer, RadioButton> rank_radio_map = new HashMap<>();
+    HashMap<Integer, RadioButton> suit_radio_map = new HashMap<>();
+    HashMap<Integer, Integer> radio_id_number_map = new HashMap<>();
+    HashMap<Integer, HashMap<Integer, Integer>> suit_rank_drawable_map = new HashMap<>();
+
+    int[][][] cards = new int[11][][];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,41 +57,26 @@ public class MainActivity extends AppCompatActivity {
 
         binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
 
-        all_cards_array[0] = binding.flop1;
-        all_cards_array[1] = binding.flop2;
-        all_cards_array[2] = binding.flop3;
-        all_cards_array[3] = binding.turn;
-        all_cards_array[4] = binding.river;
-
-        card_id_position_map.put(binding.flop1.getId(), new int[] {0, 0});
-        card_id_position_map.put(binding.flop2.getId(), new int[] {0, 1});
-        card_id_position_map.put(binding.flop3.getId(), new int[] {0, 2});
-        card_id_position_map.put(binding.turn.getId(), new int[] {0, 3});
-        card_id_position_map.put(binding.river.getId(), new int[] {0, 4});
-
+        initialise_variables();
 
         for (int i = 0; i < 10; i++) {
-            com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
-            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            player_cards_array[i] = new ImageButton[] {binding_player_row.card1, binding_player_row.card2};
+            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
+
             player_row_array[i] = binding_player_row.getRoot();
             win_array[i] = binding_player_row.win;
-            all_cards_array[i * 2 + 5] = binding_player_row.card1;
-            all_cards_array[i * 2 + 6] = binding_player_row.card2;
+            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
+            remove_row_map.put(binding_player_row.remove, i + 1);
+
+            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
             binding_player_row.remove.setOnClickListener(remove_player_listener);
-            binding_player_row.card1.setId(View.generateViewId());
-            binding_player_row.card2.setId(View.generateViewId());
-            binding_player_row.remove.setId(View.generateViewId());
-            card_id_position_map.put(binding_player_row.card1.getId(), new int[] {i + 1, 0});
-            card_id_position_map.put(binding_player_row.card2.getId(), new int[] {i + 1, 1});
-            remove_id_row_map.put(binding_player_row.remove.getId(), i + 1);
         }
 
         for (int i = 2; i < 10; i++) {
             player_row_array[i].setVisibility(View.GONE);
         }
 
-        for (ImageButton b : all_cards_array) {
+        for (ImageButton b : cardPositionBiMap.values()) {
             b.setOnClickListener(selector_listener);
         }
 
@@ -150,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.clear.setOnClickListener(v -> {
-            for (ImageButton b : all_cards_array) {
+            for (ImageButton b : cardPositionBiMap.values()) {
                 set_card(b, 0, 0);
             }
 
@@ -158,11 +101,111 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initialise_variables() {
+        cards[0] = new int[][]{ {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} };
+
+        for (int i = 1; i <= 10; i++) {
+            cards[i] = new int[][]{ {0, 0}, {0, 0} };
+        }
+
+        cardPositionBiMap.put(Arrays.asList(0, 0), binding.flop1);
+        cardPositionBiMap.put(Arrays.asList(0, 1), binding.flop2);
+        cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
+        cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
+        cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
+
+        radio_id_number_map.put(R.id.radio_diamond, 1);
+        radio_id_number_map.put(R.id.radio_club, 2);
+        radio_id_number_map.put(R.id.radio_heart, 3);
+        radio_id_number_map.put(R.id.radio_spade, 4);
+        radio_id_number_map.put(R.id.radio_2, 2);
+        radio_id_number_map.put(R.id.radio_3, 3);
+        radio_id_number_map.put(R.id.radio_4, 4);
+        radio_id_number_map.put(R.id.radio_5, 5);
+        radio_id_number_map.put(R.id.radio_6, 6);
+        radio_id_number_map.put(R.id.radio_7, 7);
+        radio_id_number_map.put(R.id.radio_8, 8);
+        radio_id_number_map.put(R.id.radio_9, 9);
+        radio_id_number_map.put(R.id.radio_10, 10);
+        radio_id_number_map.put(R.id.radio_11, 11);
+        radio_id_number_map.put(R.id.radio_12, 12);
+        radio_id_number_map.put(R.id.radio_13, 13);
+        radio_id_number_map.put(R.id.radio_14, 14);
+
+        HashMap<Integer, Integer> temp_map = new HashMap<>();
+        temp_map.put(0, R.drawable.unknown_button);
+        suit_rank_drawable_map.put(0, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.d2_button);
+        temp_map.put(3, R.drawable.d3_button);
+        temp_map.put(4, R.drawable.d4_button);
+        temp_map.put(5, R.drawable.d5_button);
+        temp_map.put(6, R.drawable.d6_button);
+        temp_map.put(7, R.drawable.d7_button);
+        temp_map.put(8, R.drawable.d8_button);
+        temp_map.put(9, R.drawable.d9_button);
+        temp_map.put(10, R.drawable.d10_button);
+        temp_map.put(11, R.drawable.d11_button);
+        temp_map.put(12, R.drawable.d12_button);
+        temp_map.put(13, R.drawable.d13_button);
+        temp_map.put(14, R.drawable.d14_button);
+        suit_rank_drawable_map.put(1, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.c2_button);
+        temp_map.put(3, R.drawable.c3_button);
+        temp_map.put(4, R.drawable.c4_button);
+        temp_map.put(5, R.drawable.c5_button);
+        temp_map.put(6, R.drawable.c6_button);
+        temp_map.put(7, R.drawable.c7_button);
+        temp_map.put(8, R.drawable.c8_button);
+        temp_map.put(9, R.drawable.c9_button);
+        temp_map.put(10, R.drawable.c10_button);
+        temp_map.put(11, R.drawable.c11_button);
+        temp_map.put(12, R.drawable.c12_button);
+        temp_map.put(13, R.drawable.c13_button);
+        temp_map.put(14, R.drawable.c14_button);
+        suit_rank_drawable_map.put(2, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.h2_button);
+        temp_map.put(3, R.drawable.h3_button);
+        temp_map.put(4, R.drawable.h4_button);
+        temp_map.put(5, R.drawable.h5_button);
+        temp_map.put(6, R.drawable.h6_button);
+        temp_map.put(7, R.drawable.h7_button);
+        temp_map.put(8, R.drawable.h8_button);
+        temp_map.put(9, R.drawable.h9_button);
+        temp_map.put(10, R.drawable.h10_button);
+        temp_map.put(11, R.drawable.h11_button);
+        temp_map.put(12, R.drawable.h12_button);
+        temp_map.put(13, R.drawable.h13_button);
+        temp_map.put(14, R.drawable.h14_button);
+        suit_rank_drawable_map.put(3, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.s2_button);
+        temp_map.put(3, R.drawable.s3_button);
+        temp_map.put(4, R.drawable.s4_button);
+        temp_map.put(5, R.drawable.s5_button);
+        temp_map.put(6, R.drawable.s6_button);
+        temp_map.put(7, R.drawable.s7_button);
+        temp_map.put(8, R.drawable.s8_button);
+        temp_map.put(9, R.drawable.s9_button);
+        temp_map.put(10, R.drawable.s10_button);
+        temp_map.put(11, R.drawable.s11_button);
+        temp_map.put(12, R.drawable.s12_button);
+        temp_map.put(13, R.drawable.s13_button);
+        temp_map.put(14, R.drawable.s14_button);
+        suit_rank_drawable_map.put(4, temp_map);
+    }
+
     private final View.OnClickListener remove_player_listener = new View.OnClickListener() {
         public void onClick(View v) {
 
             final Button remove_input = (Button) v;
-            int player_remove_number = remove_id_row_map.get(remove_input.getId());
+            int player_remove_number = remove_row_map.get(remove_input);
 
             if(players_remaining_no > 2){
                 players_remaining_no--;
@@ -170,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
                 player_row_array[players_remaining_no].setVisibility(View.GONE);
 
                 for (int i = player_remove_number; i <= players_remaining_no; i++) {
-                    set_card(player_cards_array[i - 1][0], cards[i + 1][0][0], cards[i + 1][0][1]);
-                    set_card(player_cards_array[i - 1][1], cards[i + 1][1][0], cards[i + 1][1][1]);
+                    set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(i, 0))), cards[i + 1][0][0], cards[i + 1][0][1]);
+                    set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(i, 1))), cards[i + 1][1][0], cards[i + 1][1][1]);
                 }
 
-                set_card(player_cards_array[players_remaining_no][0], 0, 0);
-                set_card(player_cards_array[players_remaining_no][1], 0, 0);
+                set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(players_remaining_no + 1, 0))), 0, 0);
+                set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(players_remaining_no + 1, 1))), 0, 0);
 
                 calculate_odds();
             }
@@ -198,45 +241,48 @@ public class MainActivity extends AppCompatActivity {
 
             rank_checked_id = -1;
 
-            rank_radio_array = new RadioButton[] {
-                binding_card_selector.radio2,
-                binding_card_selector.radio3,
-                binding_card_selector.radio4,
-                binding_card_selector.radio5,
-                binding_card_selector.radio6,
-                binding_card_selector.radio7,
-                binding_card_selector.radio8,
-                binding_card_selector.radio9,
-                binding_card_selector.radio10,
-                binding_card_selector.radio11,
-                binding_card_selector.radio12,
-                binding_card_selector.radio13,
-                binding_card_selector.radio14
-            };
+            rank_radio_map.put(2, binding_card_selector.radio2);
+            rank_radio_map.put(3, binding_card_selector.radio3);
+            rank_radio_map.put(4, binding_card_selector.radio4);
+            rank_radio_map.put(5, binding_card_selector.radio5);
+            rank_radio_map.put(6, binding_card_selector.radio6);
+            rank_radio_map.put(7, binding_card_selector.radio7);
+            rank_radio_map.put(8, binding_card_selector.radio8);
+            rank_radio_map.put(9, binding_card_selector.radio9);
+            rank_radio_map.put(10, binding_card_selector.radio10);
+            rank_radio_map.put(11, binding_card_selector.radio11);
+            rank_radio_map.put(12, binding_card_selector.radio12);
+            rank_radio_map.put(13, binding_card_selector.radio13);
+            rank_radio_map.put(14, binding_card_selector.radio14);
+
+            suit_radio_map.put(1, binding_card_selector.radioDiamond);
+            suit_radio_map.put(2, binding_card_selector.radioClub);
+            suit_radio_map.put(3, binding_card_selector.radioHeart);
+            suit_radio_map.put(4, binding_card_selector.radioSpade);
 
             binding_card_selector.radioGroupSuit.setOnCheckedChangeListener((group, checkedId) -> {
                 if(rank_checked_id != -1) {
                     card_selected(
-                        convert_id_to_number(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
-                        convert_id_to_number(rank_checked_id)
+                        radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
+                        radio_id_number_map.get(rank_checked_id)
                     );
                 }
                 else{
-                    for (RadioButton r : rank_radio_array) {
+                    for (RadioButton r : rank_radio_map.values()) {
                         r.setVisibility(View.VISIBLE);
                     }
 
                     for (int row = 0; row <= players_remaining_no; row++) {
                         for (int[] card : cards[row]) {
-                            if(card[0] == convert_id_to_number(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId())){
-                                hide_rank_radio_button(card[1]);
+                            if(card[0] == radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId())){
+                                Objects.requireNonNull(rank_radio_map.get(card[1])).setVisibility(View.INVISIBLE);
                             }
                         }
                     }
                 }
             });
 
-            for (RadioButton r : rank_radio_array) {
+            for (RadioButton r : rank_radio_map.values()) {
                 r.setOnClickListener(rank_listener);
             }
 
@@ -253,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
 
             rank_checked_id = rank_input.getId();
 
-            for (RadioButton r : rank_radio_array) {
+            for (RadioButton r : rank_radio_map.values()) {
                 r.setChecked(false);
             }
 
@@ -261,8 +307,8 @@ public class MainActivity extends AppCompatActivity {
 
             if(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId() != -1) {
                 card_selected(
-                    convert_id_to_number(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
-                    convert_id_to_number(rank_checked_id)
+                    radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
+                    radio_id_number_map.get(rank_checked_id)
                 );
             }
             else{
@@ -273,8 +319,8 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int row = 0; row <= players_remaining_no; row++) {
                     for (int[] card : cards[row]) {
-                        if(card[1] == convert_id_to_number(rank_checked_id)){
-                            hide_suit_radio_button(card[0]);
+                        if(card[1] == radio_id_number_map.get(rank_checked_id)){
+                            Objects.requireNonNull(suit_radio_map.get(card[0])).setVisibility(View.INVISIBLE);
                         }
                     }
                 }
@@ -283,11 +329,11 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void set_card(ImageButton card_button, int suit, int rank) {
-        int row_idx = Objects.requireNonNull(card_id_position_map.get(card_button.getId()))[0];
-        int card_idx = Objects.requireNonNull(card_id_position_map.get(card_button.getId()))[1];
-        cards[row_idx][card_idx][0] = suit;
-        cards[row_idx][card_idx][1] = rank;
-        card_button.setImageResource(get_card_id(suit, rank));
+        List<Integer> position = cardPositionBiMap.inverse().get(card_button);
+        assert position != null;
+        cards[position.get(0)][position.get(1)][0] = suit;
+        cards[position.get(0)][position.get(1)][1] = rank;
+        card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
     }
 
     public void card_selected(int suit, int rank) {
@@ -295,67 +341,6 @@ public class MainActivity extends AppCompatActivity {
         rank_checked_id = -1;
         dialog.dismiss();
         calculate_odds();
-    }
-
-    public void hide_rank_radio_button(int rank_no) {
-        switch(rank_no) {
-            case 2:
-                binding_card_selector.radio2.setVisibility(View.INVISIBLE);
-                break;
-            case 3:
-                binding_card_selector.radio3.setVisibility(View.INVISIBLE);
-                break;
-            case 4:
-                binding_card_selector.radio4.setVisibility(View.INVISIBLE);
-                break;
-            case 5:
-                binding_card_selector.radio5.setVisibility(View.INVISIBLE);
-                break;
-            case 6:
-                binding_card_selector.radio6.setVisibility(View.INVISIBLE);
-                break;
-            case 7:
-                binding_card_selector.radio7.setVisibility(View.INVISIBLE);
-                break;
-            case 8:
-                binding_card_selector.radio8.setVisibility(View.INVISIBLE);
-                break;
-            case 9:
-                binding_card_selector.radio9.setVisibility(View.INVISIBLE);
-                break;
-            case 10:
-                binding_card_selector.radio10.setVisibility(View.INVISIBLE);
-                break;
-            case 11:
-                binding_card_selector.radio11.setVisibility(View.INVISIBLE);
-                break;
-            case 12:
-                binding_card_selector.radio12.setVisibility(View.INVISIBLE);
-                break;
-            case 13:
-                binding_card_selector.radio13.setVisibility(View.INVISIBLE);
-                break;
-            case 14:
-                binding_card_selector.radio14.setVisibility(View.INVISIBLE);
-                break;
-        }
-    }
-
-    public void hide_suit_radio_button(int suit_no) {
-        switch(suit_no) {
-            case 1:
-                binding_card_selector.radioDiamond.setVisibility(View.INVISIBLE);
-                break;
-            case 2:
-                binding_card_selector.radioClub.setVisibility(View.INVISIBLE);
-                break;
-            case 3:
-                binding_card_selector.radioHeart.setVisibility(View.INVISIBLE);
-                break;
-            case 4:
-                binding_card_selector.radioSpade.setVisibility(View.INVISIBLE);
-                break;
-        }
     }
 
     private void calculate_odds() {
@@ -392,177 +377,4 @@ public class MainActivity extends AppCompatActivity {
             calc_obj.exact_calc(cards, players_remaining_no, new FinalUpdate(this, calc_obj));
         } catch (InterruptedException ignored) { }
     };
-
-    public int convert_id_to_number(int checkedRadioButtonId) {
-        if (checkedRadioButtonId == R.id.radio_diamond) {
-            return 1;
-        }
-        else if (checkedRadioButtonId == R.id.radio_club || checkedRadioButtonId == R.id.radio_2) {
-            return 2;
-        }
-        else if (checkedRadioButtonId == R.id.radio_heart || checkedRadioButtonId == R.id.radio_3) {
-            return 3;
-        }
-        else if (checkedRadioButtonId == R.id.radio_spade || checkedRadioButtonId == R.id.radio_4) {
-            return 4;
-        }
-        else if (checkedRadioButtonId == R.id.radio_5) {
-            return 5;
-        }
-        else if (checkedRadioButtonId == R.id.radio_6) {
-            return 6;
-        }
-        else if (checkedRadioButtonId == R.id.radio_7) {
-            return 7;
-        }
-        else if (checkedRadioButtonId == R.id.radio_8) {
-            return 8;
-        }
-        else if (checkedRadioButtonId == R.id.radio_9) {
-            return 9;
-        }
-        else if (checkedRadioButtonId == R.id.radio_10) {
-            return 10;
-        }
-        else if (checkedRadioButtonId == R.id.radio_11) {
-            return 11;
-        }
-        else if (checkedRadioButtonId == R.id.radio_12) {
-            return 12;
-        }
-        else if (checkedRadioButtonId == R.id.radio_13) {
-            return 13;
-        }
-        else if (checkedRadioButtonId == R.id.radio_14) {
-            return 14;
-        }
-
-        return checkedRadioButtonId;
-    }
-
-    private int get_card_id(int suit, int rank) {
-        switch(suit) {
-            case 0:
-                return R.drawable.unknown_button;
-            case 1:
-                switch(rank) {
-                    case 2:
-                        return R.drawable.d2_button;
-                    case 3:
-                        return R.drawable.d3_button;
-                    case 4:
-                        return R.drawable.d4_button;
-                    case 5:
-                        return R.drawable.d5_button;
-                    case 6:
-                        return R.drawable.d6_button;
-                    case 7:
-                        return R.drawable.d7_button;
-                    case 8:
-                        return R.drawable.d8_button;
-                    case 9:
-                        return R.drawable.d9_button;
-                    case 10:
-                        return R.drawable.d10_button;
-                    case 11:
-                        return R.drawable.d11_button;
-                    case 12:
-                        return R.drawable.d12_button;
-                    case 13:
-                        return R.drawable.d13_button;
-                    case 14:
-                        return R.drawable.d14_button;
-                }
-            case 2:
-                switch(rank) {
-                    case 2:
-                        return R.drawable.c2_button;
-                    case 3:
-                        return R.drawable.c3_button;
-                    case 4:
-                        return R.drawable.c4_button;
-                    case 5:
-                        return R.drawable.c5_button;
-                    case 6:
-                        return R.drawable.c6_button;
-                    case 7:
-                        return R.drawable.c7_button;
-                    case 8:
-                        return R.drawable.c8_button;
-                    case 9:
-                        return R.drawable.c9_button;
-                    case 10:
-                        return R.drawable.c10_button;
-                    case 11:
-                        return R.drawable.c11_button;
-                    case 12:
-                        return R.drawable.c12_button;
-                    case 13:
-                        return R.drawable.c13_button;
-                    case 14:
-                        return R.drawable.c14_button;
-                }
-            case 3:
-                switch(rank) {
-                    case 2:
-                        return R.drawable.h2_button;
-                    case 3:
-                        return R.drawable.h3_button;
-                    case 4:
-                        return R.drawable.h4_button;
-                    case 5:
-                        return R.drawable.h5_button;
-                    case 6:
-                        return R.drawable.h6_button;
-                    case 7:
-                        return R.drawable.h7_button;
-                    case 8:
-                        return R.drawable.h8_button;
-                    case 9:
-                        return R.drawable.h9_button;
-                    case 10:
-                        return R.drawable.h10_button;
-                    case 11:
-                        return R.drawable.h11_button;
-                    case 12:
-                        return R.drawable.h12_button;
-                    case 13:
-                        return R.drawable.h13_button;
-                    case 14:
-                        return R.drawable.h14_button;
-                }
-            case 4:
-                switch(rank) {
-                    case 2:
-                        return R.drawable.s2_button;
-                    case 3:
-                        return R.drawable.s3_button;
-                    case 4:
-                        return R.drawable.s4_button;
-                    case 5:
-                        return R.drawable.s5_button;
-                    case 6:
-                        return R.drawable.s6_button;
-                    case 7:
-                        return R.drawable.s7_button;
-                    case 8:
-                        return R.drawable.s8_button;
-                    case 9:
-                        return R.drawable.s9_button;
-                    case 10:
-                        return R.drawable.s10_button;
-                    case 11:
-                        return R.drawable.s11_button;
-                    case 12:
-                        return R.drawable.s12_button;
-                    case 13:
-                        return R.drawable.s13_button;
-                    case 14:
-                        return R.drawable.s14_button;
-                }
-        }
-
-        return 0;
-    }
-
 }
