@@ -2,6 +2,8 @@ package com.leslie.cjpokeroddscalculator;
 
 import android.graphics.Color;
 
+import com.leslie.cjpokeroddscalculator.calculation.Calculation;
+
 public class OutputResult {
     public Calculation calcObj;
     public MainActivity mainActivity;

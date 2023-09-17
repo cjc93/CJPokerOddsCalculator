@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator;
 
+import com.leslie.cjpokeroddscalculator.calculation.Calculation;
+
 public class LiveUpdate extends OutputResult {
     private long last_update_time;
 

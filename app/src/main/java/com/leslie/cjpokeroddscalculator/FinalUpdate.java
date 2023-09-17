@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator;
 
+import com.leslie.cjpokeroddscalculator.calculation.Calculation;
+
 public class FinalUpdate extends OutputResult {
     private long start_time;
     private boolean is_starting_period;

@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
+import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
 import com.leslie.cjpokeroddscalculator.databinding.CardselectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
