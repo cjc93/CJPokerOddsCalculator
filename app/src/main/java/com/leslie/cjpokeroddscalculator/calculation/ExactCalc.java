@@ -1,4 +1,6 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.calculation;
+
+import com.leslie.cjpokeroddscalculator.OutputResult;
 
 public class ExactCalc extends Calculation {
     public OutputResult outputResultObj;
