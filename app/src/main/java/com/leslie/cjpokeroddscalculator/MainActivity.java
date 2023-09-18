@@ -1,6 +1,5 @@
 package com.leslie.cjpokeroddscalculator;
 
-import android.app.Dialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,36 +15,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
-import com.leslie.cjpokeroddscalculator.databinding.CardselectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import com.google.common.collect.HashBiMap;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
-    private CardselectorBinding binding_card_selector;
 
-    private ImageButton selector_input;
-    private Dialog dialog;
+    private ImageButton selected_card_button = null;
+    private final int[] selected_card_position = new int[2];
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
-    int players_remaining_no = 2, rank_checked_id = -1;
+    int players_remaining_no = 2;
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
     public TextView[] win_array = new TextView[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     HashMap<Button, Integer> remove_row_map = new HashMap<>();
-    HashMap<Integer, RadioButton> rank_radio_map = new HashMap<>();
-    HashMap<Integer, RadioButton> suit_radio_map = new HashMap<>();
-    HashMap<Integer, Integer> radio_id_number_map = new HashMap<>();
     HashMap<Integer, HashMap<Integer, Integer>> suit_rank_drawable_map = new HashMap<>();
+    HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
     int[][][] cards = new int[11][][];
 
@@ -61,22 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         initialise_variables();
 
-        for (int i = 0; i < 10; i++) {
-            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
-
-            player_row_array[i] = binding_player_row.getRoot();
-            win_array[i] = binding_player_row.win;
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
-            remove_row_map.put(binding_player_row.remove, i + 1);
-
-            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            binding_player_row.remove.setOnClickListener(remove_player_listener);
-        }
-
-        for (int i = 2; i < 10; i++) {
-            player_row_array[i].setVisibility(View.GONE);
-        }
+        generate_main_layout();
 
         for (ImageButton b : cardPositionBiMap.values()) {
             b.setOnClickListener(selector_listener);
@@ -95,12 +73,67 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.clear.setOnClickListener(v -> {
-            for (ImageButton b : cardPositionBiMap.values()) {
-                set_card(b, 0, 0);
+            for (List<Integer> position : cardPositionBiMap.keySet()) {
+                set_card_value(position.get(0), position.get(1), 0, 0);
             }
+
+            set_selected_card(1, 0);
 
             calculate_odds();
         });
+
+        binding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+    }
+
+    private void generate_main_layout() {
+        for (int i = 0; i < 10; i++) {
+            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
+
+            player_row_array[i] = binding_player_row.getRoot();
+            win_array[i] = binding_player_row.win;
+            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
+            remove_row_map.put(binding_player_row.remove, i + 1);
+
+            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
+            binding_player_row.remove.setOnClickListener(remove_player_listener);
+        }
+
+        for (int i = 2; i < 10; i++) {
+            player_row_array[i].setVisibility(View.GONE);
+        }
+
+        set_selected_card(1, 0);
+
+        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            0,
+            1.0f
+        );
+
+        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
+            0,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            1.0f
+        );
+
+        for (int suit = 1; suit <= 4; suit++) {
+            LinearLayout row = new LinearLayout(this);
+            row.setLayoutParams(rowParam);
+
+            for (int rank = 2; rank <= 14; rank++) {
+                ImageButton b = new ImageButton(this);
+                b.setLayoutParams(buttonParam);
+                b.setBackgroundResource(0);
+                b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+                b.setScaleType(ImageButton.ScaleType.FIT_XY);
+                b.setPadding(0, 0, 0, 0);
+                b.setOnClickListener(input_card_listener);
+                row.addView(b);
+                input_suit_rank_map.put(b, Arrays.asList(suit, rank));
+            }
+            binding.inputCards.addView(row);
+        }
     }
 
     private void initialise_variables() {
@@ -115,24 +148,6 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
-
-        radio_id_number_map.put(R.id.radio_diamond, 1);
-        radio_id_number_map.put(R.id.radio_club, 2);
-        radio_id_number_map.put(R.id.radio_heart, 3);
-        radio_id_number_map.put(R.id.radio_spade, 4);
-        radio_id_number_map.put(R.id.radio_2, 2);
-        radio_id_number_map.put(R.id.radio_3, 3);
-        radio_id_number_map.put(R.id.radio_4, 4);
-        radio_id_number_map.put(R.id.radio_5, 5);
-        radio_id_number_map.put(R.id.radio_6, 6);
-        radio_id_number_map.put(R.id.radio_7, 7);
-        radio_id_number_map.put(R.id.radio_8, 8);
-        radio_id_number_map.put(R.id.radio_9, 9);
-        radio_id_number_map.put(R.id.radio_10, 10);
-        radio_id_number_map.put(R.id.radio_11, 11);
-        radio_id_number_map.put(R.id.radio_12, 12);
-        radio_id_number_map.put(R.id.radio_13, 13);
-        radio_id_number_map.put(R.id.radio_14, 14);
 
         HashMap<Integer, Integer> temp_map = new HashMap<>();
         temp_map.put(0, R.drawable.unknown_button);
@@ -215,12 +230,16 @@ public class MainActivity extends AppCompatActivity {
                 player_row_array[players_remaining_no].setVisibility(View.GONE);
 
                 for (int i = player_remove_number; i <= players_remaining_no; i++) {
-                    set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(i, 0))), cards[i + 1][0][0], cards[i + 1][0][1]);
-                    set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(i, 1))), cards[i + 1][1][0], cards[i + 1][1][1]);
+                    set_card_value(i, 0, cards[i + 1][0][0], cards[i + 1][0][1]);
+                    set_card_value(i, 1, cards[i + 1][1][0], cards[i + 1][1][1]);
                 }
 
-                set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(players_remaining_no + 1, 0))), 0, 0);
-                set_card(Objects.requireNonNull(cardPositionBiMap.get(Arrays.asList(players_remaining_no + 1, 1))), 0, 0);
+                set_card_value(players_remaining_no + 1, 0, 0, 0);
+                set_card_value(players_remaining_no + 1, 1, 0, 0);
+
+                if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
+                    set_selected_card(selected_card_position[0] - 1, selected_card_position[1]);
+                }
 
                 calculate_odds();
             }
@@ -230,118 +249,64 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private final View.OnClickListener selector_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            selector_input = (ImageButton) v;
-
-            binding_card_selector = CardselectorBinding.inflate(LayoutInflater.from(MainActivity.this));
-
-            dialog = new Dialog(MainActivity.this);
-            dialog.setContentView(binding_card_selector.getRoot());
-            dialog.setTitle("Select Card");
-            dialog.setCancelable(true);
-
-            rank_checked_id = -1;
-
-            rank_radio_map.put(2, binding_card_selector.radio2);
-            rank_radio_map.put(3, binding_card_selector.radio3);
-            rank_radio_map.put(4, binding_card_selector.radio4);
-            rank_radio_map.put(5, binding_card_selector.radio5);
-            rank_radio_map.put(6, binding_card_selector.radio6);
-            rank_radio_map.put(7, binding_card_selector.radio7);
-            rank_radio_map.put(8, binding_card_selector.radio8);
-            rank_radio_map.put(9, binding_card_selector.radio9);
-            rank_radio_map.put(10, binding_card_selector.radio10);
-            rank_radio_map.put(11, binding_card_selector.radio11);
-            rank_radio_map.put(12, binding_card_selector.radio12);
-            rank_radio_map.put(13, binding_card_selector.radio13);
-            rank_radio_map.put(14, binding_card_selector.radio14);
-
-            suit_radio_map.put(1, binding_card_selector.radioDiamond);
-            suit_radio_map.put(2, binding_card_selector.radioClub);
-            suit_radio_map.put(3, binding_card_selector.radioHeart);
-            suit_radio_map.put(4, binding_card_selector.radioSpade);
-
-            binding_card_selector.radioGroupSuit.setOnCheckedChangeListener((group, checkedId) -> {
-                if(rank_checked_id != -1) {
-                    card_selected(
-                        radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
-                        radio_id_number_map.get(rank_checked_id)
-                    );
-                }
-                else{
-                    for (RadioButton r : rank_radio_map.values()) {
-                        r.setVisibility(View.VISIBLE);
-                    }
-
-                    for (int row = 0; row <= players_remaining_no; row++) {
-                        for (int[] card : cards[row]) {
-                            if(card[0] == radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId())){
-                                Objects.requireNonNull(rank_radio_map.get(card[1])).setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }
-                }
-            });
-
-            for (RadioButton r : rank_radio_map.values()) {
-                r.setOnClickListener(rank_listener);
-            }
-
-            binding_card_selector.buttonUnknown.setOnClickListener(v1 -> card_selected(0, 0));
-
-            dialog.show();
-        }
-    };
-
-    private final View.OnClickListener rank_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-
-            final RadioButton rank_input = (RadioButton) v;
-
-            rank_checked_id = rank_input.getId();
-
-            for (RadioButton r : rank_radio_map.values()) {
-                r.setChecked(false);
-            }
-
-            rank_input.setChecked(true);
-
-            if(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId() != -1) {
-                card_selected(
-                    radio_id_number_map.get(binding_card_selector.radioGroupSuit.getCheckedRadioButtonId()),
-                    radio_id_number_map.get(rank_checked_id)
-                );
-            }
-            else{
-                binding_card_selector.radioDiamond.setVisibility(View.VISIBLE);
-                binding_card_selector.radioClub.setVisibility(View.VISIBLE);
-                binding_card_selector.radioHeart.setVisibility(View.VISIBLE);
-                binding_card_selector.radioSpade.setVisibility(View.VISIBLE);
-
-                for (int row = 0; row <= players_remaining_no; row++) {
-                    for (int[] card : cards[row]) {
-                        if(card[1] == radio_id_number_map.get(rank_checked_id)){
-                            Objects.requireNonNull(suit_radio_map.get(card[0])).setVisibility(View.INVISIBLE);
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    public void set_card(ImageButton card_button, int suit, int rank) {
-        List<Integer> position = cardPositionBiMap.inverse().get(card_button);
+    private final View.OnClickListener selector_listener = v -> {
+        List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);
         assert position != null;
-        cards[position.get(0)][position.get(1)][0] = suit;
-        cards[position.get(0)][position.get(1)][1] = rank;
+        set_selected_card(position.get(0), position.get(1));
+    };
+
+    private final View.OnClickListener input_card_listener = v -> {
+        ImageButton card_input = (ImageButton) v;
+        card_input.setVisibility(View.INVISIBLE);
+
+        List<Integer> suit_rank_list = input_suit_rank_map.get(card_input);
+        assert suit_rank_list != null;
+        set_value_to_selected_card(suit_rank_list.get(0), suit_rank_list.get(1));
+    };
+
+    private void set_next_selected_card() {
+        if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
+            set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
+        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == players_remaining_no) && selected_card_position[1] == 1) {
+            set_selected_card(0, 0);
+        } else {
+            set_selected_card(selected_card_position[0] + 1, 0);
+        }
+    }
+
+    private void set_selected_card(int row_idx, int card_idx) {
+        if (selected_card_button != null) {
+            selected_card_button.setBackgroundResource(0);
+        }
+
+        selected_card_position[0] = row_idx;
+        selected_card_position[1] = card_idx;
+
+        selected_card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
+        assert selected_card_button != null;
+        selected_card_button.setBackgroundResource(R.drawable.border_selector);
+    }
+
+    public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
+        int[] suit_rank_array = cards[row_idx][card_idx];
+
+        if (suit_rank_array[0] != 0) {
+            ImageButton prev_card = input_suit_rank_map.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
+            assert prev_card != null;
+            prev_card.setVisibility(View.VISIBLE);
+        }
+
+        cards[row_idx][card_idx][0] = suit;
+        cards[row_idx][card_idx][1] = rank;
+
+        ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
+        assert card_button != null;
         card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
     }
 
-    public void card_selected(int suit, int rank) {
-        set_card(selector_input, suit, rank);
-        rank_checked_id = -1;
-        dialog.dismiss();
+    public void set_value_to_selected_card(int suit, int rank) {
+        set_card_value(selected_card_position[0], selected_card_position[1], suit, rank);
+        set_next_selected_card();
         calculate_odds();
     }
 

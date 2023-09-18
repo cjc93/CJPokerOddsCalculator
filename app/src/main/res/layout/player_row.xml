@@ -37,7 +37,8 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/card1" />
+                android:contentDescription="@string/card1"
+                android:padding="2dp" />
 
             <ImageButton
                 android:id="@+id/card2"
@@ -48,7 +49,8 @@
                 android:layout_weight="1"
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
-                android:contentDescription="@string/card2" />
+                android:contentDescription="@string/card2"
+                android:padding="2dp" />
 
         </LinearLayout>
 
