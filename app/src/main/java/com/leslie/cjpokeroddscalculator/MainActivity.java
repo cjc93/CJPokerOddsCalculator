@@ -1,6 +1,7 @@
 package com.leslie.cjpokeroddscalculator;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             set_selected_card(1, 0);
+
+            binding.scrollView.post(() -> binding.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
         });
@@ -271,6 +274,16 @@ public class MainActivity extends AppCompatActivity {
             set_selected_card(0, 0);
         } else {
             set_selected_card(selected_card_position[0] + 1, 0);
+        }
+
+        Rect rect = new Rect();
+        if(!selected_card_button.getGlobalVisibleRect(rect) || selected_card_button.getHeight() != rect.height() ) {
+            binding.scrollView.post(
+                () -> binding.scrollView.smoothScrollTo(
+                    0,
+                    ((LinearLayout) selected_card_button.getParent().getParent().getParent()).getBottom() - binding.scrollView.getHeight()
+                )
+            );
         }
     }
 
