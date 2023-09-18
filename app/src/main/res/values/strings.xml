@@ -17,19 +17,6 @@
 
     <string name="add_player">Add Player</string>
     <string name="clear">Clear</string>
-    <string name="_2">2</string>
-    <string name="_3">3</string>
-    <string name="_4">4</string>
-    <string name="_5">5</string>
-    <string name="_6">6</string>
-    <string name="_7">7</string>
-    <string name="_8">8</string>
-    <string name="_9">9</string>
-    <string name="_10">10</string>
-    <string name="j">J</string>
-    <string name="q">Q</string>
-    <string name="k">K</string>
-    <string name="a">A</string>
     <string name="unknown_card">Unknown Card</string>
     <string name="card1">Card1</string>
     <string name="card2">Card2</string>
