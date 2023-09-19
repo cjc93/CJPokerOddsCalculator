@@ -3,21 +3,21 @@
     <!-- Strings used for fragments for navigation -->
 
     <string name="players_remaining">Players remaining: %d</string>
-    <string name="win_perc_empty">Win%:</string>
-    <string name="win_perc_populated">Win%%: %.1f%%</string>
+    <string name="win_perc_empty"></string>
+    <string name="win_perc_populated">Win: %.1f%%</string>
     <string name="flop">Flop</string>
     <string name="flop1">Flop1</string>
     <string name="flop2">Flop2</string>
     <string name="flop3">Flop3</string>
     <string name="turn">Turn</string>
     <string name="river">River</string>
-    <string name="remove_player">Remove Player</string>
+    <string name="remove_player">X</string>
 
     <string name="player">Player %d</string>
 
-    <string name="add_player">Add Player</string>
+    <string name="add_player">+ Player</string>
     <string name="clear">Clear</string>
-    <string name="unknown_card">Unknown Card</string>
+    <string name="unknown_card">\?</string>
     <string name="card1">Card1</string>
     <string name="card2">Card2</string>
 </resources>

@@ -50,12 +50,14 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-
+        
         initialise_variables();
 
         generate_main_layout();
+
+        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+        win_array[0].setText(getString(R.string.win_perc_populated, 50.0));
+        win_array[1].setText(getString(R.string.win_perc_populated, 50.0));
 
         for (ImageButton b : cardPositionBiMap.values()) {
             b.setOnClickListener(selector_listener);
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 b.setBackgroundResource(0);
                 b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
-                b.setPadding(0, 0, 0, 0);
+                b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
                 row.addView(b);
                 input_suit_rank_map.put(b, Arrays.asList(suit, rank));
