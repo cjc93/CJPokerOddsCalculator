@@ -9,66 +9,86 @@
 
     <LinearLayout
         android:id="@+id/top_row"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:baselineAligned="false" >
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false" >
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+
+            <TextView
+                android:text="@string/flop"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#696969" />
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3">
-
-                <TextView
-                    android:text="@string/flop"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
 
                     <ImageButton
                         android:id="@+id/flop1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/unknown_button"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/flop1"
                         android:padding="5dp" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
                     <ImageButton
                         android:id="@+id/flop2"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/unknown_button"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/flop2"
                         android:padding="5dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
 
                     <ImageButton
                         android:id="@+id/flop3"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:src="@drawable/unknown_button"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/flop3"
                         android:padding="5dp" />
@@ -77,79 +97,84 @@
 
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1" >
+
+            <TextView
+                android:text="@string/turn"
+                android:gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#696969" />
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:text="@string/turn"
-                    android:gravity="center_horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
 
                 <ImageButton
                     android:id="@+id/turn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:src="@drawable/unknown_button"
                     android:layout_gravity="center"
-                    android:scaleType="fitXY"
+                    android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/turn"
                     android:padding="5dp" />
-
             </LinearLayout>
+        </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-                <TextView
-                    android:text="@string/river"
-                    android:gravity="center_horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
+            <TextView
+                android:text="@string/river"
+                android:gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#696969" />
 
-                <ImageButton
-                    android:id="@+id/river"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitXY"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/river"
-                    android:padding="5dp" />
-
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/river"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/unknown_button"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/river"
+                android:padding="5dp" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/playersremaining"
-            android:textSize="26sp"
-            android:text="@string/players_remaining"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/playersremaining"
+        android:textSize="26sp"
+        android:text="@string/players_remaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="69">
 
         <LinearLayout
             android:id="@+id/player_rows"
@@ -199,7 +224,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2" >
+        android:layout_weight="31" >
 
     </LinearLayout>
 
