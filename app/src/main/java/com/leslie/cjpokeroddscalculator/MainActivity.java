@@ -3,6 +3,7 @@ package com.leslie.cjpokeroddscalculator;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         initialise_variables();
 
         generate_main_layout();
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
     private void generate_main_layout() {
         for (int i = 0; i < 10; i++) {
             PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
-
             player_row_array[i] = binding_player_row.getRoot();
             win_array[i] = binding_player_row.win;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
@@ -102,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
             binding_player_row.playerText.setText(getString(R.string.player, i + 1));
             binding_player_row.remove.setOnClickListener(remove_player_listener);
+        }
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int cardHeight = displayMetrics.heightPixels / 9;
+        for (ImageButton card : cardPositionBiMap.values()) {
+            card.setMaxHeight(cardHeight);
         }
 
         for (int i = 2; i < 10; i++) {
@@ -283,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
             binding.scrollView.post(
                 () -> binding.scrollView.smoothScrollTo(
                     0,
-                    ((LinearLayout) selected_card_button.getParent().getParent().getParent()).getBottom() - binding.scrollView.getHeight()
+                    ((LinearLayout) selected_card_button.getParent().getParent().getParent().getParent().getParent()).getBottom() - binding.scrollView.getHeight()
                 )
             );
         }

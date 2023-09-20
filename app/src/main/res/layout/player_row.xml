@@ -21,7 +21,6 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_weight="2" >
 
             <TextView
@@ -35,31 +34,50 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
 
-                <ImageButton
-                    android:id="@+id/card1"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
                     android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/card1"
-                    android:padding="5dp" />
+                    android:gravity="center" >
 
-                <ImageButton
-                    android:id="@+id/card2"
-                    android:layout_width="wrap_content"
+                    <ImageButton
+                        android:id="@+id/card1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card1"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
                     android:layout_weight="1"
-                    android:scaleType="fitXY"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/card2"
-                    android:padding="5dp" />
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/card2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card2"
+                        android:padding="5dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
