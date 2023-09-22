@@ -119,34 +119,22 @@ public class Calculation {
 
     public static int[] game_judge(int[][][] all_cards, int players_remaining_no, int[] known_players) {
         int[] game_stats = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        int j, unknown_player_win = 0;
-        int[][] pre_sorted_cards = new int[5][2];
-        int[][] sorted_cards = new int[7][2];
+        int j;
         int[] best_hand = {0, 0, 0, 0, 0, 0};
-        int[] decision;
 
-        for(int i = 0; i < 5; i++) {
-            pre_sorted_cards[i][0] = all_cards[0][i][0];
-            pre_sorted_cards[i][1] = all_cards[0][i][1];
-        }
+        int[][] pre_sorted_cards = new int[][] {
+            {all_cards[0][0][0], all_cards[0][0][1]},
+            {all_cards[0][1][0], all_cards[0][1][1]},
+            {all_cards[0][2][0], all_cards[0][2][1]},
+            {all_cards[0][3][0], all_cards[0][3][1]},
+            {all_cards[0][4][0], all_cards[0][4][1]}
+        };
 
         insertion_srt(pre_sorted_cards, 5);
 
         for(int i = 1; i <= players_remaining_no; i++) {
             if(known_players[i - 1] == 1) {
-                for(j = 0; j < 5; j++) {
-                    sorted_cards[j][0] = pre_sorted_cards[j][0];
-                    sorted_cards[j][1] = pre_sorted_cards[j][1];
-                }
-
-                sorted_cards[5][0] = all_cards[i][0][0];
-                sorted_cards[5][1] = all_cards[i][0][1];
-                sorted_cards[6][0] = all_cards[i][1][0];
-                sorted_cards[6][1] = all_cards[i][1][1];
-
-                insertion_srt(sorted_cards, 7);
-
-                decision = decide_hand(best_hand, sorted_cards);
+                int[] decision = decide_hand_for_player(pre_sorted_cards, all_cards, i, best_hand);
 
                 for(j = 0; j < 6; j++) {
                     if(decision[j] > best_hand[j]) {
@@ -167,21 +155,10 @@ public class Calculation {
             }
         }
 
+        boolean unknown_player_win = false;
         for(int i = 1; i <= players_remaining_no; i++) {
             if(known_players[i - 1] == 0) {
-                for(j = 0; j < 5; j++) {
-                    sorted_cards[j][0] = pre_sorted_cards[j][0];
-                    sorted_cards[j][1] = pre_sorted_cards[j][1];
-                }
-
-                sorted_cards[5][0] = all_cards[i][0][0];
-                sorted_cards[5][1] = all_cards[i][0][1];
-                sorted_cards[6][0] = all_cards[i][1][0];
-                sorted_cards[6][1] = all_cards[i][1][1];
-
-                insertion_srt(sorted_cards, 7);
-
-                decision = decide_hand(best_hand, sorted_cards);
+                int[] decision = decide_hand_for_player(pre_sorted_cards, all_cards, i, best_hand);
 
                 for(j = 0; j < 6; j++) {
                     if(decision[j] > best_hand[j]) {
@@ -189,14 +166,14 @@ public class Calculation {
                             game_stats[k] = 0;
                         }
                         game_stats[i - 1] = 1;
-                        unknown_player_win = 1;
+                        unknown_player_win = true;
                         break;
                     } else if(decision[j] < best_hand[j]) {
                         break;
                     }
                 }
 
-                if(unknown_player_win == 1) {
+                if(unknown_player_win) {
                     break;
                 }
 
@@ -209,6 +186,21 @@ public class Calculation {
         return game_stats;
     }
 
+    private static int[] decide_hand_for_player(int[][] preSortedCards, int[][][] allCards, int player, int[] bestHand) {
+        int[][] sorted_cards = new int[][] {
+            {preSortedCards[0][0], preSortedCards[0][1]},
+            {preSortedCards[1][0], preSortedCards[1][1]},
+            {preSortedCards[2][0], preSortedCards[2][1]},
+            {preSortedCards[3][0], preSortedCards[3][1]},
+            {preSortedCards[4][0], preSortedCards[4][1]},
+            {allCards[player][0][0], allCards[player][0][1]},
+            {allCards[player][1][0], allCards[player][1][1]}
+        };
+
+        insertion_srt(sorted_cards, 7);
+
+        return decide_hand(bestHand, sorted_cards);
+    }
 
     private static void insertion_srt(int[][] pre_sorted_cards, int n) {
 
@@ -231,61 +223,45 @@ public class Calculation {
 
 
     private static int[] decide_hand(int[] best_hand, int[][] sorted_cards) {
-        int[] decision;
+        int[] decision = straight_flush(sorted_cards);
 
-        decision = straight_flush(sorted_cards);
-
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] == 9) {
+        if(decision[0] > 0 || best_hand[0] == 9) {
             return decision;
         }
 
         decision = four_of_a_kind(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 8) {
+        if(decision[0] > 0 || best_hand[0] >= 8) {
             return decision;
         }
 
         decision = full_house(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 7) {
+        if(decision[0] > 0 || best_hand[0] >= 7) {
             return decision;
         }
 
         decision = flush(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 6) {
+        if(decision[0] > 0 || best_hand[0] >= 6) {
             return decision;
         }
 
         decision = straight(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 5) {
+        if(decision[0] > 0 || best_hand[0] >= 5) {
             return decision;
         }
 
         decision = three_of_a_kind(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 4) {
+        if(decision[0] > 0 || best_hand[0] >= 4) {
             return decision;
         }
 
         decision = pairs(sorted_cards);
 
-        if(decision[0] > 0) {
-            return decision;
-        } else if(best_hand[0] >= 2) {
+        if(decision[0] > 0 || best_hand[0] >= 2) {
             return decision;
         }
 
@@ -296,16 +272,14 @@ public class Calculation {
 
 
     private static int[] high_card(int[][] sorted_cards) {
-        int[] decision = {0, 0, 0, 0, 0, 0};
-
-        decision[0] = 1;
-        decision[1] = sorted_cards[0][1];
-        decision[2] = sorted_cards[1][1];
-        decision[3] = sorted_cards[2][1];
-        decision[4] = sorted_cards[3][1];
-        decision[5] = sorted_cards[4][1];
-
-        return decision;
+        return new int[] {
+            1,
+            sorted_cards[0][1],
+            sorted_cards[1][1],
+            sorted_cards[2][1],
+            sorted_cards[3][1],
+            sorted_cards[4][1]
+        };
     }
 
 
@@ -381,13 +355,17 @@ public class Calculation {
 
     private static int[] straight(int[][] sorted_cards) {
         int[] decision = {0, 0, 0, 0, 0, 0};
-        int i, j, k;
+        int j, k;
 
-        for(i = 0; i <= 2; i++) {
+        for(int i = 0; i <= 2; i++) {
+            k = i + 1;
+            j1loop:
             for(j = 1; j <= 4; j++ ) {
-                for(k = i + 1; k <= 6; k++) {
+                for( ; k <= 6; k++) {
                     if(sorted_cards[i][1] - j == sorted_cards[k][1]) {
                         break;
+                    } else if (sorted_cards[i][1] - j > sorted_cards[k][1]) {
+                        break j1loop;
                     }
                 }
                 if(k == 7) {
@@ -402,17 +380,21 @@ public class Calculation {
         }
 
         if(sorted_cards[0][1] == 14) {
-            for(j = 2; j <= 5; j++) {
-                for(k = 1; k <= 6; k++) {
+            k = 1;
+            j2loop:
+            for(j = 5; j >= 2; j--) {
+                for( ; k <= 6; k++) {
                     if(sorted_cards[k][1] == j) {
                         break;
+                    } else if (j > sorted_cards[k][1]) {
+                        break j2loop;
                     }
                 }
                 if(k == 7) {
                     break;
                 }
             }
-            if(j == 6) {
+            if(j == 1) {
                 decision[0] = 5;
                 decision[1] = 5;
                 return decision;
@@ -424,12 +406,11 @@ public class Calculation {
 
     private static int[] flush(int[][] sorted_cards) {
         int[] decision = {0, 0, 0, 0, 0, 0};
-        int i, j, count;
 
-        for(i = 0; i <= 2; i++) {
+        for(int i = 0; i <= 2; i++) {
             decision[1] = sorted_cards[i][1];
-            count = 1;
-            for(j = i + 1; j <= 6; j++) {
+            int count = 1;
+            for(int j = i + 1; j <= 6; j++) {
                 if(sorted_cards[i][0] == sorted_cards[j][0]) {
                     count++;
                     decision[count] = sorted_cards[j][1];
@@ -504,13 +485,17 @@ public class Calculation {
 
     private static int[] straight_flush(int[][] sorted_cards) {
         int[] decision = {0, 0, 0, 0, 0, 0};
-        int i, j, k;
+        int j, k;
 
-        for(i = 0; i <= 2; i++) {
+        for(int i = 0; i <= 2; i++) {
+            k = i + 1;
+            j1loop:
             for(j = 1; j <= 4; j++ ) {
-                for(k = i + 1; k <= 6; k++) {
+                for( ; k <= 6; k++) {
                     if(sorted_cards[i][0] == sorted_cards[k][0] && sorted_cards[i][1] - j == sorted_cards[k][1]) {
                         break;
+                    } else if (sorted_cards[i][1] - j > sorted_cards[k][1]) {
+                        break j1loop;
                     }
                 }
                 if(k == 7) {
@@ -524,19 +509,23 @@ public class Calculation {
             }
         }
 
-        for(i = 0; i <= 2; i++) {
+        for(int i = 0; i <= 2; i++) {
             if(sorted_cards[i][1] == 14) {
-                for(j = 2; j <= 5; j++) {
-                    for(k = i + 1; k <= 6; k++) {
+                k = i + 1;
+                j2loop:
+                for(j = 5; j >= 2; j--) {
+                    for( ; k <= 6; k++) {
                         if(sorted_cards[k][0] == sorted_cards[i][0] && sorted_cards[k][1] == j) {
                             break;
+                        } else if (j > sorted_cards[k][1]) {
+                            break j2loop;
                         }
                     }
                     if(k == 7) {
                         break;
                     }
                 }
-                if(j == 6) {
+                if(j == 1) {
                     decision[0] = 9;
                     decision[1] = 5;
                     return decision;
