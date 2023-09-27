@@ -26,7 +26,7 @@ import java.util.List;
 import com.google.common.collect.HashBiMap;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+    public ActivityMainBinding binding;
 
     private ImageButton selected_card_button = null;
     private final int[] selected_card_position = new int[2];
@@ -345,6 +345,8 @@ public class MainActivity extends AppCompatActivity {
             win_array[i].setText(R.string.win_perc_empty);
             win_array[i].setTextColor(Color.WHITE);
         }
+
+        binding.resDesc.setText(R.string.checking_combinations);
 
         monte_carlo_thread = new Thread(null, monte_carlo_proc);
         exact_calc_thread = new Thread(null, exact_calc_proc);
