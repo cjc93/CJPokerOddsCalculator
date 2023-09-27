@@ -44,7 +44,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIE
         0,
         callback,
         0.3,
-        0
+        2
     );
 
     eq.wait();
