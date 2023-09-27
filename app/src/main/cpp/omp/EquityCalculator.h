@@ -121,7 +121,7 @@ public:
 private:
     typedef XoroShiro128Plus Rng;
 
-    static const size_t MAX_LOOKUP_SIZE = 1000000;
+    static const size_t MAX_LOOKUP_SIZE = 10000;
     static const size_t MAX_COMBINED_RANGE_SIZE = 10000;
     static const uint64_t INFINITE = ~0ull;
 
