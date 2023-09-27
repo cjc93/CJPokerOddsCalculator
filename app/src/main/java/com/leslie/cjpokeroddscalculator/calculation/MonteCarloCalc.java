@@ -3,6 +3,7 @@ package com.leslie.cjpokeroddscalculator.calculation;
 import com.leslie.cjpokeroddscalculator.OutputResult;
 
 public class MonteCarloCalc extends Calculation{
+
     public void monteCarloCalc(int[][][] cards, int playersRemainingNo, OutputResult outputResultObj) throws InterruptedException {
         initialise_variables(cards, playersRemainingNo, outputResultObj);
 
