@@ -2,31 +2,27 @@ package com.leslie.cjpokeroddscalculator;
 
 import android.graphics.Color;
 
-import com.leslie.cjpokeroddscalculator.calculation.Calculation;
-
-public class OutputResult {
-    public Calculation calcObj;
+public abstract class OutputResult {
+    public Thread currentThread;
     public MainActivity mainActivity;
-    public OutputResult (MainActivity mainActivity, Calculation calcObj) {
+
+    public OutputResult (MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        this.calcObj = calcObj;
+        this.currentThread = Thread.currentThread();
     }
 
-    public void before_all_simulation() { }
-    public void after_every_simulation() throws InterruptedException { }
+    public abstract boolean during_simulations(double[]... result);
 
-    public void after_all_simulation() throws InterruptedException { }
+    public abstract void after_all_simulations(double[] result) throws InterruptedException;
 
-    public void update_win_perc() {
-        double[] equity_perc = calcObj.calc_equity_perc();
-
+    public void update_win_results(double[] result) {
         mainActivity.runOnUiThread(() -> {
             for(int i = 0; i < mainActivity.players_remaining_no; i++) {
-                mainActivity.win_array[i].setText(mainActivity.getString(R.string.win_perc_populated, equity_perc[i] * 100));
+                mainActivity.win_array[i].setText(mainActivity.getString(R.string.win_perc_populated, result[i] * 100));
 
-                if(equity_perc[i] > 1 / (double) mainActivity.players_remaining_no + 0.02) {
+                if(result[i] > 1 / (double) mainActivity.players_remaining_no + 0.02) {
                     mainActivity.win_array[i].setTextColor(Color.GREEN);
-                } else if (equity_perc[i] < 1 / (double) mainActivity.players_remaining_no - 0.02) {
+                } else if (result[i] < 1 / (double) mainActivity.players_remaining_no - 0.02) {
                     mainActivity.win_array[i].setTextColor(Color.RED);
                 } else {
                     mainActivity.win_array[i].setTextColor(Color.WHITE);
