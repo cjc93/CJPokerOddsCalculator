@@ -19,6 +19,9 @@ public class FinalUpdate extends OutputResult {
             mainActivity.monte_carlo_thread.interrupt();
         }
 
-        update_win_results(result);
+        mainActivity.runOnUiThread(() -> {
+            update_win_results(result);
+            mainActivity.binding.resDesc.setText(R.string.all_combinations_checked_result_is_exact);
+        });
     }
 }

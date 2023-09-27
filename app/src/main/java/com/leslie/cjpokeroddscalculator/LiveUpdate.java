@@ -11,16 +11,15 @@ public class LiveUpdate extends OutputResult {
             return false;
         }
 
-        update_win_results(result[0]);
+        mainActivity.runOnUiThread(() -> update_win_results(result[0]));
         return true;
     }
-
 
     public void after_all_simulations(double[] result) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
         }
 
-        update_win_results(result);
+        mainActivity.runOnUiThread(() -> update_win_results(result));
     }
 }
