@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
-    int players_remaining_no = 2;
+    public int players_remaining_no = 2;
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
     public TextView[] win_array = new TextView[10];
@@ -356,14 +356,14 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable monte_carlo_proc = () -> {
         try {
             MonteCarloCalc calc_obj = new MonteCarloCalc();
-            calc_obj.monte_carl_calc(cards, players_remaining_no, new LiveUpdate(this, calc_obj));
+            calc_obj.monteCarloCalc(cards, players_remaining_no, new LiveUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
             ExactCalc calc_obj = new ExactCalc();
-            calc_obj.exact_calc(cards, players_remaining_no, new FinalUpdate(this, calc_obj));
+            calc_obj.exactCalc(cards, players_remaining_no, new FinalUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 }

@@ -14,6 +14,11 @@ android {
         versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-O3 -std=c++11 -Wall -Wpedantic"
+            }
+        }
     }
 
     buildTypes {
@@ -29,6 +34,12 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
+    }
 }
 
 dependencies {
@@ -36,8 +47,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment:2.7.2")
-    implementation("androidx.navigation:navigation-ui:2.7.2")
+    implementation("androidx.navigation:navigation-fragment:2.7.3")
+    implementation("androidx.navigation:navigation-ui:2.7.3")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     implementation("com.google.guava:guava:27.0.1-android")
     testImplementation("junit:junit:4.13.2")

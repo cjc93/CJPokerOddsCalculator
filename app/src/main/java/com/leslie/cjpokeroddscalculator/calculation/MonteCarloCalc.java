@@ -2,46 +2,25 @@ package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.OutputResult;
 
-import java.util.Random;
-
 public class MonteCarloCalc extends Calculation{
-    static Random myRandom = new Random();
-    public void monte_carl_calc(int[][][] all_cards, int players_remaining_no, OutputResult output_result_obj) throws InterruptedException {
-        pre_simulation_calc(all_cards, players_remaining_no);
+    public void monteCarloCalc(int[][][] cards, int playersRemainingNo, OutputResult outputResultObj) throws InterruptedException {
+        initialise_variables(cards, playersRemainingNo, outputResultObj);
 
-        total_simulations = this.max_simulation;
+        String boardCards = convertBoardCardsToStr(cards[0]);
 
-        output_result_obj.before_all_simulation();
+        String[] playerCards = convertPlayerCardsToStr(cards, playersRemainingNo);
 
-        for(this.simulation_count = 1; simulation_count <= total_simulations; simulation_count++){
-            int[] random_numbers = random_no_generator(no_of_unknown_cards, no_of_known_cards, deck);
+        double[] result = nativeMonteCarloCalc(playerCards, boardCards);
 
-            scenario_calc(random_numbers);
+        result = average_unknown_equity(result);
 
-            output_result_obj.after_every_simulation();
-        }
-
-        output_result_obj.after_all_simulation();
+        outputResultObj.after_all_simulations(result);
     }
 
-    public static int[] random_no_generator(int no_of_unknown_cards, int no_of_known_cards, int[] deck) {
+    public native double[] nativeMonteCarloCalc(String[] cards, String boardCards);
 
-        int i, temp;
-        int[] random_numbers = new int[no_of_unknown_cards];
-        int[] deck2 = new int[52];
-
-        for(i = 0; i < 52; i++) {
-            deck2[i] = deck[i];
-        }
-
-        for(i = 0; i < no_of_unknown_cards; i++){
-            temp = myRandom.nextInt(52 - no_of_known_cards - i);
-            random_numbers[i] = deck2[temp];
-
-            deck2[temp] = deck2[51 - no_of_known_cards - i];
-        }
-
-        return random_numbers;
+    public boolean during_simulations(double[] result) {
+        result = average_unknown_equity(result);
+        return outputResultObj.during_simulations(result);
     }
-
 }
