@@ -21,5 +21,7 @@
     <string name="card1">Card1</string>
     <string name="card2">Card2</string>
     <string name="all_combinations_checked_result_is_exact">All combinations checked, result is exact.</string>
-    <string name="checking_combinations">Checking combinations...</string>
+    <string name="checking_combinations">Checking combinations…</string>
+    <string name="finished_checking_random_subset">Finished checking random subset.</string>
+    <string name="checking_random_subset">Checking random subset…</string>
 </resources>

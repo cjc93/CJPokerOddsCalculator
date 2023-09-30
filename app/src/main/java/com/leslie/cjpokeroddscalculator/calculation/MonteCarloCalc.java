@@ -11,17 +11,18 @@ public class MonteCarloCalc extends Calculation{
 
         String[] playerCards = convertPlayerCardsToStr(cards, playersRemainingNo);
 
-        double[] result = nativeMonteCarloCalc(playerCards, boardCards);
-
-        result = average_unknown_equity(result);
-
-        outputResultObj.after_all_simulations(result);
+        nativeMonteCarloCalc(playerCards, boardCards);
     }
 
-    public native double[] nativeMonteCarloCalc(String[] cards, String boardCards);
+    public native void nativeMonteCarloCalc(String[] cards, String boardCards);
 
     public boolean during_simulations(double[] result) {
         result = average_unknown_equity(result);
         return outputResultObj.during_simulations(result);
+    }
+
+    public void after_all_simulations(double[] result) {
+        result = average_unknown_equity(result);
+        outputResultObj.after_all_simulations(result);
     }
 }

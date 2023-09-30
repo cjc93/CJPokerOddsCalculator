@@ -11,16 +11,17 @@ public class ExactCalc extends Calculation {
 
         String[] playerCards = convertPlayerCardsToStr(cards, playersRemainingNo);
 
-        double[] result = nativeExactCalc(playerCards, boardCards);
-
-        result = average_unknown_equity(result);
-
-        outputResultObj.after_all_simulations(result);
+        nativeExactCalc(playerCards, boardCards);
     }
 
-    public native double[] nativeExactCalc(String[] cards, String boardCards);
+    public native void nativeExactCalc(String[] cards, String boardCards);
 
     public boolean during_simulations() {
         return outputResultObj.during_simulations();
+    }
+
+    public void after_all_simulations(double[] result, boolean isCancelled) {
+        result = average_unknown_equity(result);
+        outputResultObj.after_all_simulations(result, isCancelled);
     }
 }
