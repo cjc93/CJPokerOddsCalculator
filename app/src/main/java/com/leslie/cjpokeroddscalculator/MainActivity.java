@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
             win_array[i].setTextColor(Color.WHITE);
         }
 
-        binding.resDesc.setText(R.string.checking_combinations);
+        binding.resDesc.setText(R.string.checking_random_subset);
 
         monte_carlo_thread = new Thread(null, monte_carlo_proc);
         exact_calc_thread = new Thread(null, exact_calc_proc);

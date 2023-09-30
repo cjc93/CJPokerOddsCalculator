@@ -13,7 +13,7 @@ public abstract class OutputResult {
 
     public abstract boolean during_simulations(double[]... result);
 
-    public abstract void after_all_simulations(double[] result) throws InterruptedException;
+    public abstract void after_all_simulations(double[] result, boolean... isCancelled);
 
     public void update_win_results(double[] result) {
         for(int i = 0; i < mainActivity.players_remaining_no; i++) {

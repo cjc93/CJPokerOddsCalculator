@@ -10,26 +10,32 @@ std::string jstr_to_cppstring(JNIEnv *pEnv, jstring pJstring);
 jdoubleArray results_to_jdouble_array(JNIEnv *pEnv, omp::EquityCalculator::Results cpp_results);
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT void JNICALL
 Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
     std::vector<omp::CardRange> cardRangeVec = jstr_array_to_card_vec(env, cards);
 
     std::string board_cards_cpp = jstr_to_cppstring(env, board_cards);
 
     omp::EquityCalculator eq;
+    bool is_cancelled = false;
 
     JavaVM* jvm;
     env->GetJavaVM(&jvm);
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "()Z");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([DZ)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
-    auto callback = [&eq, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
+    auto callback = [&eq, &is_cancelled, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
         JNIEnv* myNewEnv;
         jvm->AttachCurrentThread(&myNewEnv, nullptr);
 
-        if (myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations) == JNI_FALSE) {
+        if ((1.0 / results.progress - 1.0) * results.time > 60.0) {
+            is_cancelled = true;
+        }
+
+        if ((myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations) == JNI_FALSE) || is_cancelled) {
             eq.stop();
         }
 
@@ -44,22 +50,22 @@ Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIE
         0,
         callback,
         0.3,
-        2
+        0
     );
 
     eq.wait();
     auto r = eq.getResults();
 
     jdoubleArray result = results_to_jdouble_array(env, r);
+    env->CallVoidMethod(thiz, mAfterAllSimulations, result, is_cancelled ? JNI_TRUE : JNI_FALSE);
+    env->DeleteLocalRef(result);
 
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
-
-    return result;
 }
 
 extern "C"
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT void JNICALL
 Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarloCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
     std::vector<omp::CardRange> cardRangeVec = jstr_array_to_card_vec(env, cards);
 
@@ -72,6 +78,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarl
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "([D)Z");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
@@ -104,11 +111,11 @@ Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarl
     auto r = eq.getResults();
 
     jdoubleArray result = results_to_jdouble_array(env, r);
+    env->CallVoidMethod(thiz, mAfterAllSimulations, result);
+    env->DeleteLocalRef(result);
 
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
-
-    return result;
 }
 
 jdoubleArray results_to_jdouble_array(JNIEnv *pEnv, omp::EquityCalculator::Results cpp_results) {

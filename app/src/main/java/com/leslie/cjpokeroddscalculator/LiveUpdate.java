@@ -15,11 +15,16 @@ public class LiveUpdate extends OutputResult {
         return true;
     }
 
-    public void after_all_simulations(double[] result) throws InterruptedException {
-        if (Thread.interrupted()) {
-            throw new InterruptedException();
+    public void after_all_simulations(double[] result, boolean... isCancelled) {
+        if (!Thread.interrupted()) {
+            if (mainActivity.exact_calc_thread.isAlive()) {
+                mainActivity.runOnUiThread(() -> update_win_results(result));
+            } else {
+                mainActivity.runOnUiThread(() -> {
+                    update_win_results(result);
+                    mainActivity.binding.resDesc.setText(R.string.finished_checking_random_subset);
+                });
+            }
         }
-
-        mainActivity.runOnUiThread(() -> update_win_results(result));
     }
 }
