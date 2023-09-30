@@ -11,9 +11,7 @@ public class FinalUpdate extends OutputResult {
             return false;
         }
 
-        mainActivity.runOnUiThread(() -> {
-            mainActivity.binding.resDesc.setText(R.string.checking_combinations);
-        });
+        mainActivity.runOnUiThread(() -> mainActivity.binding.resDesc.setText(R.string.checking_combinations));
 
         return true;
     }
@@ -22,9 +20,7 @@ public class FinalUpdate extends OutputResult {
         if (!Thread.interrupted()) {
             if (mainActivity.monte_carlo_thread.isAlive()) {
                 if (isCancelled[0]) {
-                    mainActivity.runOnUiThread(() -> {
-                        mainActivity.binding.resDesc.setText(R.string.checking_random_subset);
-                    });
+                    mainActivity.runOnUiThread(() -> mainActivity.binding.resDesc.setText(R.string.checking_random_subset));
                 } else {
                     mainActivity.monte_carlo_thread.interrupt();
                     mainActivity.runOnUiThread(() -> {
@@ -34,9 +30,7 @@ public class FinalUpdate extends OutputResult {
                 }
             } else {
                 if (isCancelled[0]) {
-                    mainActivity.runOnUiThread(() -> {
-                        mainActivity.binding.resDesc.setText(R.string.finished_checking_random_subset);
-                    });
+                    mainActivity.runOnUiThread(() -> mainActivity.binding.resDesc.setText(R.string.finished_checking_random_subset));
                 } else {
                     mainActivity.runOnUiThread(() -> {
                         update_win_results(result);
