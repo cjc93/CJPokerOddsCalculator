@@ -5,7 +5,9 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ import com.google.common.collect.HashBiMap;
 
 public class MainActivity extends AppCompatActivity {
     public ActivityMainBinding binding;
+    private long startClickTime;
 
     private ImageButton selected_card_button = null;
     private final int[] selected_card_position = new int[2];
@@ -81,14 +84,66 @@ public class MainActivity extends AppCompatActivity {
                 set_card_value(position.get(0), position.get(1), 0, 0);
             }
 
-            set_selected_card(1, 0);
-
             binding.scrollView.post(() -> binding.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
         });
 
         binding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            startClickTime = System.currentTimeMillis();
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
+                Rect outRect = new Rect();
+                boolean tapOnButton = false;
+
+                binding.bottomBar.getGlobalVisibleRect(outRect);
+                if (outRect.top < (int) event.getRawY()) {
+                    tapOnButton = true;
+                }
+
+                if (!tapOnButton) {
+                    for (ImageButton card : cardPositionBiMap.values()) {
+                        card.getGlobalVisibleRect(outRect);
+                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            tapOnButton = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!tapOnButton) {
+                    for (ImageButton card : cardPositionBiMap.values()) {
+                        card.getGlobalVisibleRect(outRect);
+                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            tapOnButton = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!tapOnButton) {
+                    for (Button b : remove_row_map.keySet()) {
+                        b.getGlobalVisibleRect(outRect);
+                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            tapOnButton = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!tapOnButton) {
+                    binding.inputCards.setVisibility(View.GONE);
+                    binding.buttonUnknown.setVisibility(View.GONE);
+                    selected_card_button.setBackgroundResource(0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
     }
 
     private void generate_main_layout() {
@@ -265,6 +320,8 @@ public class MainActivity extends AppCompatActivity {
         List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);
         assert position != null;
         set_selected_card(position.get(0), position.get(1));
+        binding.inputCards.setVisibility(View.VISIBLE);
+        binding.buttonUnknown.setVisibility(View.VISIBLE);
     };
 
     private final View.OnClickListener input_card_listener = v -> {

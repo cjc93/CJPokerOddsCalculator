@@ -209,11 +209,25 @@
         android:background="#2F3540" >
 
         <Button
+            android:id="@+id/addrange"
+            android:text="@string/range"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="14sp"
+            android:layout_weight="1" />
+
+        <Button
             android:id="@+id/addplayer"
             android:text="@string/add_player"
             android:gravity="center_vertical|center_horizontal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:maxLines="1"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="14sp"
             android:layout_weight="1" />
 
         <Button
