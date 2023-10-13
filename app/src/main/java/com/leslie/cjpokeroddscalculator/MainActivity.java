@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<Integer, HashMap<Integer, Integer>> suit_rank_drawable_map = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
-    int[][][] cards = new int[11][][];
+    CardRow[] cardRows = new CardRow[11];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,10 +204,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialise_variables() {
-        cards[0] = new int[][]{ {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0} };
+        cardRows[0] = new CardRow(5);
 
         for (int i = 1; i <= 10; i++) {
-            cards[i] = new int[][]{ {0, 0}, {0, 0} };
+            cardRows[i] = new CardRow(2);
         }
 
         cardPositionBiMap.put(Arrays.asList(0, 0), binding.flop1);
@@ -296,8 +296,8 @@ public class MainActivity extends AppCompatActivity {
             player_row_array[players_remaining_no].setVisibility(View.GONE);
 
             for (int i = player_remove_number; i <= players_remaining_no; i++) {
-                set_card_value(i, 0, cards[i + 1][0][0], cards[i + 1][0][1]);
-                set_card_value(i, 1, cards[i + 1][1][0], cards[i + 1][1][1]);
+                set_card_value(i, 0, cardRows[i + 1].cards[0][0], cardRows[i + 1].cards[0][1]);
+                set_card_value(i, 1, cardRows[i + 1].cards[1][0], cardRows[i + 1].cards[1][1]);
             }
 
             set_card_value(players_remaining_no + 1, 0, 0, 0);
@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
-        int[] suit_rank_array = cards[row_idx][card_idx];
+        int[] suit_rank_array = cardRows[row_idx].cards[card_idx];
 
         if (suit_rank_array[0] != 0) {
             ImageButton prev_card = input_suit_rank_map.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
@@ -370,8 +370,8 @@ public class MainActivity extends AppCompatActivity {
             prev_card.setVisibility(View.VISIBLE);
         }
 
-        cards[row_idx][card_idx][0] = suit;
-        cards[row_idx][card_idx][1] = rank;
+        cardRows[row_idx].cards[card_idx][0] = suit;
+        cardRows[row_idx].cards[card_idx][1] = rank;
 
         ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
         assert card_button != null;
@@ -410,14 +410,14 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable monte_carlo_proc = () -> {
         try {
             MonteCarloCalc calc_obj = new MonteCarloCalc();
-            calc_obj.monteCarloCalc(cards, players_remaining_no, new LiveUpdate(this));
+            calc_obj.monteCarloCalc(cardRows, players_remaining_no, new LiveUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
             ExactCalc calc_obj = new ExactCalc();
-            calc_obj.exactCalc(cards, players_remaining_no, new FinalUpdate(this));
+            calc_obj.exactCalc(cardRows, players_remaining_no, new FinalUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 }

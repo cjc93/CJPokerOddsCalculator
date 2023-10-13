@@ -1,15 +1,16 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
+import com.leslie.cjpokeroddscalculator.CardRow;
 import com.leslie.cjpokeroddscalculator.OutputResult;
 
 public class ExactCalc extends Calculation {
 
-    public void exactCalc(int[][][] cards, int playersRemainingNo, OutputResult outputResultObj) throws InterruptedException {
-        initialise_variables(cards, playersRemainingNo, outputResultObj);
+    public void exactCalc(CardRow[] cardRows, int playersRemainingNo, OutputResult outputResultObj) throws InterruptedException {
+        initialise_variables(cardRows, playersRemainingNo, outputResultObj);
 
-        String boardCards = convertBoardCardsToStr(cards[0]);
+        String boardCards = convertBoardCardsToStr(cardRows[0].cards);
 
-        String[] playerCards = convertPlayerCardsToStr(cards, playersRemainingNo);
+        String[] playerCards = convertPlayerCardsToStr(cardRows, playersRemainingNo);
 
         nativeExactCalc(playerCards, boardCards);
     }
