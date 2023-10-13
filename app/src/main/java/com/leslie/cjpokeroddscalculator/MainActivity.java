@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
     public TextView[] win_array = new TextView[10];
+    public ImageButton[] rangeButtons = new ImageButton[10];
+    public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     HashMap<Button, Integer> remove_row_map = new HashMap<>();
@@ -71,6 +73,22 @@ public class MainActivity extends AppCompatActivity {
             if(players_remaining_no < 10){
                 players_remaining_no++;
                 binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+                rangeButtons[players_remaining_no - 1].setVisibility(View.GONE);
+                twoCardsLayouts[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                calculate_odds();
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Max number of players is 10", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.addrange.setOnClickListener(v -> {
+            if(players_remaining_no < 10){
+                players_remaining_no++;
+                binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+                twoCardsLayouts[players_remaining_no - 1].setVisibility(View.GONE);
+                rangeButtons[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 calculate_odds();
             }
@@ -81,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.clear.setOnClickListener(v -> {
             for (List<Integer> position : cardPositionBiMap.keySet()) {
+                setInputCardVisible(position.get(0), position.get(1));
                 set_card_value(position.get(0), position.get(1), 0, 0);
             }
 
@@ -151,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
             PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
             player_row_array[i] = binding_player_row.getRoot();
             win_array[i] = binding_player_row.win;
+            rangeButtons[i] = binding_player_row.range;
+            twoCardsLayouts[i] = binding_player_row.twoCards;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
             remove_row_map.put(binding_player_row.remove, i + 1);
@@ -164,6 +185,10 @@ public class MainActivity extends AppCompatActivity {
         int cardHeight = displayMetrics.heightPixels / 9;
         for (ImageButton card : cardPositionBiMap.values()) {
             card.setMaxHeight(cardHeight);
+        }
+
+        for (ImageButton r : rangeButtons) {
+            r.setMaxHeight(cardHeight);
         }
 
         for (int i = 2; i < 10; i++) {
@@ -295,6 +320,10 @@ public class MainActivity extends AppCompatActivity {
             binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
             player_row_array[players_remaining_no].setVisibility(View.GONE);
 
+            for (int i = 0; i < 2; i++) {
+                setInputCardVisible(player_remove_number, i);
+            }
+
             for (int i = player_remove_number; i <= players_remaining_no; i++) {
                 set_card_value(i, 0, cardRows[i + 1].cards[0][0], cardRows[i + 1].cards[0][1]);
                 set_card_value(i, 1, cardRows[i + 1].cards[1][0], cardRows[i + 1].cards[1][1]);
@@ -362,14 +391,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
-        int[] suit_rank_array = cardRows[row_idx].cards[card_idx];
-
-        if (suit_rank_array[0] != 0) {
-            ImageButton prev_card = input_suit_rank_map.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
-            assert prev_card != null;
-            prev_card.setVisibility(View.VISIBLE);
-        }
-
         cardRows[row_idx].cards[card_idx][0] = suit;
         cardRows[row_idx].cards[card_idx][1] = rank;
 
@@ -379,10 +400,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void set_value_to_selected_card(int suit, int rank) {
+        setInputCardVisible(selected_card_position[0], selected_card_position[1]);
+
         set_card_value(selected_card_position[0], selected_card_position[1], suit, rank);
         set_next_selected_card();
         calculate_odds();
     }
+
+    public void setInputCardVisible(int row_idx, int card_idx) {
+        int[] suit_rank_array = cardRows[row_idx].cards[card_idx];
+
+        if (suit_rank_array[0] != 0) {
+            ImageButton card = input_suit_rank_map.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
+            assert card != null;
+            card.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     private void calculate_odds() {
         if (monte_carlo_thread != null) {

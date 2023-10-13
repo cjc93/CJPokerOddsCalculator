@@ -31,7 +31,21 @@
                 android:layout_height="wrap_content"
                 android:background="#696969" />
 
+            <ImageButton
+                android:id="@+id/range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/unknown_button"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/card1"
+                android:padding="5dp"
+                android:visibility="gone"/>
+
             <LinearLayout
+                android:id="@+id/two_cards"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
