@@ -291,28 +291,23 @@ public class MainActivity extends AppCompatActivity {
             final Button remove_input = (Button) v;
             int player_remove_number = remove_row_map.get(remove_input);
 
-            if(players_remaining_no > 2){
-                players_remaining_no--;
-                binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                player_row_array[players_remaining_no].setVisibility(View.GONE);
+            players_remaining_no--;
+            binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+            player_row_array[players_remaining_no].setVisibility(View.GONE);
 
-                for (int i = player_remove_number; i <= players_remaining_no; i++) {
-                    set_card_value(i, 0, cards[i + 1][0][0], cards[i + 1][0][1]);
-                    set_card_value(i, 1, cards[i + 1][1][0], cards[i + 1][1][1]);
-                }
-
-                set_card_value(players_remaining_no + 1, 0, 0, 0);
-                set_card_value(players_remaining_no + 1, 1, 0, 0);
-
-                if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
-                    set_selected_card(selected_card_position[0] - 1, selected_card_position[1]);
-                }
-
-                calculate_odds();
+            for (int i = player_remove_number; i <= players_remaining_no; i++) {
+                set_card_value(i, 0, cards[i + 1][0][0], cards[i + 1][0][1]);
+                set_card_value(i, 1, cards[i + 1][1][0], cards[i + 1][1][1]);
             }
-            else{
-                Toast.makeText(MainActivity.this, "Min number of players is 2", Toast.LENGTH_SHORT).show();
+
+            set_card_value(players_remaining_no + 1, 0, 0, 0);
+            set_card_value(players_remaining_no + 1, 1, 0, 0);
+
+            if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
+                set_selected_card(selected_card_position[0] - 1, selected_card_position[1]);
             }
+
+            calculate_odds();
         }
     };
 
