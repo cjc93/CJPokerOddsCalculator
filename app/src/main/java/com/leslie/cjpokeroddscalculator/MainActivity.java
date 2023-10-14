@@ -24,6 +24,7 @@ import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.collect.HashBiMap;
 
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 rangeButtons[players_remaining_no - 1].setVisibility(View.GONE);
                 twoCardsLayouts[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                cardRows[players_remaining_no].rowType = "specific";
                 calculate_odds();
             }
             else{
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 twoCardsLayouts[players_remaining_no - 1].setVisibility(View.GONE);
                 rangeButtons[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                cardRows[players_remaining_no].rowType = "range";
                 calculate_odds();
             }
             else{
@@ -318,22 +321,36 @@ public class MainActivity extends AppCompatActivity {
 
             players_remaining_no--;
             binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-            player_row_array[players_remaining_no].setVisibility(View.GONE);
 
             for (int i = 0; i < 2; i++) {
                 setInputCardVisible(player_remove_number, i);
             }
 
             for (int i = player_remove_number; i <= players_remaining_no; i++) {
-                set_card_value(i, 0, cardRows[i + 1].cards[0][0], cardRows[i + 1].cards[0][1]);
-                set_card_value(i, 1, cardRows[i + 1].cards[1][0], cardRows[i + 1].cards[1][1]);
+                cardRows[i] = new CardRow(cardRows[i + 1]);
+
+                if (Objects.equals(cardRows[i].rowType, "specific")) {
+                    setCardImage(i, 0, cardRows[i].cards[0][0], cardRows[i].cards[0][1]);
+                    setCardImage(i, 1, cardRows[i].cards[1][0], cardRows[i].cards[1][1]);
+                    rangeButtons[i - 1].setVisibility(View.GONE);
+                    twoCardsLayouts[i - 1].setVisibility(View.VISIBLE);
+                } else {
+                    twoCardsLayouts[i - 1].setVisibility(View.GONE);
+                    rangeButtons[i - 1].setVisibility(View.VISIBLE);
+                }
             }
 
             set_card_value(players_remaining_no + 1, 0, 0, 0);
             set_card_value(players_remaining_no + 1, 1, 0, 0);
+            player_row_array[players_remaining_no].setVisibility(View.GONE);
 
             if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
-                set_selected_card(selected_card_position[0] - 1, selected_card_position[1]);
+                for (int i = selected_card_position[0] - 1; i >= 0; i--) {
+                    if (Objects.equals(cardRows[i].rowType, "specific")) {
+                        set_selected_card(i, selected_card_position[1]);
+                        break;
+                    }
+                }
             }
 
             calculate_odds();
@@ -363,7 +380,18 @@ public class MainActivity extends AppCompatActivity {
         } else if ((selected_card_position[0] == 1 || selected_card_position[0] == players_remaining_no) && selected_card_position[1] == 1) {
             set_selected_card(0, 0);
         } else {
-            set_selected_card(selected_card_position[0] + 1, 0);
+            boolean foundNext = false;
+            for (int i = selected_card_position[0] + 1; i < players_remaining_no + 1; i++) {
+                if (Objects.equals(cardRows[i].rowType, "specific")) {
+                    set_selected_card(i, 0);
+                    foundNext = true;
+                    break;
+                }
+            }
+
+            if (!foundNext) {
+                set_selected_card(0, 0);
+            }
         }
 
         Rect rect = new Rect();
@@ -394,9 +422,8 @@ public class MainActivity extends AppCompatActivity {
         cardRows[row_idx].cards[card_idx][0] = suit;
         cardRows[row_idx].cards[card_idx][1] = rank;
 
-        ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
-        assert card_button != null;
-        card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+
+        setCardImage(row_idx, card_idx, suit, rank);
     }
 
     public void set_value_to_selected_card(int suit, int rank) {
@@ -417,6 +444,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setCardImage(int row_idx, int card_idx, int suit, int rank) {
+        ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
+        assert card_button != null;
+        card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+    }
 
     private void calculate_odds() {
         if (monte_carlo_thread != null) {
