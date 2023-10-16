@@ -25,4 +25,6 @@
     <string name="finished_checking_random_subset">Finished checking random subset.</string>
     <string name="checking_random_subset">Checking random subset…</string>
     <string name="range">+ Range</string>
+    <string name="done">Done</string>
+    <string name="matrix_str">%s%s%s</string>
 </resources>

@@ -2,8 +2,10 @@ package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.CardRow;
 import com.leslie.cjpokeroddscalculator.OutputResult;
+import com.leslie.cjpokeroddscalculator.R;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Calculation {
@@ -25,6 +27,8 @@ public class Calculation {
         "2h","3h","4h","5h","6h","7h","8h","9h","Th","Jh","Qh","Kh","Ah",
         "2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"
     };
+
+    String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
 
     public Calculation() {
         rankToStr.put(0, "");
@@ -57,10 +61,31 @@ public class Calculation {
         this.no_of_unknown_players = 0;
 
         for(int player = 1; player <= playersRemainingNo; player++) {
-            if(cardRows[player].cards[0][0] != 0 || cardRows[player].cards[1][0] != 0) {
-                known_players[player - 1] = true;
+            CardRow cardRow = cardRows[player];
+            if (Objects.equals(cardRow.rowType, "specific")) {
+                if(cardRow.cards[0][0] != 0 || cardRow.cards[1][0] != 0) {
+                    known_players[player - 1] = true;
+                } else {
+                    no_of_unknown_players++;
+                }
             } else {
-                no_of_unknown_players++;
+                boolean known_player = false;
+
+                outerloop:
+                for (int i = 0; i < 13; i++) {
+                    for (int j = 0; j < 13; j++) {
+                        if (cardRow.matrix[i][j] != cardRow.matrix[0][0]) {
+                            known_player = true;
+                            break outerloop;
+                        }
+                    }
+                }
+
+                if (known_player) {
+                    known_players[player - 1] = true;
+                } else {
+                    no_of_unknown_players++;
+                }
             }
         }
     }
@@ -78,23 +103,49 @@ public class Calculation {
         String[] playerCards = new String[playersRemainingNo];
 
         for (int i = 1; i <= playersRemainingNo; i++) {
-            StringBuilder temp = new StringBuilder();
-            temp.append(rankToStr.get(cardRows[i].cards[0][1]));
-            temp.append(suitToStr.get(cardRows[i].cards[0][0]));
-            temp.append(rankToStr.get(cardRows[i].cards[1][1]));
-            temp.append(suitToStr.get(cardRows[i].cards[1][0]));
-            if (String.valueOf(temp).equals("")) {
-                playerCards[i - 1] = "random";
-            } else if (temp.length() == 2) {
+            CardRow cardRow = cardRows[i];
+
+            if (Objects.equals(cardRow.rowType, "specific")) {
+                StringBuilder temp = new StringBuilder();
+                temp.append(rankToStr.get(cardRow.cards[0][1]));
+                temp.append(suitToStr.get(cardRow.cards[0][0]));
+                temp.append(rankToStr.get(cardRow.cards[1][1]));
+                temp.append(suitToStr.get(cardRow.cards[1][0]));
+                if (String.valueOf(temp).equals("")) {
+                    playerCards[i - 1] = "random";
+                } else if (temp.length() == 2) {
+                    StringJoiner sj = new StringJoiner(",");
+                    for (String card : all_possible_cards) {
+                        if (!card.equals(String.valueOf(temp))) {
+                            sj.add(temp + card);
+                        }
+                    }
+                    playerCards[i - 1] = sj.toString();
+                } else {
+                    playerCards[i - 1] = String.valueOf(temp);
+                }
+            } else {
                 StringJoiner sj = new StringJoiner(",");
-                for (String card : all_possible_cards) {
-                    if (!card.equals(String.valueOf(temp))) {
-                        sj.add(temp + card);
+
+                for (int row_idx = 0; row_idx < 13; row_idx++) {
+                    for (int col_idx = 0; col_idx < 13; col_idx++) {
+                        if (cardRow.matrix[row_idx][col_idx]) {
+                            if (row_idx == col_idx) {
+                                sj.add(matrixStrings[row_idx] + matrixStrings[row_idx]);
+                            } else if (col_idx > row_idx) {
+                                sj.add(matrixStrings[row_idx] + matrixStrings[col_idx] + "s");
+                            } else {
+                                sj.add(matrixStrings[col_idx] + matrixStrings[row_idx] + "o");
+                            }
+                        }
                     }
                 }
-                playerCards[i - 1] = sj.toString();
-            } else {
-                playerCards[i - 1] = String.valueOf(temp);
+
+                if (sj.toString().equals("")) {
+                    playerCards[i - 1] = "random";
+                } else {
+                    playerCards[i - 1] = sj.toString();
+                }
             }
         }
 
