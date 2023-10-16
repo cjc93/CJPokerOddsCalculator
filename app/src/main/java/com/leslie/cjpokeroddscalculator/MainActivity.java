@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,10 +31,15 @@ import com.google.common.collect.HashBiMap;
 
 public class MainActivity extends AppCompatActivity {
     public ActivityMainBinding binding;
+
     private long startClickTime;
 
     private ImageButton selected_card_button = null;
     private final int[] selected_card_position = new int[2];
+
+    private ImageButton selectedRangeButton = null;
+    private int selectedRangePosition;
+
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
@@ -41,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
     public TextView[] win_array = new TextView[10];
-    public ImageButton[] rangeButtons = new ImageButton[10];
+    public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
     public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
@@ -50,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
     HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
     CardRow[] cardRows = new CardRow[11];
+
+    HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
+    String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
+    boolean[][] matrixInput = new boolean[13][13];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
         generate_main_layout();
 
+        generateRangeSelector();
+
         binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
         win_array[0].setText(getString(R.string.win_perc_populated, 50.0));
         win_array[1].setText(getString(R.string.win_perc_populated, 50.0));
@@ -70,11 +83,15 @@ public class MainActivity extends AppCompatActivity {
             b.setOnClickListener(selector_listener);
         }
 
+        for (ImageButton r : rangePositionBiMap.values()) {
+            r.setOnClickListener(rangeSelectorListener);
+        }
+
         binding.addplayer.setOnClickListener(v -> {
             if(players_remaining_no < 10){
                 players_remaining_no++;
                 binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                rangeButtons[players_remaining_no - 1].setVisibility(View.GONE);
+                Objects.requireNonNull(rangePositionBiMap.get(players_remaining_no)).setVisibility(View.GONE);
                 twoCardsLayouts[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 cardRows[players_remaining_no].rowType = "specific";
@@ -90,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 players_remaining_no++;
                 binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
                 twoCardsLayouts[players_remaining_no - 1].setVisibility(View.GONE);
-                rangeButtons[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                Objects.requireNonNull(rangePositionBiMap.get(players_remaining_no)).setVisibility(View.VISIBLE);
                 player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
                 cardRows[players_remaining_no].rowType = "range";
                 calculate_odds();
@@ -106,12 +123,32 @@ public class MainActivity extends AppCompatActivity {
                 set_card_value(position.get(0), position.get(1), 0, 0);
             }
 
+            for (int i = 0; i < 11; i++) {
+                for (int j = 0; j < 13; j++) {
+                    for (int k = 0; k < 13; k++) {
+                        cardRows[i].matrix[j][k] = false;
+                    }
+                }
+            }
+
             binding.scrollView.post(() -> binding.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
         });
 
         binding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+
+        binding.done.setOnClickListener(v -> {
+            this.cardRows[selectedRangePosition].matrix = new boolean[13][];
+            for (int i = 0; i < 13; i++) {
+                this.cardRows[selectedRangePosition].matrix[i] = Arrays.copyOf(this.matrixInput[i], 13);
+            }
+
+            binding.rangeSelector.setVisibility(View.GONE);
+            binding.mainUi.setVisibility(View.VISIBLE);
+
+            calculate_odds();
+        });
     }
 
     @Override
@@ -168,69 +205,6 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent( event );
     }
 
-    private void generate_main_layout() {
-        for (int i = 0; i < 10; i++) {
-            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
-            player_row_array[i] = binding_player_row.getRoot();
-            win_array[i] = binding_player_row.win;
-            rangeButtons[i] = binding_player_row.range;
-            twoCardsLayouts[i] = binding_player_row.twoCards;
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
-            remove_row_map.put(binding_player_row.remove, i + 1);
-
-            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            binding_player_row.remove.setOnClickListener(remove_player_listener);
-        }
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int cardHeight = displayMetrics.heightPixels / 9;
-        for (ImageButton card : cardPositionBiMap.values()) {
-            card.setMaxHeight(cardHeight);
-        }
-
-        for (ImageButton r : rangeButtons) {
-            r.setMaxHeight(cardHeight);
-        }
-
-        for (int i = 2; i < 10; i++) {
-            player_row_array[i].setVisibility(View.GONE);
-        }
-
-        set_selected_card(1, 0);
-
-        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0,
-            1.0f
-        );
-
-        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
-            0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            1.0f
-        );
-
-        for (int suit = 1; suit <= 4; suit++) {
-            LinearLayout row = new LinearLayout(this);
-            row.setLayoutParams(rowParam);
-
-            for (int rank = 2; rank <= 14; rank++) {
-                ImageButton b = new ImageButton(this);
-                b.setLayoutParams(buttonParam);
-                b.setBackgroundResource(0);
-                b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
-                b.setScaleType(ImageButton.ScaleType.FIT_XY);
-                b.setPadding(1, 1, 1, 1);
-                b.setOnClickListener(input_card_listener);
-                row.addView(b);
-                input_suit_rank_map.put(b, Arrays.asList(suit, rank));
-            }
-            binding.inputCards.addView(row);
-        }
-    }
-
     private void initialise_variables() {
         cardRows[0] = new CardRow(5);
 
@@ -243,6 +217,12 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
+
+        for (int row_idx = 0; row_idx < 13; row_idx++) {
+            for (int col_idx = 0; col_idx < 13; col_idx++) {
+                this.matrixInput[row_idx][col_idx] = false;
+            }
+        }
 
         HashMap<Integer, Integer> temp_map = new HashMap<>();
         temp_map.put(0, R.drawable.unknown_button);
@@ -313,6 +293,118 @@ public class MainActivity extends AppCompatActivity {
         suit_rank_drawable_map.put(4, temp_map);
     }
 
+    private void generate_main_layout() {
+        for (int i = 0; i < 10; i++) {
+            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
+            player_row_array[i] = binding_player_row.getRoot();
+            win_array[i] = binding_player_row.win;
+            rangePositionBiMap.put(i + 1, binding_player_row.range);
+            twoCardsLayouts[i] = binding_player_row.twoCards;
+            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
+            remove_row_map.put(binding_player_row.remove, i + 1);
+
+            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
+            binding_player_row.remove.setOnClickListener(remove_player_listener);
+        }
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int cardHeight = displayMetrics.heightPixels / 9;
+        for (ImageButton card : cardPositionBiMap.values()) {
+            card.setMaxHeight(cardHeight);
+        }
+
+        for (ImageButton r : rangePositionBiMap.values()) {
+            r.setMaxHeight(cardHeight);
+        }
+
+        for (int i = 2; i < 10; i++) {
+            player_row_array[i].setVisibility(View.GONE);
+        }
+
+        set_selected_card(1, 0);
+
+        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1.0f
+        );
+
+        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1.0f
+        );
+
+        for (int suit = 1; suit <= 4; suit++) {
+            LinearLayout row = new LinearLayout(this);
+            row.setLayoutParams(rowParam);
+
+            for (int rank = 2; rank <= 14; rank++) {
+                ImageButton b = new ImageButton(this);
+                b.setLayoutParams(buttonParam);
+                b.setBackgroundResource(0);
+                b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+                b.setScaleType(ImageButton.ScaleType.FIT_XY);
+                b.setPadding(1, 1, 1, 1);
+                b.setOnClickListener(input_card_listener);
+                row.addView(b);
+                input_suit_rank_map.put(b, Arrays.asList(suit, rank));
+            }
+            binding.inputCards.addView(row);
+        }
+    }
+
+    private void generateRangeSelector() {
+        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1.0f
+        );
+        buttonParam.setMargins(1, 1,1,1);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int squareHeight = displayMetrics.widthPixels / 13;
+
+        for (int row_idx = 0; row_idx < 13; row_idx++) {
+            LinearLayout row = new LinearLayout(this);
+            row.setLayoutParams(rowParam);
+
+            for (int col_idx = 0; col_idx < 13; col_idx++) {
+                Button b = new Button(this);
+                b.setLayoutParams(buttonParam);
+                b.setPadding(1, 1, 1, 1);
+                b.setHeight(squareHeight);
+                b.setMinimumHeight(squareHeight);
+                b.setBackgroundColor(Color.LTGRAY);
+                b.setTextColor(Color.BLACK);
+                b.setAllCaps(false);
+                b.setMaxLines(1);
+                b.setAutoSizeTextTypeUniformWithConfiguration(10, 11, 1, TypedValue.COMPLEX_UNIT_SP);
+                b.setOnClickListener(matrixListener);
+
+                if (row_idx == col_idx) {
+                    b.setText(getString(R.string.matrix_str, matrixStrings[row_idx], matrixStrings[row_idx], ""));
+                } else if (col_idx > row_idx) {
+                    b.setText(getString(R.string.matrix_str, matrixStrings[row_idx], matrixStrings[col_idx], "s"));
+                } else {
+                    b.setText(getString(R.string.matrix_str, matrixStrings[col_idx], matrixStrings[row_idx], "o"));
+                }
+
+                row.addView(b);
+                this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
+            }
+            binding.rangeMatrix.addView(row);
+        }
+    }
+
     private final View.OnClickListener remove_player_listener = new View.OnClickListener() {
         public void onClick(View v) {
 
@@ -330,18 +422,25 @@ public class MainActivity extends AppCompatActivity {
                 cardRows[i] = new CardRow(cardRows[i + 1]);
 
                 if (Objects.equals(cardRows[i].rowType, "specific")) {
+                    Objects.requireNonNull(rangePositionBiMap.get(i)).setVisibility(View.GONE);
                     setCardImage(i, 0, cardRows[i].cards[0][0], cardRows[i].cards[0][1]);
                     setCardImage(i, 1, cardRows[i].cards[1][0], cardRows[i].cards[1][1]);
-                    rangeButtons[i - 1].setVisibility(View.GONE);
                     twoCardsLayouts[i - 1].setVisibility(View.VISIBLE);
                 } else {
                     twoCardsLayouts[i - 1].setVisibility(View.GONE);
-                    rangeButtons[i - 1].setVisibility(View.VISIBLE);
+                    Objects.requireNonNull(rangePositionBiMap.get(i)).setVisibility(View.VISIBLE);
                 }
             }
 
             set_card_value(players_remaining_no + 1, 0, 0, 0);
             set_card_value(players_remaining_no + 1, 1, 0, 0);
+
+            for (int row_idx = 0; row_idx < 13; row_idx++) {
+                for (int col_idx = 0; col_idx < 13; col_idx++) {
+                    cardRows[players_remaining_no + 1].matrix[row_idx][col_idx] = false;
+                }
+            }
+
             player_row_array[players_remaining_no].setVisibility(View.GONE);
 
             if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
@@ -372,6 +471,45 @@ public class MainActivity extends AppCompatActivity {
         List<Integer> suit_rank_list = input_suit_rank_map.get(card_input);
         assert suit_rank_list != null;
         set_value_to_selected_card(suit_rank_list.get(0), suit_rank_list.get(1));
+    };
+
+    private final View.OnClickListener rangeSelectorListener = v -> {
+        ImageButton rangeSelectorInput = (ImageButton) v;
+        selectedRangeButton = rangeSelectorInput;
+        selectedRangePosition = rangePositionBiMap.inverse().get(rangeSelectorInput);
+
+        this.matrixInput = new boolean[13][];
+        for (int i = 0; i < 13; i++) {
+            this.matrixInput[i] = Arrays.copyOf(this.cardRows[selectedRangePosition].matrix[i], 13);
+        }
+
+        for (int row_idx = 0; row_idx < 13; row_idx++) {
+            for (int col_idx = 0; col_idx < 13; col_idx++) {
+                if (this.matrixInput[row_idx][col_idx]) {
+                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
+                } else {
+                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                }
+            }
+        }
+
+        binding.mainUi.setVisibility(View.GONE);
+        binding.rangeSelector.setVisibility(View.VISIBLE);
+    };
+
+    private final View.OnClickListener matrixListener = v -> {
+        Button matrixButton = (Button) v;
+
+        List<Integer> matrixPosition = inputMatrixMap.get(matrixButton);
+        assert matrixPosition != null;
+
+        if (matrixInput[matrixPosition.get(0)][matrixPosition.get(1)]) {
+            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = false;
+            matrixButton.setBackgroundColor(Color.LTGRAY);
+        } else {
+            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = true;
+            matrixButton.setBackgroundColor(Color.YELLOW);
+        }
     };
 
     private void set_next_selected_card() {
@@ -421,7 +559,6 @@ public class MainActivity extends AppCompatActivity {
     public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
         cardRows[row_idx].cards[card_idx][0] = suit;
         cardRows[row_idx].cards[card_idx][1] = rank;
-
 
         setCardImage(row_idx, card_idx, suit, rank);
     }
