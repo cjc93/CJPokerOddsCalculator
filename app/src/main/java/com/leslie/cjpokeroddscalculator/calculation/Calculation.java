@@ -2,7 +2,6 @@ package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.CardRow;
 import com.leslie.cjpokeroddscalculator.OutputResult;
-import com.leslie.cjpokeroddscalculator.R;
 
 import java.util.HashMap;
 import java.util.Objects;
