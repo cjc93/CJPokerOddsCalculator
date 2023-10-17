@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             int cardHeight = displayMetrics.heightPixels / 9;
 
             selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
+            matrixBitmap.recycle();
 
             binding.rangeSelector.setVisibility(View.GONE);
             binding.mainUi.setVisibility(View.VISIBLE);
