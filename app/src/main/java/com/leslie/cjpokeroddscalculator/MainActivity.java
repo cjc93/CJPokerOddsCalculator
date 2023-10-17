@@ -230,6 +230,16 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent( event );
     }
 
+    @Override
+    public void onBackPressed() {
+        if (binding.rangeSelector.getVisibility() == View.VISIBLE) {
+            binding.rangeSelector.setVisibility(View.GONE);
+            binding.mainUi.setVisibility(View.VISIBLE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initialise_variables() {
         cardRows[0] = new CardRow(5);
 
