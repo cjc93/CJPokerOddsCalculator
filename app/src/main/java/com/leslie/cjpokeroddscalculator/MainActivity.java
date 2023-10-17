@@ -156,9 +156,9 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < 13; i++)  {
                 for (int j = 0; j < 13; j++)  {
                     if (this.cardRows[selectedRangePosition].matrix[i][j]) {
-                        matrixBitmap.setPixel(i, j, Color.YELLOW);
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
                     } else {
-                        matrixBitmap.setPixel(i, j, Color.LTGRAY);
+                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
                     }
                 }
             }
