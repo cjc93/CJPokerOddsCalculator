@@ -1,7 +1,9 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
     String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
     boolean[][] matrixInput = new boolean[13][13];
+    private Bitmap emptyRangeBitmap;
 
 
     @Override
@@ -131,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            for (ImageButton r : rangePositionBiMap.values()) {
+                r.setImageBitmap(emptyRangeBitmap);
+            }
+
             binding.scrollView.post(() -> binding.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
@@ -143,6 +150,24 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < 13; i++) {
                 this.cardRows[selectedRangePosition].matrix[i] = Arrays.copyOf(this.matrixInput[i], 13);
             }
+
+            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+
+            for (int i = 0; i < 13; i++)  {
+                for (int j = 0; j < 13; j++)  {
+                    if (this.cardRows[selectedRangePosition].matrix[i][j]) {
+                        matrixBitmap.setPixel(i, j, Color.YELLOW);
+                    } else {
+                        matrixBitmap.setPixel(i, j, Color.LTGRAY);
+                    }
+                }
+            }
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int cardHeight = displayMetrics.heightPixels / 9;
+
+            selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
 
             binding.rangeSelector.setVisibility(View.GONE);
             binding.mainUi.setVisibility(View.VISIBLE);
@@ -315,8 +340,11 @@ public class MainActivity extends AppCompatActivity {
             card.setMaxHeight(cardHeight);
         }
 
+        this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
+        this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
+
         for (ImageButton r : rangePositionBiMap.values()) {
-            r.setMaxHeight(cardHeight);
+            r.setImageBitmap(emptyRangeBitmap);
         }
 
         for (int i = 2; i < 10; i++) {
@@ -428,6 +456,8 @@ public class MainActivity extends AppCompatActivity {
                     twoCardsLayouts[i - 1].setVisibility(View.VISIBLE);
                 } else {
                     twoCardsLayouts[i - 1].setVisibility(View.GONE);
+                    Drawable d = Objects.requireNonNull(rangePositionBiMap.get(i + 1)).getDrawable();
+                    Objects.requireNonNull(rangePositionBiMap.get(i)).setImageDrawable(d);
                     Objects.requireNonNull(rangePositionBiMap.get(i)).setVisibility(View.VISIBLE);
                 }
             }
@@ -440,6 +470,8 @@ public class MainActivity extends AppCompatActivity {
                     cardRows[players_remaining_no + 1].matrix[row_idx][col_idx] = false;
                 }
             }
+
+            Objects.requireNonNull(rangePositionBiMap.get(players_remaining_no + 1)).setImageBitmap(emptyRangeBitmap);
 
             player_row_array[players_remaining_no].setVisibility(View.GONE);
 
