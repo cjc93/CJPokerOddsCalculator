@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
@@ -59,14 +60,30 @@ public class MainActivity extends AppCompatActivity {
     CardRow[] cardRows = new CardRow[11];
 
     HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
-    String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
     boolean[][] matrixInput = new boolean[13][13];
     public Bitmap emptyRangeBitmap;
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    int cardHeight;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (binding.rangeSelector.getVisibility() == View.VISIBLE) {
+                    binding.rangeSelector.setVisibility(View.GONE);
+                    binding.mainUi.setVisibility(View.VISIBLE);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                    setEnabled(true);
+                }
+            }
+        };
+        this.getOnBackPressedDispatcher().addCallback(this, callback);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -162,10 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int cardHeight = displayMetrics.heightPixels / 9;
-
             selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
             matrixBitmap.recycle();
 
@@ -230,17 +243,10 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent( event );
     }
 
-    @Override
-    public void onBackPressed() {
-        if (binding.rangeSelector.getVisibility() == View.VISIBLE) {
-            binding.rangeSelector.setVisibility(View.GONE);
-            binding.mainUi.setVisibility(View.VISIBLE);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     private void initialise_variables() {
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        cardHeight = displayMetrics.heightPixels / 9;
+
         cardRows[0] = new SpecificCardsRow(5);
 
         for (int i = 1; i <= 10; i++) {
@@ -343,9 +349,6 @@ public class MainActivity extends AppCompatActivity {
             binding_player_row.remove.setOnClickListener(remove_player_listener);
         }
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int cardHeight = displayMetrics.heightPixels / 9;
         for (ImageButton card : cardPositionBiMap.values()) {
             card.setMaxHeight(cardHeight);
         }
@@ -407,8 +410,6 @@ public class MainActivity extends AppCompatActivity {
         );
         buttonParam.setMargins(1, 1,1,1);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int squareHeight = displayMetrics.widthPixels / 13;
 
         for (int row_idx = 0; row_idx < 13; row_idx++) {
@@ -429,11 +430,11 @@ public class MainActivity extends AppCompatActivity {
                 b.setOnClickListener(matrixListener);
 
                 if (row_idx == col_idx) {
-                    b.setText(getString(R.string.matrix_str, matrixStrings[row_idx], matrixStrings[row_idx], ""));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[row_idx], GlobalStatic.matrixStrings[row_idx], ""));
                 } else if (col_idx > row_idx) {
-                    b.setText(getString(R.string.matrix_str, matrixStrings[row_idx], matrixStrings[col_idx], "s"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[row_idx], GlobalStatic.matrixStrings[col_idx], "s"));
                 } else {
-                    b.setText(getString(R.string.matrix_str, matrixStrings[col_idx], matrixStrings[row_idx], "o"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[col_idx], GlobalStatic.matrixStrings[row_idx], "o"));
                 }
 
                 row.addView(b);

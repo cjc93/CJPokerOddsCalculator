@@ -44,8 +44,7 @@ public class Calculation {
         String[] playerCards = new String[playersRemainingNo];
 
         for (int i = 1; i <= playersRemainingNo; i++) {
-            CardRow cardRow = cardRows[i];
-            playerCards[i - 1] = cardRow.convertPlayerCardsToStr();
+            playerCards[i - 1] = cardRows[i].convertPlayerCardsToStr();
         }
 
         return playerCards;
