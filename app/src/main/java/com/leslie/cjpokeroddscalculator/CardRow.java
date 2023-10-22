@@ -1,7 +1,5 @@
 package com.leslie.cjpokeroddscalculator;
 
-import android.view.View;
-
 public abstract class CardRow {
     public abstract void clear(MainActivity mainActivity, int row_idx);
     public abstract CardRow copy();
