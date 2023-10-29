@@ -17,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.slider.Slider;
 import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -84,10 +89,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         this.getOnBackPressedDispatcher().addCallback(this, callback);
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
+        
         initialise_variables();
 
         generate_main_layout();
@@ -159,6 +161,38 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+
+        binding.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+            if (fromUser) {
+                float finalValue = 0;
+                for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
+                    List<Integer> matrixPosition = entry.getValue();
+                    int cumulativeHands = entry.getKey();
+                    if (cumulativeHands <= value) {
+                        Objects.requireNonNull(inputMatrixMap.inverse().get(matrixPosition)).setBackgroundColor(Color.YELLOW);
+                        finalValue = cumulativeHands;
+                    } else {
+                        Objects.requireNonNull(inputMatrixMap.inverse().get(matrixPosition)).setBackgroundColor(Color.LTGRAY);
+                    }
+                }
+                slider.setValue(finalValue);
+            }
+            binding.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
+        });
+
+        binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) { }
+
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                float selectedValue = slider.getValue();
+                for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
+                    List<Integer> matrixPosition = entry.getValue();
+                    matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = entry.getKey() <= selectedValue;
+                }
+            }
+        });
 
         binding.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
@@ -504,15 +538,27 @@ public class MainActivity extends AppCompatActivity {
             this.matrixInput[i] = Arrays.copyOf(rangeRow.matrix[i], 13);
         }
 
+        int handCount = 0;
+
         for (int row_idx = 0; row_idx < 13; row_idx++) {
             for (int col_idx = 0; col_idx < 13; col_idx++) {
                 if (this.matrixInput[row_idx][col_idx]) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
+
+                    if (row_idx == col_idx) {
+                        handCount += 6;
+                    } else if (col_idx > row_idx) {
+                        handCount += 4;
+                    } else {
+                        handCount += 12;
+                    }
                 } else {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
                 }
             }
         }
+
+        binding.rangeSlider.setValue(handCount);
 
         binding.mainUi.setVisibility(View.GONE);
         binding.rangeSelector.setVisibility(View.VISIBLE);
@@ -527,9 +573,25 @@ public class MainActivity extends AppCompatActivity {
         if (matrixInput[matrixPosition.get(0)][matrixPosition.get(1)]) {
             matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = false;
             matrixButton.setBackgroundColor(Color.LTGRAY);
+
+            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 6);
+            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 4);
+            } else {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 12);
+            }
         } else {
             matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = true;
             matrixButton.setBackgroundColor(Color.YELLOW);
+
+            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 6);
+            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 4);
+            } else {
+                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 12);
+            }
         }
     };
 
