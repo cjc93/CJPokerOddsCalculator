@@ -5,6 +5,7 @@
     <string name="players_remaining">Players remaining: %d</string>
     <string name="win_perc_empty"></string>
     <string name="win_perc_populated">Win: %.2f%%</string>
+    <string name="hands_perc">%.1f%%</string>
     <string name="flop">Flop</string>
     <string name="flop1">Flop1</string>
     <string name="flop2">Flop2</string>
@@ -27,4 +28,5 @@
     <string name="range">+ Range</string>
     <string name="done">Done</string>
     <string name="matrix_str">%s%s%s</string>
+    <string name="_0_0">0.0%</string>
 </resources>
