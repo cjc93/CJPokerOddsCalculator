@@ -1,8 +1,13 @@
 package com.leslie.cjpokeroddscalculator;
 
+import com.google.common.collect.Sets;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -35,6 +40,10 @@ public class GlobalStatic {
         suitToStr.put(4, "s");
     }
 
+    public static Set<String> suitedSuits = Sets.newHashSet("dd", "cc", "hh", "ss");
+    public static Set<String> pairSuits = Sets.newHashSet("sh", "sc", "sd", "hc", "hd", "cd");
+    public static Set<String> offSuits = Sets.newHashSet("sh", "sc", "sd", "hs", "hc", "hd", "cs", "ch", "cd", "ds", "dh", "dc");
+
     static String[] all_possible_cards = new String[] {
             "2d","3d","4d","5d","6d","7d","8d","9d","Td","Jd","Qd","Kd","Ad",
             "2c","3c","4c","5c","6c","7c","8c","9c","Tc","Jc","Qc","Kc","Ac",
@@ -43,6 +52,29 @@ public class GlobalStatic {
     };
 
     static String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
+
+    public static List<List<Set<String>>> copyMatrix(List<List<Set<String>>> original) {
+        List<List<Set<String>>> copy = new ArrayList<>(13);
+        for (int row_idx = 0; row_idx < 13; row_idx++) {
+            List<Set<String>> row = new ArrayList<>(13);
+            for (int col_idx = 0; col_idx < 13; col_idx++) {
+                row.add(new HashSet<>(original.get(row_idx).get(col_idx)));
+            }
+            copy.add(row);
+        }
+
+        return copy;
+    }
+
+    public static boolean isAllSuits(Set<String> suits, int row, int col) {
+        if (row == col) {
+            return suits.size() == 6;
+        } else if (col > row) {
+            return suits.size() == 4;
+        } else {
+            return suits.size() == 12;
+        }
+    }
 
     public static SortedMap<Integer, List<Integer>> bestHandsMap = new TreeMap<>();
     static {

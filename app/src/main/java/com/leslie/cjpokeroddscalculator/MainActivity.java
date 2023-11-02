@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.HashBiMap;
 
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     CardRow[] cardRows = new CardRow[11];
 
     HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
-    boolean[][] matrixInput = new boolean[13][13];
+    List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
     DisplayMetrics displayMetrics = new DisplayMetrics();
     int cardHeight;
@@ -189,26 +190,39 @@ public class MainActivity extends AppCompatActivity {
                 float selectedValue = slider.getValue();
                 for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
                     List<Integer> matrixPosition = entry.getValue();
-                    matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = entry.getKey() <= selectedValue;
+                    int row = matrixPosition.get(0);
+                    int col = matrixPosition.get(1);
+
+                    Set<String> suits = matrixInput.get(row).get(col);
+
+                    if (entry.getKey() <= selectedValue) {
+                        if (row == col) {
+                            suits.addAll(GlobalStatic.pairSuits);
+                        } else if (col > row) {
+                            suits.addAll(GlobalStatic.suitedSuits);
+                        } else {
+                            suits.addAll(GlobalStatic.offSuits);
+                        }
+                    } else {
+                        suits.clear();
+                    }
                 }
             }
         });
 
         binding.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
-            rangeRow.matrix = new boolean[13][];
-            for (int i = 0; i < 13; i++) {
-                rangeRow.matrix[i] = Arrays.copyOf(this.matrixInput[i], 13);
-            }
+
+            rangeRow.matrix = GlobalStatic.copyMatrix(this.matrixInput);
 
             Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
 
             for (int i = 0; i < 13; i++)  {
                 for (int j = 0; j < 13; j++)  {
-                    if (rangeRow.matrix[i][j]) {
-                        matrixBitmap.setPixel(j, i, Color.YELLOW);
-                    } else {
+                    if (rangeRow.matrix.get(i).get(j).isEmpty()) {
                         matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                    } else {
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
                     }
                 }
             }
@@ -292,12 +306,6 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
-
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
-                this.matrixInput[row_idx][col_idx] = false;
-            }
-        }
 
         HashMap<Integer, Integer> temp_map = new HashMap<>();
         temp_map.put(0, R.drawable.unknown_button);
@@ -533,28 +541,23 @@ public class MainActivity extends AppCompatActivity {
         selectedRangePosition = rangePositionBiMap.inverse().get(rangeSelectorInput);
 
         RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
-        this.matrixInput = new boolean[13][];
-        for (int i = 0; i < 13; i++) {
-            this.matrixInput[i] = Arrays.copyOf(rangeRow.matrix[i], 13);
-        }
+
+        this.matrixInput = GlobalStatic.copyMatrix(rangeRow.matrix);
 
         int handCount = 0;
 
         for (int row_idx = 0; row_idx < 13; row_idx++) {
             for (int col_idx = 0; col_idx < 13; col_idx++) {
-                if (this.matrixInput[row_idx][col_idx]) {
+                Set<String> suits = this.matrixInput.get(row_idx).get(col_idx);
+                if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
-
-                    if (row_idx == col_idx) {
-                        handCount += 6;
-                    } else if (col_idx > row_idx) {
-                        handCount += 4;
-                    } else {
-                        handCount += 12;
-                    }
-                } else {
+                } else if (suits.isEmpty()) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                } else {
+                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.BLUE);
                 }
+
+                handCount += suits.size();
             }
         }
 
@@ -569,29 +572,27 @@ public class MainActivity extends AppCompatActivity {
 
         List<Integer> matrixPosition = inputMatrixMap.get(matrixButton);
         assert matrixPosition != null;
+        int row = matrixPosition.get(0);
+        int col = matrixPosition.get(1);
 
-        if (matrixInput[matrixPosition.get(0)][matrixPosition.get(1)]) {
-            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = false;
+        Set<String> suits = this.matrixInput.get(row).get(col);
+
+        if (GlobalStatic.isAllSuits(suits, row, col)) {
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - suits.size());
+            suits.clear();
             matrixButton.setBackgroundColor(Color.LTGRAY);
-
-            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 6);
-            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 4);
+        } else if (suits.isEmpty()) {
+            if (row == col) {
+                suits.addAll(GlobalStatic.pairSuits);
+            } else if (col > row) {
+                suits.addAll(GlobalStatic.suitedSuits);
             } else {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 12);
+                suits.addAll(GlobalStatic.offSuits);
             }
-        } else {
-            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = true;
+
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + suits.size());
+
             matrixButton.setBackgroundColor(Color.YELLOW);
-
-            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 6);
-            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 4);
-            } else {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 12);
-            }
         }
     };
 
