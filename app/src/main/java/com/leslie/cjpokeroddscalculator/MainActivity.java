@@ -187,9 +187,7 @@ public class MainActivity extends AppCompatActivity {
         binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
-                if (selectedMatrixButton != null) {
-                    selectedMatrixButton.setStrokeWidth(0);
-                }
+                clearSuitsSelectionUI();
             }
 
             @Override
@@ -505,13 +503,12 @@ public class MainActivity extends AppCompatActivity {
 
         binding.rangeSlider.setValue(handCount);
 
-        if (selectedMatrixButton != null) {
-            selectedMatrixButton.setStrokeWidth(0);
-        }
+        clearSuitsSelectionUI();
 
         binding.mainUi.setVisibility(View.GONE);
         binding.rangeSelector.setVisibility(View.VISIBLE);
     };
+
 
     private final View.OnClickListener matrixListener = v -> {
         MaterialButton matrixButton = (MaterialButton) v;
@@ -550,7 +547,67 @@ public class MainActivity extends AppCompatActivity {
 
         selectedMatrixButton = matrixButton;
         selectedMatrixButton.setStrokeWidth(2);
+
+        if (row == col) {
+            binding.suits00.setVisibility(View.INVISIBLE);
+            binding.suits01.setVisibility(View.VISIBLE);
+            binding.suits02.setVisibility(View.VISIBLE);
+            binding.suits03.setVisibility(View.INVISIBLE);
+            binding.suits10.setVisibility(View.INVISIBLE);
+            binding.suits11.setVisibility(View.VISIBLE);
+            binding.suits12.setVisibility(View.VISIBLE);
+            binding.suits13.setVisibility(View.INVISIBLE);
+            binding.suits20.setVisibility(View.INVISIBLE);
+            binding.suits21.setVisibility(View.VISIBLE);
+            binding.suits22.setVisibility(View.VISIBLE);
+            binding.suits23.setVisibility(View.INVISIBLE);
+        } else if (col > row) {
+            binding.suits00.setVisibility(View.INVISIBLE);
+            binding.suits01.setVisibility(View.VISIBLE);
+            binding.suits02.setVisibility(View.VISIBLE);
+            binding.suits03.setVisibility(View.INVISIBLE);
+            binding.suits10.setVisibility(View.INVISIBLE);
+            binding.suits11.setVisibility(View.VISIBLE);
+            binding.suits12.setVisibility(View.VISIBLE);
+            binding.suits13.setVisibility(View.INVISIBLE);
+            binding.suits20.setVisibility(View.INVISIBLE);
+            binding.suits21.setVisibility(View.INVISIBLE);
+            binding.suits22.setVisibility(View.INVISIBLE);
+            binding.suits23.setVisibility(View.INVISIBLE);
+        } else {
+            binding.suits00.setVisibility(View.VISIBLE);
+            binding.suits01.setVisibility(View.VISIBLE);
+            binding.suits02.setVisibility(View.VISIBLE);
+            binding.suits03.setVisibility(View.VISIBLE);
+            binding.suits10.setVisibility(View.VISIBLE);
+            binding.suits11.setVisibility(View.VISIBLE);
+            binding.suits12.setVisibility(View.VISIBLE);
+            binding.suits13.setVisibility(View.VISIBLE);
+            binding.suits20.setVisibility(View.VISIBLE);
+            binding.suits21.setVisibility(View.VISIBLE);
+            binding.suits22.setVisibility(View.VISIBLE);
+            binding.suits23.setVisibility(View.VISIBLE);
+        }
     };
+
+    private void clearSuitsSelectionUI() {
+        if (selectedMatrixButton != null) {
+            selectedMatrixButton.setStrokeWidth(0);
+        }
+
+        binding.suits00.setVisibility(View.INVISIBLE);
+        binding.suits01.setVisibility(View.INVISIBLE);
+        binding.suits02.setVisibility(View.INVISIBLE);
+        binding.suits03.setVisibility(View.INVISIBLE);
+        binding.suits10.setVisibility(View.INVISIBLE);
+        binding.suits11.setVisibility(View.INVISIBLE);
+        binding.suits12.setVisibility(View.INVISIBLE);
+        binding.suits13.setVisibility(View.INVISIBLE);
+        binding.suits20.setVisibility(View.INVISIBLE);
+        binding.suits21.setVisibility(View.INVISIBLE);
+        binding.suits22.setVisibility(View.INVISIBLE);
+        binding.suits23.setVisibility(View.INVISIBLE);
+    }
 
     private void set_next_selected_card() {
         if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
