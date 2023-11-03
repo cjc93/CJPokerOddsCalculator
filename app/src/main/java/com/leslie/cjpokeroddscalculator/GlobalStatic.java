@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -74,6 +75,77 @@ public class GlobalStatic {
         } else {
             return suits.size() == 12;
         }
+    }
+
+    public static Map<Integer, Map<Integer, Integer>> suitRankDrawableMap = new HashMap<>();
+    static {
+        Map<Integer, Integer> temp_map = new HashMap<>();
+        temp_map.put(0, R.drawable.unknown_button);
+        suitRankDrawableMap.put(0, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.d2_button);
+        temp_map.put(3, R.drawable.d3_button);
+        temp_map.put(4, R.drawable.d4_button);
+        temp_map.put(5, R.drawable.d5_button);
+        temp_map.put(6, R.drawable.d6_button);
+        temp_map.put(7, R.drawable.d7_button);
+        temp_map.put(8, R.drawable.d8_button);
+        temp_map.put(9, R.drawable.d9_button);
+        temp_map.put(10, R.drawable.d10_button);
+        temp_map.put(11, R.drawable.d11_button);
+        temp_map.put(12, R.drawable.d12_button);
+        temp_map.put(13, R.drawable.d13_button);
+        temp_map.put(14, R.drawable.d14_button);
+        suitRankDrawableMap.put(1, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.c2_button);
+        temp_map.put(3, R.drawable.c3_button);
+        temp_map.put(4, R.drawable.c4_button);
+        temp_map.put(5, R.drawable.c5_button);
+        temp_map.put(6, R.drawable.c6_button);
+        temp_map.put(7, R.drawable.c7_button);
+        temp_map.put(8, R.drawable.c8_button);
+        temp_map.put(9, R.drawable.c9_button);
+        temp_map.put(10, R.drawable.c10_button);
+        temp_map.put(11, R.drawable.c11_button);
+        temp_map.put(12, R.drawable.c12_button);
+        temp_map.put(13, R.drawable.c13_button);
+        temp_map.put(14, R.drawable.c14_button);
+        suitRankDrawableMap.put(2, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.h2_button);
+        temp_map.put(3, R.drawable.h3_button);
+        temp_map.put(4, R.drawable.h4_button);
+        temp_map.put(5, R.drawable.h5_button);
+        temp_map.put(6, R.drawable.h6_button);
+        temp_map.put(7, R.drawable.h7_button);
+        temp_map.put(8, R.drawable.h8_button);
+        temp_map.put(9, R.drawable.h9_button);
+        temp_map.put(10, R.drawable.h10_button);
+        temp_map.put(11, R.drawable.h11_button);
+        temp_map.put(12, R.drawable.h12_button);
+        temp_map.put(13, R.drawable.h13_button);
+        temp_map.put(14, R.drawable.h14_button);
+        suitRankDrawableMap.put(3, temp_map);
+
+        temp_map = new HashMap<>();
+        temp_map.put(2, R.drawable.s2_button);
+        temp_map.put(3, R.drawable.s3_button);
+        temp_map.put(4, R.drawable.s4_button);
+        temp_map.put(5, R.drawable.s5_button);
+        temp_map.put(6, R.drawable.s6_button);
+        temp_map.put(7, R.drawable.s7_button);
+        temp_map.put(8, R.drawable.s8_button);
+        temp_map.put(9, R.drawable.s9_button);
+        temp_map.put(10, R.drawable.s10_button);
+        temp_map.put(11, R.drawable.s11_button);
+        temp_map.put(12, R.drawable.s12_button);
+        temp_map.put(13, R.drawable.s13_button);
+        temp_map.put(14, R.drawable.s14_button);
+        suitRankDrawableMap.put(4, temp_map);
     }
 
     public static SortedMap<Integer, List<Integer>> bestHandsMap = new TreeMap<>();
@@ -248,5 +320,4 @@ public class GlobalStatic {
         bestHandsMap.put(1314, Arrays.asList(12, 7));
         bestHandsMap.put(1326, Arrays.asList(12, 11));
     }
-
 }

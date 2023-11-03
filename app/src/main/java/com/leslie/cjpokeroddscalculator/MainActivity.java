@@ -1,11 +1,11 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +20,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton selectedRangeButton = null;
     private int selectedRangePosition;
 
+    private MaterialButton selectedMatrixButton = null;
+    private final int[] selectedMatrixPosition = new int[2];
+
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
@@ -57,12 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     HashMap<Button, Integer> remove_row_map = new HashMap<>();
-    HashMap<Integer, HashMap<Integer, Integer>> suit_rank_drawable_map = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
     CardRow[] cardRows = new CardRow[11];
 
-    HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
+    HashBiMap<MaterialButton, List<Integer>> inputMatrixMap = HashBiMap.create();
     List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
     DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -183,7 +186,11 @@ public class MainActivity extends AppCompatActivity {
 
         binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull Slider slider) { }
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+                if (selectedMatrixButton != null) {
+                    selectedMatrixButton.setStrokeWidth(0);
+                }
+            }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
@@ -306,74 +313,6 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
-
-        HashMap<Integer, Integer> temp_map = new HashMap<>();
-        temp_map.put(0, R.drawable.unknown_button);
-        suit_rank_drawable_map.put(0, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.d2_button);
-        temp_map.put(3, R.drawable.d3_button);
-        temp_map.put(4, R.drawable.d4_button);
-        temp_map.put(5, R.drawable.d5_button);
-        temp_map.put(6, R.drawable.d6_button);
-        temp_map.put(7, R.drawable.d7_button);
-        temp_map.put(8, R.drawable.d8_button);
-        temp_map.put(9, R.drawable.d9_button);
-        temp_map.put(10, R.drawable.d10_button);
-        temp_map.put(11, R.drawable.d11_button);
-        temp_map.put(12, R.drawable.d12_button);
-        temp_map.put(13, R.drawable.d13_button);
-        temp_map.put(14, R.drawable.d14_button);
-        suit_rank_drawable_map.put(1, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.c2_button);
-        temp_map.put(3, R.drawable.c3_button);
-        temp_map.put(4, R.drawable.c4_button);
-        temp_map.put(5, R.drawable.c5_button);
-        temp_map.put(6, R.drawable.c6_button);
-        temp_map.put(7, R.drawable.c7_button);
-        temp_map.put(8, R.drawable.c8_button);
-        temp_map.put(9, R.drawable.c9_button);
-        temp_map.put(10, R.drawable.c10_button);
-        temp_map.put(11, R.drawable.c11_button);
-        temp_map.put(12, R.drawable.c12_button);
-        temp_map.put(13, R.drawable.c13_button);
-        temp_map.put(14, R.drawable.c14_button);
-        suit_rank_drawable_map.put(2, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.h2_button);
-        temp_map.put(3, R.drawable.h3_button);
-        temp_map.put(4, R.drawable.h4_button);
-        temp_map.put(5, R.drawable.h5_button);
-        temp_map.put(6, R.drawable.h6_button);
-        temp_map.put(7, R.drawable.h7_button);
-        temp_map.put(8, R.drawable.h8_button);
-        temp_map.put(9, R.drawable.h9_button);
-        temp_map.put(10, R.drawable.h10_button);
-        temp_map.put(11, R.drawable.h11_button);
-        temp_map.put(12, R.drawable.h12_button);
-        temp_map.put(13, R.drawable.h13_button);
-        temp_map.put(14, R.drawable.h14_button);
-        suit_rank_drawable_map.put(3, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.s2_button);
-        temp_map.put(3, R.drawable.s3_button);
-        temp_map.put(4, R.drawable.s4_button);
-        temp_map.put(5, R.drawable.s5_button);
-        temp_map.put(6, R.drawable.s6_button);
-        temp_map.put(7, R.drawable.s7_button);
-        temp_map.put(8, R.drawable.s8_button);
-        temp_map.put(9, R.drawable.s9_button);
-        temp_map.put(10, R.drawable.s10_button);
-        temp_map.put(11, R.drawable.s11_button);
-        temp_map.put(12, R.drawable.s12_button);
-        temp_map.put(13, R.drawable.s13_button);
-        temp_map.put(14, R.drawable.s14_button);
-        suit_rank_drawable_map.put(4, temp_map);
     }
 
     private void generate_main_layout() {
@@ -428,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageButton b = new ImageButton(this);
                 b.setLayoutParams(buttonParam);
                 b.setBackgroundResource(0);
-                b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
@@ -459,16 +398,19 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(rowParam);
 
             for (int col_idx = 0; col_idx < 13; col_idx++) {
-                Button b = new Button(this);
+                MaterialButton b = new MaterialButton(this);
                 b.setLayoutParams(buttonParam);
-                b.setPadding(1, 1, 1, 1);
+                b.setPadding(0, 0, 0, 0);
                 b.setHeight(squareHeight);
                 b.setMinimumHeight(squareHeight);
                 b.setBackgroundColor(Color.LTGRAY);
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
-                b.setMaxLines(1);
-                b.setAutoSizeTextTypeUniformWithConfiguration(10, 11, 1, TypedValue.COMPLEX_UNIT_SP);
+                b.setTextSize(11);
+                b.setCornerRadius(0);
+                b.setInsetBottom(0);
+                b.setInsetTop(0);
+                b.setStrokeColor(ColorStateList.valueOf(Color.RED));
                 b.setOnClickListener(matrixListener);
 
                 if (row_idx == col_idx) {
@@ -563,12 +505,16 @@ public class MainActivity extends AppCompatActivity {
 
         binding.rangeSlider.setValue(handCount);
 
+        if (selectedMatrixButton != null) {
+            selectedMatrixButton.setStrokeWidth(0);
+        }
+
         binding.mainUi.setVisibility(View.GONE);
         binding.rangeSelector.setVisibility(View.VISIBLE);
     };
 
     private final View.OnClickListener matrixListener = v -> {
-        Button matrixButton = (Button) v;
+        MaterialButton matrixButton = (MaterialButton) v;
 
         List<Integer> matrixPosition = inputMatrixMap.get(matrixButton);
         assert matrixPosition != null;
@@ -594,6 +540,16 @@ public class MainActivity extends AppCompatActivity {
 
             matrixButton.setBackgroundColor(Color.YELLOW);
         }
+
+        if (selectedMatrixButton != null) {
+            selectedMatrixButton.setStrokeWidth(0);
+        }
+
+        selectedMatrixPosition[0] = row;
+        selectedMatrixPosition[1] = col;
+
+        selectedMatrixButton = matrixButton;
+        selectedMatrixButton.setStrokeWidth(2);
     };
 
     private void set_next_selected_card() {
@@ -669,7 +625,7 @@ public class MainActivity extends AppCompatActivity {
     public void setCardImage(int row_idx, int card_idx, int suit, int rank) {
         ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
         assert card_button != null;
-        card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
     }
 
     private void calculate_odds() {

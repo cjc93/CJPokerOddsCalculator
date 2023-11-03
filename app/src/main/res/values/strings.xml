@@ -29,4 +29,5 @@
     <string name="done">Done</string>
     <string name="matrix_str">%s%s%s</string>
     <string name="_0_0">0.0%</string>
+    <string name="suits">suits</string>
 </resources>
