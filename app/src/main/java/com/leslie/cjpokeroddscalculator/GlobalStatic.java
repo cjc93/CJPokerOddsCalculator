@@ -77,6 +77,10 @@ public class GlobalStatic {
         }
     }
 
+    public static int convertMatrixPositionToRankInt(int matrixPosition) {
+        return 14 - matrixPosition;
+    }
+
     public static Map<Integer, Map<Integer, Integer>> suitRankDrawableMap = new HashMap<>();
     static {
         Map<Integer, Integer> temp_map = new HashMap<>();

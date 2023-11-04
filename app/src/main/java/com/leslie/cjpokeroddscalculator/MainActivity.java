@@ -4,8 +4,11 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
@@ -30,6 +34,7 @@ import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
-    HashMap<Button, Integer> remove_row_map = new HashMap<>();
+    Map<Button, Integer> remove_row_map = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
     CardRow[] cardRows = new CardRow[11];
@@ -70,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
     public Bitmap emptyRangeBitmap;
     DisplayMetrics displayMetrics = new DisplayMetrics();
     int cardHeight;
+
+    Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, List<Integer>> offsuitButtonSuitsMap = new HashMap<>();
 
 
     @Override
@@ -311,6 +320,31 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
+
+        suitedButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 1));
+        suitedButtonSuitsMap.put(binding.suits02, Arrays.asList(2, 2));
+        suitedButtonSuitsMap.put(binding.suits11, Arrays.asList(3, 3));
+        suitedButtonSuitsMap.put(binding.suits12, Arrays.asList(4, 4));
+
+        pairButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
+        pairButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
+        pairButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
+        pairButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
+        pairButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
+        pairButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
+
+        offsuitButtonSuitsMap.put(binding.suits00, Arrays.asList(2, 1));
+        offsuitButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
+        offsuitButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
+        offsuitButtonSuitsMap.put(binding.suits03, Arrays.asList(3, 1));
+        offsuitButtonSuitsMap.put(binding.suits10, Arrays.asList(4, 1));
+        offsuitButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
+        offsuitButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
+        offsuitButtonSuitsMap.put(binding.suits13, Arrays.asList(3, 2));
+        offsuitButtonSuitsMap.put(binding.suits20, Arrays.asList(4, 2));
+        offsuitButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
+        offsuitButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
+        offsuitButtonSuitsMap.put(binding.suits23, Arrays.asList(4, 3));
     }
 
     private void generate_main_layout() {
@@ -549,64 +583,47 @@ public class MainActivity extends AppCompatActivity {
         selectedMatrixButton.setStrokeWidth(2);
 
         if (row == col) {
-            binding.suits00.setVisibility(View.INVISIBLE);
-            binding.suits01.setVisibility(View.VISIBLE);
-            binding.suits02.setVisibility(View.VISIBLE);
-            binding.suits03.setVisibility(View.INVISIBLE);
-            binding.suits10.setVisibility(View.INVISIBLE);
-            binding.suits11.setVisibility(View.VISIBLE);
-            binding.suits12.setVisibility(View.VISIBLE);
-            binding.suits13.setVisibility(View.INVISIBLE);
-            binding.suits20.setVisibility(View.INVISIBLE);
-            binding.suits21.setVisibility(View.VISIBLE);
-            binding.suits22.setVisibility(View.VISIBLE);
-            binding.suits23.setVisibility(View.INVISIBLE);
+            int rank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            setSuitSelectorImages(pairButtonSuitsMap, rank, rank);
         } else if (col > row) {
-            binding.suits00.setVisibility(View.INVISIBLE);
-            binding.suits01.setVisibility(View.VISIBLE);
-            binding.suits02.setVisibility(View.VISIBLE);
-            binding.suits03.setVisibility(View.INVISIBLE);
-            binding.suits10.setVisibility(View.INVISIBLE);
-            binding.suits11.setVisibility(View.VISIBLE);
-            binding.suits12.setVisibility(View.VISIBLE);
-            binding.suits13.setVisibility(View.INVISIBLE);
-            binding.suits20.setVisibility(View.INVISIBLE);
-            binding.suits21.setVisibility(View.INVISIBLE);
-            binding.suits22.setVisibility(View.INVISIBLE);
-            binding.suits23.setVisibility(View.INVISIBLE);
+            int highRank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(col);
+            setSuitSelectorImages(suitedButtonSuitsMap, highRank, lowRank);
         } else {
-            binding.suits00.setVisibility(View.VISIBLE);
-            binding.suits01.setVisibility(View.VISIBLE);
-            binding.suits02.setVisibility(View.VISIBLE);
-            binding.suits03.setVisibility(View.VISIBLE);
-            binding.suits10.setVisibility(View.VISIBLE);
-            binding.suits11.setVisibility(View.VISIBLE);
-            binding.suits12.setVisibility(View.VISIBLE);
-            binding.suits13.setVisibility(View.VISIBLE);
-            binding.suits20.setVisibility(View.VISIBLE);
-            binding.suits21.setVisibility(View.VISIBLE);
-            binding.suits22.setVisibility(View.VISIBLE);
-            binding.suits23.setVisibility(View.VISIBLE);
+            int highRank = GlobalStatic.convertMatrixPositionToRankInt(col);
+            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            setSuitSelectorImages(offsuitButtonSuitsMap, highRank, lowRank);
         }
     };
+
+    private void setSuitSelectorImages(Map<ImageButton, List<Integer>> buttonSuitsMap, int highRank, int lowRank) {
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            List<Integer> s = buttonSuitsMap.get(b);
+            if (s == null) {
+                b.setVisibility(View.INVISIBLE);
+            } else {
+                Drawable leftCard = ContextCompat.getDrawable(this, GlobalStatic.suitRankDrawableMap.get(s.get(0)).get(highRank));
+                Drawable rightCard = ContextCompat.getDrawable(this, GlobalStatic.suitRankDrawableMap.get(s.get(1)).get(lowRank));
+
+                LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
+                assert rightCard != null;
+                combinedDrawable.setLayerInsetRight(0, rightCard.getIntrinsicWidth());
+                combinedDrawable.setLayerGravity(1, Gravity.RIGHT);
+
+                b.setImageDrawable(combinedDrawable);
+                b.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     private void clearSuitsSelectionUI() {
         if (selectedMatrixButton != null) {
             selectedMatrixButton.setStrokeWidth(0);
         }
 
-        binding.suits00.setVisibility(View.INVISIBLE);
-        binding.suits01.setVisibility(View.INVISIBLE);
-        binding.suits02.setVisibility(View.INVISIBLE);
-        binding.suits03.setVisibility(View.INVISIBLE);
-        binding.suits10.setVisibility(View.INVISIBLE);
-        binding.suits11.setVisibility(View.INVISIBLE);
-        binding.suits12.setVisibility(View.INVISIBLE);
-        binding.suits13.setVisibility(View.INVISIBLE);
-        binding.suits20.setVisibility(View.INVISIBLE);
-        binding.suits21.setVisibility(View.INVISIBLE);
-        binding.suits22.setVisibility(View.INVISIBLE);
-        binding.suits23.setVisibility(View.INVISIBLE);
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            b.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void set_next_selected_card() {
