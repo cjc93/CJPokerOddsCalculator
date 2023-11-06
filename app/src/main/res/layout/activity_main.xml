@@ -310,6 +310,12 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/suit_selector_text"
+            android:text="@string/select_a_hand_to_choose_suits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
             android:id="@+id/suits_selector"
             android:orientation="vertical"
@@ -341,6 +347,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -362,6 +369,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
                 </LinearLayout>
 
@@ -382,6 +390,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -403,6 +412,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -432,6 +442,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -453,6 +464,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
                 </LinearLayout>
 
@@ -473,6 +485,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -494,6 +507,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -523,6 +537,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -544,6 +559,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
                 </LinearLayout>
 
@@ -564,6 +580,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>
@@ -585,6 +602,7 @@
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
                         android:padding="5dp"
+                        android:layout_margin="3dp"
                         android:contentDescription="@string/suits" />
 
                 </LinearLayout>

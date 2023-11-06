@@ -30,4 +30,6 @@
     <string name="matrix_str">%s%s%s</string>
     <string name="_0_0">0.0%</string>
     <string name="suits">suits</string>
+    <string name="select_a_hand_to_choose_suits">Select a hand to choose suits</string>
+    <string name="choose_suits">Choose suits for the selected hand</string>
 </resources>

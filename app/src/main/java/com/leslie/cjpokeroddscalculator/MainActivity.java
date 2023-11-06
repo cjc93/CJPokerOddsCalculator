@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
-                clearSuitsSelectionUI();
+                clearSuitSelectorUI();
             }
 
             @Override
@@ -210,13 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     Set<String> suits = matrixInput.get(row).get(col);
 
                     if (entry.getKey() <= selectedValue) {
-                        if (row == col) {
-                            suits.addAll(GlobalStatic.pairSuits);
-                        } else if (col > row) {
-                            suits.addAll(GlobalStatic.suitedSuits);
-                        } else {
-                            suits.addAll(GlobalStatic.offSuits);
-                        }
+                        GlobalStatic.addAllSuits(suits, row, col);
                     } else {
                         suits.clear();
                     }
@@ -233,10 +227,13 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < 13; i++)  {
                 for (int j = 0; j < 13; j++)  {
-                    if (rangeRow.matrix.get(i).get(j).isEmpty()) {
+                    Set<String> suits = rangeRow.matrix.get(i).get(j);
+                    if (GlobalStatic.isAllSuits(suits, i, j)) {
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                    } else if (suits.isEmpty()) {
                         matrixBitmap.setPixel(j, i, Color.LTGRAY);
                     } else {
-                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                        matrixBitmap.setPixel(j, i, Color.CYAN);
                     }
                 }
             }
@@ -263,16 +260,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.bottomBar.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
                     tapOnButton = true;
-                }
-
-                if (!tapOnButton) {
-                    for (ImageButton card : cardPositionBiMap.values()) {
-                        card.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
-                            break;
-                        }
-                    }
                 }
 
                 if (!tapOnButton) {
@@ -458,6 +445,10 @@ public class MainActivity extends AppCompatActivity {
             }
             binding.rangeMatrix.addView(row);
         }
+
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            b.setOnClickListener(suitsListener);
+        }
     }
 
     private final View.OnClickListener remove_player_listener = v -> {
@@ -528,7 +519,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (suits.isEmpty()) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
                 } else {
-                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.BLUE);
+                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
                 }
 
                 handCount += suits.size();
@@ -537,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.rangeSlider.setValue(handCount);
 
-        clearSuitsSelectionUI();
+        clearSuitSelectorUI();
 
         binding.mainUi.setVisibility(View.GONE);
         binding.rangeSelector.setVisibility(View.VISIBLE);
@@ -559,13 +550,7 @@ public class MainActivity extends AppCompatActivity {
             suits.clear();
             matrixButton.setBackgroundColor(Color.LTGRAY);
         } else if (suits.isEmpty()) {
-            if (row == col) {
-                suits.addAll(GlobalStatic.pairSuits);
-            } else if (col > row) {
-                suits.addAll(GlobalStatic.suitedSuits);
-            } else {
-                suits.addAll(GlobalStatic.offSuits);
-            }
+            GlobalStatic.addAllSuits(suits, row, col);
 
             binding.rangeSlider.setValue(binding.rangeSlider.getValue() + suits.size());
 
@@ -584,19 +569,59 @@ public class MainActivity extends AppCompatActivity {
 
         if (row == col) {
             int rank = GlobalStatic.convertMatrixPositionToRankInt(row);
-            setSuitSelectorImages(pairButtonSuitsMap, rank, rank);
+            setSuitSelectorUI(pairButtonSuitsMap, rank, rank, suits);
         } else if (col > row) {
             int highRank = GlobalStatic.convertMatrixPositionToRankInt(row);
             int lowRank = GlobalStatic.convertMatrixPositionToRankInt(col);
-            setSuitSelectorImages(suitedButtonSuitsMap, highRank, lowRank);
+            setSuitSelectorUI(suitedButtonSuitsMap, highRank, lowRank, suits);
         } else {
             int highRank = GlobalStatic.convertMatrixPositionToRankInt(col);
             int lowRank = GlobalStatic.convertMatrixPositionToRankInt(row);
-            setSuitSelectorImages(offsuitButtonSuitsMap, highRank, lowRank);
+            setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
+        }
+
+        binding.suitSelectorText.setText(R.string.choose_suits);
+    };
+
+    private final View.OnClickListener suitsListener = v -> {
+        ImageButton suitsButton = (ImageButton) v;
+
+        int row = selectedMatrixPosition[0];
+        int col = selectedMatrixPosition[1];
+
+        Set<String> suits = this.matrixInput.get(row).get(col);
+        List<Integer> s;
+        if (row == col) {
+            s = pairButtonSuitsMap.get(suitsButton);
+        } else if (col > row) {
+            s = suitedButtonSuitsMap.get(suitsButton);
+        } else {
+            s = offsuitButtonSuitsMap.get(suitsButton);
+        }
+
+        assert s != null;
+        String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
+        if (suits.contains(currentSuit)) {
+            suits.remove(currentSuit);
+            suitsButton.setBackgroundResource(0);
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 1);
+        } else {
+            suits.add(currentSuit);
+            suitsButton.setBackgroundResource(R.drawable.border_selector);
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 1);
+        }
+
+        if (GlobalStatic.isAllSuits(suits, row, col)) {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.YELLOW);
+        } else if (suits.isEmpty()) {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.LTGRAY);
+        } else {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.CYAN);
         }
     };
 
-    private void setSuitSelectorImages(Map<ImageButton, List<Integer>> buttonSuitsMap, int highRank, int lowRank) {
+
+    private void setSuitSelectorUI(Map<ImageButton, List<Integer>> buttonSuitsMap, int highRank, int lowRank, Set<String> suits) {
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             List<Integer> s = buttonSuitsMap.get(b);
             if (s == null) {
@@ -611,12 +636,21 @@ public class MainActivity extends AppCompatActivity {
                 combinedDrawable.setLayerGravity(1, Gravity.RIGHT);
 
                 b.setImageDrawable(combinedDrawable);
+
+                String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
+
+                if (suits.contains(currentSuit)) {
+                    b.setBackgroundResource(R.drawable.border_selector);
+                } else {
+                    b.setBackgroundResource(0);
+                }
+
                 b.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    private void clearSuitsSelectionUI() {
+    private void clearSuitSelectorUI() {
         if (selectedMatrixButton != null) {
             selectedMatrixButton.setStrokeWidth(0);
         }
@@ -624,6 +658,8 @@ public class MainActivity extends AppCompatActivity {
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             b.setVisibility(View.INVISIBLE);
         }
+
+        binding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
     }
 
     private void set_next_selected_card() {

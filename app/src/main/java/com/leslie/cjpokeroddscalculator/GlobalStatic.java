@@ -14,7 +14,7 @@ import java.util.TreeMap;
 
 public class GlobalStatic {
 
-    public static HashMap<Integer, String> rankToStr = new HashMap<>();
+    public static Map<Integer, String> rankToStr = new HashMap<>();
     static {
         rankToStr.put(0, "");
         rankToStr.put(2, "2");
@@ -32,7 +32,7 @@ public class GlobalStatic {
         rankToStr.put(14, "A");
     }
 
-    public static HashMap<Integer, String> suitToStr = new HashMap<>();
+    public static Map<Integer, String> suitToStr = new HashMap<>();
     static {
         suitToStr.put(0, "");
         suitToStr.put(1, "d");
@@ -42,7 +42,7 @@ public class GlobalStatic {
     }
 
     public static Set<String> suitedSuits = Sets.newHashSet("dd", "cc", "hh", "ss");
-    public static Set<String> pairSuits = Sets.newHashSet("sh", "sc", "sd", "hc", "hd", "cd");
+    public static Set<String> pairSuits = Sets.newHashSet("hs", "cs", "ds", "ch", "dh", "dc");
     public static Set<String> offSuits = Sets.newHashSet("sh", "sc", "sd", "hs", "hc", "hd", "cs", "ch", "cd", "ds", "dh", "dc");
 
     static String[] all_possible_cards = new String[] {
@@ -74,6 +74,16 @@ public class GlobalStatic {
             return suits.size() == 4;
         } else {
             return suits.size() == 12;
+        }
+    }
+
+    public static void addAllSuits(Set<String> suits, int row, int col) {
+        if (row == col) {
+            suits.addAll(pairSuits);
+        } else if (col > row) {
+            suits.addAll(suitedSuits);
+        } else {
+            suits.addAll(offSuits);
         }
     }
 
