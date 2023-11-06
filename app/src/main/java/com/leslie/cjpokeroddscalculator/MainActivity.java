@@ -1,11 +1,14 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +22,9 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
@@ -29,7 +34,9 @@ import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.common.collect.HashBiMap;
 
@@ -44,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton selectedRangeButton = null;
     private int selectedRangePosition;
 
+    private MaterialButton selectedMatrixButton = null;
+    private final int[] selectedMatrixPosition = new int[2];
+
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
@@ -55,17 +65,20 @@ public class MainActivity extends AppCompatActivity {
     public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
-    HashMap<Button, Integer> remove_row_map = new HashMap<>();
-    HashMap<Integer, HashMap<Integer, Integer>> suit_rank_drawable_map = new HashMap<>();
+    Map<Button, Integer> remove_row_map = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
 
     CardRow[] cardRows = new CardRow[11];
 
-    HashBiMap<Button, List<Integer>> inputMatrixMap = HashBiMap.create();
-    boolean[][] matrixInput = new boolean[13][13];
+    HashBiMap<MaterialButton, List<Integer>> inputMatrixMap = HashBiMap.create();
+    List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
     DisplayMetrics displayMetrics = new DisplayMetrics();
     int cardHeight;
+
+    Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, List<Integer>> offsuitButtonSuitsMap = new HashMap<>();
 
 
     @Override
@@ -182,33 +195,45 @@ public class MainActivity extends AppCompatActivity {
 
         binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
-            public void onStartTrackingTouch(@NonNull Slider slider) { }
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+                clearSuitSelectorUI();
+            }
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
                 float selectedValue = slider.getValue();
                 for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
                     List<Integer> matrixPosition = entry.getValue();
-                    matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = entry.getKey() <= selectedValue;
+                    int row = matrixPosition.get(0);
+                    int col = matrixPosition.get(1);
+
+                    Set<String> suits = matrixInput.get(row).get(col);
+
+                    if (entry.getKey() <= selectedValue) {
+                        GlobalStatic.addAllSuits(suits, row, col);
+                    } else {
+                        suits.clear();
+                    }
                 }
             }
         });
 
         binding.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
-            rangeRow.matrix = new boolean[13][];
-            for (int i = 0; i < 13; i++) {
-                rangeRow.matrix[i] = Arrays.copyOf(this.matrixInput[i], 13);
-            }
+
+            rangeRow.matrix = GlobalStatic.copyMatrix(this.matrixInput);
 
             Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
 
             for (int i = 0; i < 13; i++)  {
                 for (int j = 0; j < 13; j++)  {
-                    if (rangeRow.matrix[i][j]) {
+                    Set<String> suits = rangeRow.matrix.get(i).get(j);
+                    if (GlobalStatic.isAllSuits(suits, i, j)) {
                         matrixBitmap.setPixel(j, i, Color.YELLOW);
-                    } else {
+                    } else if (suits.isEmpty()) {
                         matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                    } else {
+                        matrixBitmap.setPixel(j, i, Color.CYAN);
                     }
                 }
             }
@@ -235,16 +260,6 @@ public class MainActivity extends AppCompatActivity {
                 binding.bottomBar.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
                     tapOnButton = true;
-                }
-
-                if (!tapOnButton) {
-                    for (ImageButton card : cardPositionBiMap.values()) {
-                        card.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
-                            break;
-                        }
-                    }
                 }
 
                 if (!tapOnButton) {
@@ -293,79 +308,30 @@ public class MainActivity extends AppCompatActivity {
         cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
         cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
 
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
-                this.matrixInput[row_idx][col_idx] = false;
-            }
-        }
+        suitedButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 1));
+        suitedButtonSuitsMap.put(binding.suits02, Arrays.asList(2, 2));
+        suitedButtonSuitsMap.put(binding.suits11, Arrays.asList(3, 3));
+        suitedButtonSuitsMap.put(binding.suits12, Arrays.asList(4, 4));
 
-        HashMap<Integer, Integer> temp_map = new HashMap<>();
-        temp_map.put(0, R.drawable.unknown_button);
-        suit_rank_drawable_map.put(0, temp_map);
+        pairButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
+        pairButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
+        pairButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
+        pairButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
+        pairButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
+        pairButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
 
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.d2_button);
-        temp_map.put(3, R.drawable.d3_button);
-        temp_map.put(4, R.drawable.d4_button);
-        temp_map.put(5, R.drawable.d5_button);
-        temp_map.put(6, R.drawable.d6_button);
-        temp_map.put(7, R.drawable.d7_button);
-        temp_map.put(8, R.drawable.d8_button);
-        temp_map.put(9, R.drawable.d9_button);
-        temp_map.put(10, R.drawable.d10_button);
-        temp_map.put(11, R.drawable.d11_button);
-        temp_map.put(12, R.drawable.d12_button);
-        temp_map.put(13, R.drawable.d13_button);
-        temp_map.put(14, R.drawable.d14_button);
-        suit_rank_drawable_map.put(1, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.c2_button);
-        temp_map.put(3, R.drawable.c3_button);
-        temp_map.put(4, R.drawable.c4_button);
-        temp_map.put(5, R.drawable.c5_button);
-        temp_map.put(6, R.drawable.c6_button);
-        temp_map.put(7, R.drawable.c7_button);
-        temp_map.put(8, R.drawable.c8_button);
-        temp_map.put(9, R.drawable.c9_button);
-        temp_map.put(10, R.drawable.c10_button);
-        temp_map.put(11, R.drawable.c11_button);
-        temp_map.put(12, R.drawable.c12_button);
-        temp_map.put(13, R.drawable.c13_button);
-        temp_map.put(14, R.drawable.c14_button);
-        suit_rank_drawable_map.put(2, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.h2_button);
-        temp_map.put(3, R.drawable.h3_button);
-        temp_map.put(4, R.drawable.h4_button);
-        temp_map.put(5, R.drawable.h5_button);
-        temp_map.put(6, R.drawable.h6_button);
-        temp_map.put(7, R.drawable.h7_button);
-        temp_map.put(8, R.drawable.h8_button);
-        temp_map.put(9, R.drawable.h9_button);
-        temp_map.put(10, R.drawable.h10_button);
-        temp_map.put(11, R.drawable.h11_button);
-        temp_map.put(12, R.drawable.h12_button);
-        temp_map.put(13, R.drawable.h13_button);
-        temp_map.put(14, R.drawable.h14_button);
-        suit_rank_drawable_map.put(3, temp_map);
-
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.s2_button);
-        temp_map.put(3, R.drawable.s3_button);
-        temp_map.put(4, R.drawable.s4_button);
-        temp_map.put(5, R.drawable.s5_button);
-        temp_map.put(6, R.drawable.s6_button);
-        temp_map.put(7, R.drawable.s7_button);
-        temp_map.put(8, R.drawable.s8_button);
-        temp_map.put(9, R.drawable.s9_button);
-        temp_map.put(10, R.drawable.s10_button);
-        temp_map.put(11, R.drawable.s11_button);
-        temp_map.put(12, R.drawable.s12_button);
-        temp_map.put(13, R.drawable.s13_button);
-        temp_map.put(14, R.drawable.s14_button);
-        suit_rank_drawable_map.put(4, temp_map);
+        offsuitButtonSuitsMap.put(binding.suits00, Arrays.asList(2, 1));
+        offsuitButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
+        offsuitButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
+        offsuitButtonSuitsMap.put(binding.suits03, Arrays.asList(3, 1));
+        offsuitButtonSuitsMap.put(binding.suits10, Arrays.asList(4, 1));
+        offsuitButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
+        offsuitButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
+        offsuitButtonSuitsMap.put(binding.suits13, Arrays.asList(3, 2));
+        offsuitButtonSuitsMap.put(binding.suits20, Arrays.asList(4, 2));
+        offsuitButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
+        offsuitButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
+        offsuitButtonSuitsMap.put(binding.suits23, Arrays.asList(4, 3));
     }
 
     private void generate_main_layout() {
@@ -420,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
                 ImageButton b = new ImageButton(this);
                 b.setLayoutParams(buttonParam);
                 b.setBackgroundResource(0);
-                b.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
@@ -451,16 +417,19 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(rowParam);
 
             for (int col_idx = 0; col_idx < 13; col_idx++) {
-                Button b = new Button(this);
+                MaterialButton b = new MaterialButton(this);
                 b.setLayoutParams(buttonParam);
-                b.setPadding(1, 1, 1, 1);
+                b.setPadding(0, 0, 0, 0);
                 b.setHeight(squareHeight);
                 b.setMinimumHeight(squareHeight);
                 b.setBackgroundColor(Color.LTGRAY);
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
-                b.setMaxLines(1);
-                b.setAutoSizeTextTypeUniformWithConfiguration(10, 11, 1, TypedValue.COMPLEX_UNIT_SP);
+                b.setTextSize(11);
+                b.setCornerRadius(0);
+                b.setInsetBottom(0);
+                b.setInsetTop(0);
+                b.setStrokeColor(ColorStateList.valueOf(Color.RED));
                 b.setOnClickListener(matrixListener);
 
                 if (row_idx == col_idx) {
@@ -475,6 +444,10 @@ public class MainActivity extends AppCompatActivity {
                 this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
             }
             binding.rangeMatrix.addView(row);
+        }
+
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            b.setOnClickListener(suitsListener);
         }
     }
 
@@ -533,67 +506,161 @@ public class MainActivity extends AppCompatActivity {
         selectedRangePosition = rangePositionBiMap.inverse().get(rangeSelectorInput);
 
         RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
-        this.matrixInput = new boolean[13][];
-        for (int i = 0; i < 13; i++) {
-            this.matrixInput[i] = Arrays.copyOf(rangeRow.matrix[i], 13);
-        }
+
+        this.matrixInput = GlobalStatic.copyMatrix(rangeRow.matrix);
 
         int handCount = 0;
 
         for (int row_idx = 0; row_idx < 13; row_idx++) {
             for (int col_idx = 0; col_idx < 13; col_idx++) {
-                if (this.matrixInput[row_idx][col_idx]) {
+                Set<String> suits = this.matrixInput.get(row_idx).get(col_idx);
+                if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
-
-                    if (row_idx == col_idx) {
-                        handCount += 6;
-                    } else if (col_idx > row_idx) {
-                        handCount += 4;
-                    } else {
-                        handCount += 12;
-                    }
-                } else {
+                } else if (suits.isEmpty()) {
                     Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                } else {
+                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
                 }
+
+                handCount += suits.size();
             }
         }
 
         binding.rangeSlider.setValue(handCount);
 
+        clearSuitSelectorUI();
+
         binding.mainUi.setVisibility(View.GONE);
         binding.rangeSelector.setVisibility(View.VISIBLE);
     };
 
+
     private final View.OnClickListener matrixListener = v -> {
-        Button matrixButton = (Button) v;
+        MaterialButton matrixButton = (MaterialButton) v;
 
         List<Integer> matrixPosition = inputMatrixMap.get(matrixButton);
         assert matrixPosition != null;
+        int row = matrixPosition.get(0);
+        int col = matrixPosition.get(1);
 
-        if (matrixInput[matrixPosition.get(0)][matrixPosition.get(1)]) {
-            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = false;
+        Set<String> suits = this.matrixInput.get(row).get(col);
+
+        if (GlobalStatic.isAllSuits(suits, row, col)) {
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - suits.size());
+            suits.clear();
             matrixButton.setBackgroundColor(Color.LTGRAY);
+        } else if (suits.isEmpty()) {
+            GlobalStatic.addAllSuits(suits, row, col);
 
-            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 6);
-            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 4);
-            } else {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 12);
-            }
-        } else {
-            matrixInput[matrixPosition.get(0)][matrixPosition.get(1)] = true;
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + suits.size());
+
             matrixButton.setBackgroundColor(Color.YELLOW);
+        }
 
-            if (Objects.equals(matrixPosition.get(0), matrixPosition.get(1))) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 6);
-            } else if (matrixPosition.get(1) > matrixPosition.get(0)) {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 4);
-            } else {
-                binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 12);
-            }
+        if (selectedMatrixButton != null) {
+            selectedMatrixButton.setStrokeWidth(0);
+        }
+
+        selectedMatrixPosition[0] = row;
+        selectedMatrixPosition[1] = col;
+
+        selectedMatrixButton = matrixButton;
+        selectedMatrixButton.setStrokeWidth(2);
+
+        if (row == col) {
+            int rank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            setSuitSelectorUI(pairButtonSuitsMap, rank, rank, suits);
+        } else if (col > row) {
+            int highRank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(col);
+            setSuitSelectorUI(suitedButtonSuitsMap, highRank, lowRank, suits);
+        } else {
+            int highRank = GlobalStatic.convertMatrixPositionToRankInt(col);
+            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
+        }
+
+        binding.suitSelectorText.setText(R.string.choose_suits);
+    };
+
+    private final View.OnClickListener suitsListener = v -> {
+        ImageButton suitsButton = (ImageButton) v;
+
+        int row = selectedMatrixPosition[0];
+        int col = selectedMatrixPosition[1];
+
+        Set<String> suits = this.matrixInput.get(row).get(col);
+        List<Integer> s;
+        if (row == col) {
+            s = pairButtonSuitsMap.get(suitsButton);
+        } else if (col > row) {
+            s = suitedButtonSuitsMap.get(suitsButton);
+        } else {
+            s = offsuitButtonSuitsMap.get(suitsButton);
+        }
+
+        assert s != null;
+        String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
+        if (suits.contains(currentSuit)) {
+            suits.remove(currentSuit);
+            suitsButton.setBackgroundResource(0);
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 1);
+        } else {
+            suits.add(currentSuit);
+            suitsButton.setBackgroundResource(R.drawable.border_selector);
+            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 1);
+        }
+
+        if (GlobalStatic.isAllSuits(suits, row, col)) {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.YELLOW);
+        } else if (suits.isEmpty()) {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.LTGRAY);
+        } else {
+            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.CYAN);
         }
     };
+
+
+    private void setSuitSelectorUI(Map<ImageButton, List<Integer>> buttonSuitsMap, int highRank, int lowRank, Set<String> suits) {
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            List<Integer> s = buttonSuitsMap.get(b);
+            if (s == null) {
+                b.setVisibility(View.INVISIBLE);
+            } else {
+                Drawable leftCard = ContextCompat.getDrawable(this, GlobalStatic.suitRankDrawableMap.get(s.get(0)).get(highRank));
+                Drawable rightCard = ContextCompat.getDrawable(this, GlobalStatic.suitRankDrawableMap.get(s.get(1)).get(lowRank));
+
+                LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
+                assert rightCard != null;
+                combinedDrawable.setLayerInsetRight(0, rightCard.getIntrinsicWidth());
+                combinedDrawable.setLayerGravity(1, Gravity.RIGHT);
+
+                b.setImageDrawable(combinedDrawable);
+
+                String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
+
+                if (suits.contains(currentSuit)) {
+                    b.setBackgroundResource(R.drawable.border_selector);
+                } else {
+                    b.setBackgroundResource(0);
+                }
+
+                b.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    private void clearSuitSelectorUI() {
+        if (selectedMatrixButton != null) {
+            selectedMatrixButton.setStrokeWidth(0);
+        }
+
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+            b.setVisibility(View.INVISIBLE);
+        }
+
+        binding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
+    }
 
     private void set_next_selected_card() {
         if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
@@ -668,7 +735,7 @@ public class MainActivity extends AppCompatActivity {
     public void setCardImage(int row_idx, int card_idx, int suit, int rank) {
         ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
         assert card_button != null;
-        card_button.setImageResource(suit_rank_drawable_map.get(suit).get(rank));
+        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
     }
 
     private void calculate_odds() {
