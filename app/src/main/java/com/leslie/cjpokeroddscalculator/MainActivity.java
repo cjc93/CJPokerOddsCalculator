@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initialise_variables() {
+        // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         cardHeight = displayMetrics.heightPixels / 9;
 
