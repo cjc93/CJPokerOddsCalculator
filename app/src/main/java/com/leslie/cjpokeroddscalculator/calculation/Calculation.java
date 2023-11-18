@@ -50,22 +50,26 @@ public class Calculation {
         return playerCards;
     }
 
-    public double[] average_unknown_equity(double[] result) {
-        double known_players_equity = 0;
+    public double[][] average_unknown_equity(double[] equity, double[] win) {
+        double unknown_players_equity = 0;
+        double unknown_players_win = 0;
 
         for(int i = 0; i < this.playersRemainingNo; i++) {
-            if(this.known_players[i]) {
-                known_players_equity += result[i];
+            if(!this.known_players[i]) {
+                unknown_players_equity += equity[i];
+                unknown_players_win += win[i];
             }
         }
 
-        double unknown_players_equity = (1 - known_players_equity) / this.no_of_unknown_players;
+        unknown_players_equity = unknown_players_equity / this.no_of_unknown_players;
+        unknown_players_win = unknown_players_win / this.no_of_unknown_players;
         for(int i = 0; i < playersRemainingNo; i++) {
             if(!known_players[i]) {
-                result[i] = unknown_players_equity;
+                equity[i] = unknown_players_equity;
+                win[i] = unknown_players_win;
             }
         }
 
-        return result;
+        return new double[][] {equity, win};
     }
 }

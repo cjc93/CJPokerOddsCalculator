@@ -7,7 +7,9 @@ std::vector<omp::CardRange> jstr_array_to_card_vec(JNIEnv *pEnv, jobjectArray pA
 
 std::string jstr_to_cppstring(JNIEnv *pEnv, jstring pJstring);
 
-jdoubleArray results_to_jdouble_array(JNIEnv *pEnv, omp::EquityCalculator::Results cpp_results);
+jdoubleArray win_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results);
+
+jdoubleArray cpp_double_array_to_jdouble_array(JNIEnv *pEnv, const double pDouble[10]);
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -24,7 +26,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIE
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "()Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([DZ)V");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D[DZ)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &is_cancelled, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
@@ -56,9 +58,13 @@ Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIE
     eq.wait();
     auto r = eq.getResults();
 
-    jdoubleArray result = results_to_jdouble_array(env, r);
-    env->CallVoidMethod(thiz, mAfterAllSimulations, result, is_cancelled ? JNI_TRUE : JNI_FALSE);
-    env->DeleteLocalRef(result);
+    jdoubleArray equity = cpp_double_array_to_jdouble_array(env, r.equity);
+    jdoubleArray win = win_to_jdouble_array(env, r);
+
+    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win, is_cancelled ? JNI_TRUE : JNI_FALSE);
+
+    env->DeleteLocalRef(equity);
+    env->DeleteLocalRef(win);
 
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
@@ -77,21 +83,23 @@ Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarl
     env->GetJavaVM(&jvm);
 
     jclass jcls = env->GetObjectClass(thiz);
-    jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "([D)Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D)V");
+    jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "([D[D)Z");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D[D)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
         JNIEnv* myNewEnv;
         jvm->AttachCurrentThread(&myNewEnv, nullptr);
 
-        jdoubleArray jresult = results_to_jdouble_array(myNewEnv, results);
+        jdoubleArray jequity = cpp_double_array_to_jdouble_array(myNewEnv, results.equity);
+        jdoubleArray jwin = win_to_jdouble_array(myNewEnv, results);
 
-        if (myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations, jresult) == JNI_FALSE) {
+        if (myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations, jequity, jwin) == JNI_FALSE) {
             eq.stop();
         }
 
-        myNewEnv->DeleteLocalRef(jresult);
+        myNewEnv->DeleteLocalRef(jequity);
+        myNewEnv->DeleteLocalRef(jwin);
 
         jvm->DetachCurrentThread();
     };
@@ -110,18 +118,31 @@ Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarl
     eq.wait();
     auto r = eq.getResults();
 
-    jdoubleArray result = results_to_jdouble_array(env, r);
-    env->CallVoidMethod(thiz, mAfterAllSimulations, result);
-    env->DeleteLocalRef(result);
+    jdoubleArray equity = cpp_double_array_to_jdouble_array(env, r.equity);
+    jdoubleArray win = win_to_jdouble_array(env, r);
+
+    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win);
+
+    env->DeleteLocalRef(equity);
+    env->DeleteLocalRef(win);
 
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
 }
 
-jdoubleArray results_to_jdouble_array(JNIEnv *pEnv, omp::EquityCalculator::Results cpp_results) {
+jdoubleArray win_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results) {
+    double win[10];
+    for (int i=0; i < 10; ++i) {
+        win[i] = cpp_results.wins[i] / (double) cpp_results.hands;
+    }
+
+    return cpp_double_array_to_jdouble_array(pEnv, win);
+}
+
+jdoubleArray cpp_double_array_to_jdouble_array(JNIEnv *pEnv, const double pDouble[10]) {
     jdoubleArray jresult = pEnv->NewDoubleArray(10);
 
-    pEnv->SetDoubleArrayRegion(jresult, 0, 10, &cpp_results.equity[0]);
+    pEnv->SetDoubleArrayRegion(jresult, 0, 10, &pDouble[0]);
 
     return jresult;
 }

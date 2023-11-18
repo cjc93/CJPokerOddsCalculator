@@ -1,7 +1,5 @@
 package com.leslie.cjpokeroddscalculator;
 
-import android.graphics.Color;
-
 public abstract class OutputResult {
     public Thread currentThread;
     public MainActivity mainActivity;
@@ -13,19 +11,13 @@ public abstract class OutputResult {
 
     public abstract boolean during_simulations(double[]... result);
 
-    public abstract void after_all_simulations(double[] result, boolean... isCancelled);
+    public abstract void after_all_simulations(double[] equity, double[] win, boolean... isCancelled);
 
-    public void update_win_results(double[] result) {
+    public void update_win_results(double[] equity, double[] win) {
         for(int i = 0; i < mainActivity.players_remaining_no; i++) {
-            mainActivity.win_array[i].setText(mainActivity.getString(R.string.win_perc_populated, result[i] * 100));
-
-            if(result[i] > 1 / (double) mainActivity.players_remaining_no + 0.02) {
-                mainActivity.win_array[i].setTextColor(Color.GREEN);
-            } else if (result[i] < 1 / (double) mainActivity.players_remaining_no - 0.02) {
-                mainActivity.win_array[i].setTextColor(Color.RED);
-            } else {
-                mainActivity.win_array[i].setTextColor(Color.WHITE);
-            }
+            mainActivity.equityArray[i].setText(mainActivity.getString(R.string.two_decimal_perc, equity[i] * 100));
+            mainActivity.winArray[i].setText(mainActivity.getString(R.string.two_decimal_perc, win[i] * 100));
+            mainActivity.tieArray[i].setText(mainActivity.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
         }
     }
 }
