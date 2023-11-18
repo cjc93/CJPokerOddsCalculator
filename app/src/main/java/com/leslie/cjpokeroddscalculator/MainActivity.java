@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     public int players_remaining_no = 2;
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
-    public TextView[] win_array = new TextView[10];
+    public TextView[] equityArray = new TextView[10];
+    public TextView[] winArray = new TextView[10];
+    public TextView[] tieArray = new TextView[10];
     public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
     public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
@@ -110,8 +112,12 @@ public class MainActivity extends AppCompatActivity {
         generateRangeSelector();
 
         binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-        win_array[0].setText(getString(R.string.win_perc_populated, 50.0));
-        win_array[1].setText(getString(R.string.win_perc_populated, 50.0));
+        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
+        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
+        winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
+        winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
+        tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
+        tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
 
         for (ImageButton b : cardPositionBiMap.values()) {
             b.setOnClickListener(selector_listener);
@@ -339,7 +345,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(MainActivity.this), binding.playerRows, true);
             player_row_array[i] = binding_player_row.getRoot();
-            win_array[i] = binding_player_row.win;
+            equityArray[i] = binding_player_row.equity;
+            winArray[i] = binding_player_row.win;
+            tieArray[i] = binding_player_row.tie;
             rangePositionBiMap.put(i + 1, binding_player_row.range);
             twoCardsLayouts[i] = binding_player_row.twoCards;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
@@ -749,8 +757,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         for(int i = 0; i < players_remaining_no; i++) {
-            win_array[i].setText(R.string.win_perc_empty);
-            win_array[i].setTextColor(Color.WHITE);
+            equityArray[i].setText("");
+            winArray[i].setText("");
+            tieArray[i].setText("");
         }
 
         binding.resDesc.setText(R.string.checking_random_subset);

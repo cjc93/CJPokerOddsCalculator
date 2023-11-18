@@ -22,8 +22,8 @@ public class ExactCalc extends Calculation {
         return outputResultObj.during_simulations();
     }
 
-    public void after_all_simulations(double[] result, boolean isCancelled) {
-        result = average_unknown_equity(result);
-        outputResultObj.after_all_simulations(result, isCancelled);
+    public void after_all_simulations(double[] equity, double[] win, boolean isCancelled) {
+        double[][] result = average_unknown_equity(equity, win);
+        outputResultObj.after_all_simulations(result[0], result[1], isCancelled);
     }
 }

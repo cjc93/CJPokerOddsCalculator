@@ -3,8 +3,7 @@
     <!-- Strings used for fragments for navigation -->
 
     <string name="players_remaining">Players remaining: %d</string>
-    <string name="win_perc_empty"></string>
-    <string name="win_perc_populated">Win: %.2f%%</string>
+    <string name="two_decimal_perc">%.2f%%</string>
     <string name="hands_perc">%.1f%%</string>
     <string name="flop">Flop</string>
     <string name="flop1">Flop1</string>
@@ -32,4 +31,7 @@
     <string name="suits">suits</string>
     <string name="select_a_hand_to_choose_suits">Select a hand to choose suits</string>
     <string name="choose_suits">Choose suits for the selected hand</string>
+    <string name="equity">Equity</string>
+    <string name="win">Win</string>
+    <string name="tie">Tie</string>
 </resources>
