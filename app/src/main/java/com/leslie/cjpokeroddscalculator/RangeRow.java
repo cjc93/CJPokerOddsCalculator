@@ -28,25 +28,25 @@ public class RangeRow extends CardRow{
         this.matrix = GlobalStatic.copyMatrix(other.matrix);
     }
 
-    public void clear(MainActivity mainActivity, int row_idx) {
+    public void clear(TexasHoldemFragment texasHoldemFragment, int row_idx) {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 13; j++) {
                 this.matrix.get(i).get(j).clear();
             }
         }
 
-        Objects.requireNonNull(mainActivity.rangePositionBiMap.get(row_idx)).setImageBitmap(mainActivity.emptyRangeBitmap);
+        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
     }
 
     public CardRow copy() {
         return new RangeRow(this);
     }
 
-    public void copyImageBelow(MainActivity mainActivity, int row_idx) {
-        mainActivity.twoCardsLayouts[row_idx - 1].setVisibility(View.GONE);
-        Drawable d = Objects.requireNonNull(mainActivity.rangePositionBiMap.get(row_idx + 1)).getDrawable();
-        Objects.requireNonNull(mainActivity.rangePositionBiMap.get(row_idx)).setImageDrawable(d);
-        Objects.requireNonNull(mainActivity.rangePositionBiMap.get(row_idx)).setVisibility(View.VISIBLE);
+    public void copyImageBelow(TexasHoldemFragment texasHoldemFragment, int row_idx) {
+        texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.GONE);
+        Drawable d = Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx + 1)).getDrawable();
+        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setImageDrawable(d);
+        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.VISIBLE);
     }
 
     public boolean isKnownPlayer() {
