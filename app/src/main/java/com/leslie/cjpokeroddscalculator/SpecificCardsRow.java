@@ -25,13 +25,13 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
-    public void clear(MainActivity mainActivity, int row_idx) {
+    public void clear(TexasHoldemFragment texasHoldemFragment, int row_idx) {
         for (int[] card : this.cards) {
             Arrays.fill(card, 0);
         }
 
         for (int i = 0; i < this.cards.length; i++) {
-            mainActivity.setCardImage(row_idx, i, 0, 0);
+            texasHoldemFragment.setCardImage(row_idx, i, 0, 0);
         }
     }
 
@@ -39,15 +39,15 @@ public class SpecificCardsRow extends CardRow {
         return new SpecificCardsRow(this);
     }
 
-    public void copyImageBelow(MainActivity mainActivity, int row_idx) {
-        Objects.requireNonNull(mainActivity.rangePositionBiMap.get(row_idx)).setVisibility(View.GONE);
+    public void copyImageBelow(TexasHoldemFragment texasHoldemFragment, int row_idx) {
+        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.GONE);
 
         for (int i = 0; i < 2; i++) {
-            Drawable d = Objects.requireNonNull(mainActivity.cardPositionBiMap.get(Arrays.asList(row_idx + 1, i))).getDrawable();
-            Objects.requireNonNull(mainActivity.cardPositionBiMap.get(Arrays.asList(row_idx, i))).setImageDrawable(d);
+            Drawable d = Objects.requireNonNull(texasHoldemFragment.cardPositionBiMap.get(Arrays.asList(row_idx + 1, i))).getDrawable();
+            Objects.requireNonNull(texasHoldemFragment.cardPositionBiMap.get(Arrays.asList(row_idx, i))).setImageDrawable(d);
         }
 
-        mainActivity.twoCardsLayouts[row_idx - 1].setVisibility(View.VISIBLE);
+        texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.VISIBLE);
     }
 
     public boolean isKnownPlayer() {

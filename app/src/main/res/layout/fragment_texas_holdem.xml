@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true" >
+
+    <LinearLayout
+        android:id="@+id/main_ui"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/top_row"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false" >
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <TextView
+                    android:text="@string/flop"
+                    android:gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:baselineAligned="false">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" >
+
+                        <ImageButton
+                            android:id="@+id/flop1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/flop1"
+                            android:padding="5dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" >
+
+                        <ImageButton
+                            android:id="@+id/flop2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/flop2"
+                            android:padding="5dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center" >
+
+                        <ImageButton
+                            android:id="@+id/flop3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:src="@drawable/unknown_button"
+                            android:layout_gravity="center"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:contentDescription="@string/flop3"
+                            android:padding="5dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:text="@string/turn"
+                    android:gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/turn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/turn"
+                        android:padding="5dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:text="@string/river"
+                    android:gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#696969" />
+
+                <ImageButton
+                    android:id="@+id/river"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/river"
+                    android:padding="5dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/playersremaining"
+                android:textSize="26sp"
+                android:text="@string/players_remaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="68">
+
+            <LinearLayout
+                android:id="@+id/player_rows"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/res_desc"
+            android:text="@string/all_combinations_checked_result_is_exact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#2F3540" >
+
+            <Button
+                android:id="@+id/addrange"
+                android:text="@string/range"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="14sp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/addplayer"
+                android:text="@string/add_player"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="14sp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/clear"
+                android:text="@string/clear"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/button_unknown"
+                app:autoSizeTextType="uniform"
+                android:text="@string/unknown_card"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/input_cards"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="32"
+            android:background="#2F3540" >
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/range_selector"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/range_matrix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/hands_perc"
+                android:text="@string/_0_0"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/range_slider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:valueFrom="0"
+                android:valueTo="1326"
+                android:stepSize="1"
+                android:layout_weight="7"
+                android:layout_marginEnd="50dp"
+                app:labelBehavior="gone"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/suit_selector_text"
+            android:text="@string/select_a_hand_to_choose_suits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/suits_selector"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits00"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:baselineAligned="false">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/suits23"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:layout_margin="3dp"
+                        android:contentDescription="@string/suits" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/done" />
+
+    </LinearLayout>
+
+</LinearLayout>
