@@ -3,7 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/TexasHoldemFragment">
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.leslie.cjpokeroddscalculator.HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_HomeFragment_to_TexasHoldemFragment"
+            app:destination="@id/TexasHoldemFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/TexasHoldemFragment"
@@ -11,4 +22,5 @@
         tools:layout="@layout/fragment_texas_holdem">
 
     </fragment>
+
 </navigation>

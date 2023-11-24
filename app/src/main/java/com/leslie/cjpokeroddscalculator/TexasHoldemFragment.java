@@ -104,7 +104,7 @@ public class TexasHoldemFragment extends Fragment {
                 }
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(requireActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         initialise_variables();
 
@@ -260,6 +260,14 @@ public class TexasHoldemFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        if (monte_carlo_thread != null) {
+            monte_carlo_thread.interrupt();
+        }
+
+        if (exact_calc_thread != null) {
+            exact_calc_thread.interrupt();
+        }
     }
 
     public void hideCardSelector(MotionEvent event) {
