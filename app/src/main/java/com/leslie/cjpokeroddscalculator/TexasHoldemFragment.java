@@ -259,8 +259,6 @@ public class TexasHoldemFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
-
         if (monte_carlo_thread != null) {
             monte_carlo_thread.interrupt();
         }
@@ -268,6 +266,8 @@ public class TexasHoldemFragment extends Fragment {
         if (exact_calc_thread != null) {
             exact_calc_thread.interrupt();
         }
+
+        binding = null;
     }
 
     public void hideCardSelector(MotionEvent event) {
