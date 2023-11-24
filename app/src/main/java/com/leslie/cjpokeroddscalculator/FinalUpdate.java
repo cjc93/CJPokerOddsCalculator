@@ -11,7 +11,7 @@ public class FinalUpdate extends OutputResult {
             return false;
         }
 
-        texasHoldemFragment.requireActivity().runOnUiThread(() -> texasHoldemFragment.binding.resDesc.setText(R.string.checking_combinations));
+        texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_combinations));
 
         return true;
     }
@@ -20,24 +20,25 @@ public class FinalUpdate extends OutputResult {
         if (!Thread.interrupted()) {
             if (texasHoldemFragment.monte_carlo_thread.isAlive()) {
                 if (isCancelled[0]) {
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> texasHoldemFragment.binding.resDesc.setText(R.string.checking_random_subset));
+                    texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
                 } else {
                     texasHoldemFragment.monte_carlo_thread.interrupt();
                     texasHoldemFragment.requireActivity().runOnUiThread(() -> {
-                        update_win_results(equity, win);
-                        texasHoldemFragment.binding.resDesc.setText(R.string.all_combinations_checked_result_is_exact);
+                        updateWinResults(equity, win);
+                        updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });
                 }
             } else {
                 if (isCancelled[0]) {
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> texasHoldemFragment.binding.resDesc.setText(R.string.finished_checking_random_subset));
+                    texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
                 } else {
                     texasHoldemFragment.requireActivity().runOnUiThread(() -> {
-                        update_win_results(equity, win);
-                        texasHoldemFragment.binding.resDesc.setText(R.string.all_combinations_checked_result_is_exact);
+                        updateWinResults(equity, win);
+                        updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });
                 }
             }
         }
     }
+
 }
