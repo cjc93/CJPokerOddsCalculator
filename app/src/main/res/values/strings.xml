@@ -34,4 +34,5 @@
     <string name="equity">Equity</string>
     <string name="win">Win</string>
     <string name="tie">Tie</string>
+    <string name="texas_hold_em_equity_calculator">Texas Hold\'em Equity Calculator</string>
 </resources>
