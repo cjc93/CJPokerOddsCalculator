@@ -19,7 +19,7 @@ public abstract class OutputResult {
 
     public void updateWinResults(double[] equity, double[] win) {
         if (texasHoldemFragment.getActivity() != null) {
-            for(int i = 0; i < texasHoldemFragment.players_remaining_no; i++) {
+            for(int i = 0; i < texasHoldemFragment.playersRemainingNo; i++) {
                 texasHoldemFragment.equityArray[i].setText(texasHoldemFragment.getString(R.string.two_decimal_perc, equity[i] * 100));
                 texasHoldemFragment.winArray[i].setText(texasHoldemFragment.getString(R.string.two_decimal_perc, win[i] * 100));
                 texasHoldemFragment.tieArray[i].setText(texasHoldemFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));

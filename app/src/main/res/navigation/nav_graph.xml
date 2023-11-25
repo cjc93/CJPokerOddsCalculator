@@ -21,6 +21,10 @@
         android:name="com.leslie.cjpokeroddscalculator.TexasHoldemFragment"
         tools:layout="@layout/fragment_texas_holdem">
 
+        <action
+            android:id="@+id/action_TexasHoldemFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+
     </fragment>
 
 </navigation>
