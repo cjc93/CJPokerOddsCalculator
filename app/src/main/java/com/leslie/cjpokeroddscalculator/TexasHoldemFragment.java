@@ -24,6 +24,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
@@ -48,7 +49,7 @@ public class TexasHoldemFragment extends Fragment {
     private ImageButton selected_card_button = null;
     private final int[] selected_card_position = new int[2];
 
-    private ImageButton selectedRangeButton = null;
+    private ImageButton selectedRangeButton;
     private int selectedRangePosition;
 
     private MaterialButton selectedMatrixButton = null;
@@ -57,7 +58,7 @@ public class TexasHoldemFragment extends Fragment {
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
-    public int players_remaining_no = 2;
+    public int playersRemainingNo;
 
     private final LinearLayout[] player_row_array = new LinearLayout[10];
     public TextView[] equityArray = new TextView[10];
@@ -68,11 +69,11 @@ public class TexasHoldemFragment extends Fragment {
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<Button, Integer> remove_row_map = new HashMap<>();
-    HashBiMap<ImageButton, List<Integer>> input_suit_rank_map = HashBiMap.create();
+    HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
 
     CardRow[] cardRows = new CardRow[11];
 
-    HashBiMap<MaterialButton, List<Integer>> inputMatrixMap = HashBiMap.create();
+    HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
     List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
     DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -112,7 +113,7 @@ public class TexasHoldemFragment extends Fragment {
 
         generateRangeSelector();
 
-        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+        binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
         equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
         equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
         winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
@@ -129,15 +130,15 @@ public class TexasHoldemFragment extends Fragment {
         }
 
         binding.addplayer.setOnClickListener(v -> {
-            if(players_remaining_no < 10){
-                players_remaining_no++;
-                binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                Objects.requireNonNull(rangePositionBiMap.get(players_remaining_no)).setVisibility(View.GONE);
-                cardRows[players_remaining_no] = new SpecificCardsRow(2);
-                setCardImage(players_remaining_no, 0, 0, 0);
-                setCardImage(players_remaining_no, 1, 0, 0);
-                twoCardsLayouts[players_remaining_no - 1].setVisibility(View.VISIBLE);
-                player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
+            if(playersRemainingNo < 10){
+                playersRemainingNo++;
+                binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+                Objects.requireNonNull(rangePositionBiMap.get(playersRemainingNo)).setVisibility(View.GONE);
+                cardRows[playersRemainingNo] = new SpecificCardsRow(2);
+                setCardImage(playersRemainingNo, 0, 0, 0);
+                setCardImage(playersRemainingNo, 1, 0, 0);
+                twoCardsLayouts[playersRemainingNo - 1].setVisibility(View.VISIBLE);
+                player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
                 calculate_odds();
             }
             else{
@@ -146,16 +147,16 @@ public class TexasHoldemFragment extends Fragment {
         });
 
         binding.addrange.setOnClickListener(v -> {
-            if(players_remaining_no < 10){
-                players_remaining_no++;
-                binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
-                twoCardsLayouts[players_remaining_no - 1].setVisibility(View.GONE);
-                cardRows[players_remaining_no] = new RangeRow();
-                ImageButton b = this.rangePositionBiMap.get(players_remaining_no);
+            if(playersRemainingNo < 10){
+                playersRemainingNo++;
+                binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+                twoCardsLayouts[playersRemainingNo - 1].setVisibility(View.GONE);
+                cardRows[playersRemainingNo] = new RangeRow();
+                ImageButton b = this.rangePositionBiMap.get(playersRemainingNo);
                 assert b != null;
                 b.setImageBitmap(this.emptyRangeBitmap);
                 b.setVisibility(View.VISIBLE);
-                player_row_array[players_remaining_no - 1].setVisibility(View.VISIBLE);
+                player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
                 calculate_odds();
             }
             else{
@@ -254,6 +255,7 @@ public class TexasHoldemFragment extends Fragment {
             calculate_odds();
         });
 
+        binding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
     }
 
     @Override
@@ -322,6 +324,8 @@ public class TexasHoldemFragment extends Fragment {
         for (int i = 1; i <= 10; i++) {
             cardRows[i] = new SpecificCardsRow(2);
         }
+
+        playersRemainingNo = 2;
 
         cardPositionBiMap.put(Arrays.asList(0, 0), binding.flop1);
         cardPositionBiMap.put(Arrays.asList(0, 1), binding.flop2);
@@ -401,6 +405,7 @@ public class TexasHoldemFragment extends Fragment {
                 1.0f
         );
 
+        inputSuitRankMap = HashBiMap.create();
         for (int suit = 1; suit <= 4; suit++) {
             LinearLayout row = new LinearLayout(requireActivity());
             row.setLayoutParams(rowParam);
@@ -414,7 +419,7 @@ public class TexasHoldemFragment extends Fragment {
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
                 row.addView(b);
-                input_suit_rank_map.put(b, Arrays.asList(suit, rank));
+                inputSuitRankMap.put(b, Arrays.asList(suit, rank));
             }
             binding.inputCards.addView(row);
         }
@@ -434,7 +439,7 @@ public class TexasHoldemFragment extends Fragment {
         buttonParam.setMargins(1, 1,1,1);
 
         int squareHeight = displayMetrics.widthPixels / 13;
-
+        this.inputMatrixMap = HashBiMap.create();
         for (int row_idx = 0; row_idx < 13; row_idx++) {
             LinearLayout row = new LinearLayout(requireActivity());
             row.setLayoutParams(rowParam);
@@ -478,8 +483,8 @@ public class TexasHoldemFragment extends Fragment {
         final Button remove_input = (Button) v;
         int player_remove_number = remove_row_map.get(remove_input);
 
-        players_remaining_no--;
-        binding.playersremaining.setText(getString(R.string.players_remaining, players_remaining_no));
+        playersRemainingNo--;
+        binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
 
         if (cardRows[player_remove_number] instanceof SpecificCardsRow) {
             for (int i = 0; i < 2; i++) {
@@ -487,14 +492,14 @@ public class TexasHoldemFragment extends Fragment {
             }
         }
 
-        for (int i = player_remove_number; i <= players_remaining_no; i++) {
+        for (int i = player_remove_number; i <= playersRemainingNo; i++) {
             cardRows[i] = cardRows[i + 1].copy();
             cardRows[i].copyImageBelow(this, i);
         }
 
-        player_row_array[players_remaining_no].setVisibility(View.GONE);
+        player_row_array[playersRemainingNo].setVisibility(View.GONE);
 
-        if (selected_card_position[0] > player_remove_number || selected_card_position[0] == players_remaining_no + 1) {
+        if (selected_card_position[0] > player_remove_number || selected_card_position[0] == playersRemainingNo + 1) {
             for (int i = selected_card_position[0] - 1; i >= 0; i--) {
                 if (cardRows[i] instanceof SpecificCardsRow) {
                     set_selected_card(i, selected_card_position[1]);
@@ -518,7 +523,7 @@ public class TexasHoldemFragment extends Fragment {
         ImageButton card_input = (ImageButton) v;
         card_input.setVisibility(View.INVISIBLE);
 
-        List<Integer> suit_rank_list = input_suit_rank_map.get(card_input);
+        List<Integer> suit_rank_list = inputSuitRankMap.get(card_input);
         assert suit_rank_list != null;
         set_value_to_selected_card(suit_rank_list.get(0), suit_rank_list.get(1));
     };
@@ -688,11 +693,11 @@ public class TexasHoldemFragment extends Fragment {
     private void set_next_selected_card() {
         if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
             set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
-        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == players_remaining_no) && selected_card_position[1] == 1) {
+        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playersRemainingNo) && selected_card_position[1] == 1) {
             set_selected_card(0, 0);
         } else {
             boolean foundNext = false;
-            for (int i = selected_card_position[0] + 1; i < players_remaining_no + 1; i++) {
+            for (int i = selected_card_position[0] + 1; i < playersRemainingNo + 1; i++) {
                 if (cardRows[i] instanceof SpecificCardsRow) {
                     set_selected_card(i, 0);
                     foundNext = true;
@@ -749,7 +754,7 @@ public class TexasHoldemFragment extends Fragment {
         int[] suit_rank_array = ((SpecificCardsRow) cardRows[row_idx]).cards[card_idx];
 
         if (suit_rank_array[0] != 0) {
-            ImageButton card = input_suit_rank_map.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
+            ImageButton card = inputSuitRankMap.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
             assert card != null;
             card.setVisibility(View.VISIBLE);
         }
@@ -770,7 +775,7 @@ public class TexasHoldemFragment extends Fragment {
             exact_calc_thread.interrupt();
         }
 
-        for(int i = 0; i < players_remaining_no; i++) {
+        for(int i = 0; i < playersRemainingNo; i++) {
             equityArray[i].setText("");
             winArray[i].setText("");
             tieArray[i].setText("");
@@ -788,14 +793,14 @@ public class TexasHoldemFragment extends Fragment {
     private final Runnable monte_carlo_proc = () -> {
         try {
             MonteCarloCalc calc_obj = new MonteCarloCalc();
-            calc_obj.monteCarloCalc(cardRows, players_remaining_no, new LiveUpdate(this));
+            calc_obj.monteCarloCalc(cardRows, playersRemainingNo, new LiveUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
             ExactCalc calc_obj = new ExactCalc();
-            calc_obj.exactCalc(cardRows, players_remaining_no, new FinalUpdate(this));
+            calc_obj.exactCalc(cardRows, playersRemainingNo, new FinalUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 }
