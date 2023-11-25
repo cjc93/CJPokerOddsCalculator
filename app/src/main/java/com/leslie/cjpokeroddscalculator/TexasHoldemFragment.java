@@ -95,9 +95,9 @@ public class TexasHoldemFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (binding.rangeSelector.getVisibility() == View.VISIBLE) {
-                    binding.rangeSelector.setVisibility(View.GONE);
-                    binding.mainUi.setVisibility(View.VISIBLE);
+                if (binding.rangeSelector.rangeSelector.getVisibility() == View.VISIBLE) {
+                    binding.rangeSelector.rangeSelector.setVisibility(View.GONE);
+                    binding.mainUi.mainUi.setVisibility(View.VISIBLE);
                 } else {
                     setEnabled(false);
                     requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -113,7 +113,7 @@ public class TexasHoldemFragment extends Fragment {
 
         generateRangeSelector();
 
-        binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+        binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
         equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
         equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
         winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
@@ -129,10 +129,10 @@ public class TexasHoldemFragment extends Fragment {
             r.setOnClickListener(rangeSelectorListener);
         }
 
-        binding.addplayer.setOnClickListener(v -> {
+        binding.mainUi.addplayer.setOnClickListener(v -> {
             if(playersRemainingNo < 10){
                 playersRemainingNo++;
-                binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+                binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
                 Objects.requireNonNull(rangePositionBiMap.get(playersRemainingNo)).setVisibility(View.GONE);
                 cardRows[playersRemainingNo] = new SpecificCardsRow(2);
                 setCardImage(playersRemainingNo, 0, 0, 0);
@@ -146,10 +146,10 @@ public class TexasHoldemFragment extends Fragment {
             }
         });
 
-        binding.addrange.setOnClickListener(v -> {
+        binding.mainUi.addrange.setOnClickListener(v -> {
             if(playersRemainingNo < 10){
                 playersRemainingNo++;
-                binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+                binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
                 twoCardsLayouts[playersRemainingNo - 1].setVisibility(View.GONE);
                 cardRows[playersRemainingNo] = new RangeRow();
                 ImageButton b = this.rangePositionBiMap.get(playersRemainingNo);
@@ -164,7 +164,7 @@ public class TexasHoldemFragment extends Fragment {
             }
         });
 
-        binding.clear.setOnClickListener(v -> {
+        binding.mainUi.clear.setOnClickListener(v -> {
             for (int i = 0; i < 11; i++) {
                 if (cardRows[i] instanceof SpecificCardsRow) {
                     SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[i];
@@ -176,14 +176,14 @@ public class TexasHoldemFragment extends Fragment {
                 cardRows[i].clear(this, i);
             }
 
-            binding.scrollView.post(() -> binding.scrollView.smoothScrollTo(0, 0));
+            binding.mainUi.scrollView.post(() -> binding.mainUi.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
         });
 
-        binding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+        binding.mainUi.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
 
-        binding.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+        binding.rangeSelector.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
                 float finalValue = 0;
                 for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
@@ -198,10 +198,10 @@ public class TexasHoldemFragment extends Fragment {
                 }
                 slider.setValue(finalValue);
             }
-            binding.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
+            binding.rangeSelector.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
         });
 
-        binding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+        binding.rangeSelector.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
                 clearSuitSelectorUI();
@@ -226,7 +226,7 @@ public class TexasHoldemFragment extends Fragment {
             }
         });
 
-        binding.done.setOnClickListener(v -> {
+        binding.rangeSelector.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
 
             rangeRow.matrix = GlobalStatic.copyMatrix(this.matrixInput);
@@ -249,13 +249,13 @@ public class TexasHoldemFragment extends Fragment {
             selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
             matrixBitmap.recycle();
 
-            binding.rangeSelector.setVisibility(View.GONE);
-            binding.mainUi.setVisibility(View.VISIBLE);
+            binding.rangeSelector.rangeSelector.setVisibility(View.GONE);
+            binding.mainUi.mainUi.setVisibility(View.VISIBLE);
 
             calculate_odds();
         });
 
-        binding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
+        binding.mainUi.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
     }
 
     @Override
@@ -280,7 +280,7 @@ public class TexasHoldemFragment extends Fragment {
                 Rect outRect = new Rect();
                 boolean tapOnButton = false;
 
-                binding.bottomBar.getGlobalVisibleRect(outRect);
+                binding.mainUi.bottomBar.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
                     tapOnButton = true;
                 }
@@ -306,8 +306,8 @@ public class TexasHoldemFragment extends Fragment {
                 }
 
                 if (!tapOnButton) {
-                    binding.inputCards.setVisibility(View.GONE);
-                    binding.buttonUnknown.setVisibility(View.GONE);
+                    binding.mainUi.inputCards.setVisibility(View.GONE);
+                    binding.mainUi.buttonUnknown.setVisibility(View.GONE);
                     selected_card_button.setBackgroundResource(0);
                 }
             }
@@ -327,41 +327,41 @@ public class TexasHoldemFragment extends Fragment {
 
         playersRemainingNo = 2;
 
-        cardPositionBiMap.put(Arrays.asList(0, 0), binding.flop1);
-        cardPositionBiMap.put(Arrays.asList(0, 1), binding.flop2);
-        cardPositionBiMap.put(Arrays.asList(0, 2), binding.flop3);
-        cardPositionBiMap.put(Arrays.asList(0, 3), binding.turn);
-        cardPositionBiMap.put(Arrays.asList(0, 4), binding.river);
+        cardPositionBiMap.put(Arrays.asList(0, 0), binding.mainUi.flop1);
+        cardPositionBiMap.put(Arrays.asList(0, 1), binding.mainUi.flop2);
+        cardPositionBiMap.put(Arrays.asList(0, 2), binding.mainUi.flop3);
+        cardPositionBiMap.put(Arrays.asList(0, 3), binding.mainUi.turn);
+        cardPositionBiMap.put(Arrays.asList(0, 4), binding.mainUi.river);
 
-        suitedButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 1));
-        suitedButtonSuitsMap.put(binding.suits02, Arrays.asList(2, 2));
-        suitedButtonSuitsMap.put(binding.suits11, Arrays.asList(3, 3));
-        suitedButtonSuitsMap.put(binding.suits12, Arrays.asList(4, 4));
+        suitedButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 1));
+        suitedButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(2, 2));
+        suitedButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(3, 3));
+        suitedButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(4, 4));
 
-        pairButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
-        pairButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
-        pairButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
-        pairButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
-        pairButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
-        pairButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 2));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(1, 3));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(1, 4));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(2, 3));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits21, Arrays.asList(2, 4));
+        pairButtonSuitsMap.put(binding.rangeSelector.suits22, Arrays.asList(3, 4));
 
-        offsuitButtonSuitsMap.put(binding.suits00, Arrays.asList(2, 1));
-        offsuitButtonSuitsMap.put(binding.suits01, Arrays.asList(1, 2));
-        offsuitButtonSuitsMap.put(binding.suits02, Arrays.asList(1, 3));
-        offsuitButtonSuitsMap.put(binding.suits03, Arrays.asList(3, 1));
-        offsuitButtonSuitsMap.put(binding.suits10, Arrays.asList(4, 1));
-        offsuitButtonSuitsMap.put(binding.suits11, Arrays.asList(1, 4));
-        offsuitButtonSuitsMap.put(binding.suits12, Arrays.asList(2, 3));
-        offsuitButtonSuitsMap.put(binding.suits13, Arrays.asList(3, 2));
-        offsuitButtonSuitsMap.put(binding.suits20, Arrays.asList(4, 2));
-        offsuitButtonSuitsMap.put(binding.suits21, Arrays.asList(2, 4));
-        offsuitButtonSuitsMap.put(binding.suits22, Arrays.asList(3, 4));
-        offsuitButtonSuitsMap.put(binding.suits23, Arrays.asList(4, 3));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits00, Arrays.asList(2, 1));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 2));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(1, 3));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits03, Arrays.asList(3, 1));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits10, Arrays.asList(4, 1));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(1, 4));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(2, 3));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits13, Arrays.asList(3, 2));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits20, Arrays.asList(4, 2));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits21, Arrays.asList(2, 4));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits22, Arrays.asList(3, 4));
+        offsuitButtonSuitsMap.put(binding.rangeSelector.suits23, Arrays.asList(4, 3));
     }
 
     private void generate_main_layout() {
         for (int i = 0; i < 10; i++) {
-            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), binding.playerRows, true);
+            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), binding.mainUi.playerRows, true);
             player_row_array[i] = binding_player_row.getRoot();
             equityArray[i] = binding_player_row.equity;
             winArray[i] = binding_player_row.win;
@@ -421,7 +421,7 @@ public class TexasHoldemFragment extends Fragment {
                 row.addView(b);
                 inputSuitRankMap.put(b, Arrays.asList(suit, rank));
             }
-            binding.inputCards.addView(row);
+            binding.mainUi.inputCards.addView(row);
         }
     }
 
@@ -471,7 +471,7 @@ public class TexasHoldemFragment extends Fragment {
                 row.addView(b);
                 this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
             }
-            binding.rangeMatrix.addView(row);
+            binding.rangeSelector.rangeMatrix.addView(row);
         }
 
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
@@ -484,7 +484,7 @@ public class TexasHoldemFragment extends Fragment {
         int player_remove_number = remove_row_map.get(remove_input);
 
         playersRemainingNo--;
-        binding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+        binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
 
         if (cardRows[player_remove_number] instanceof SpecificCardsRow) {
             for (int i = 0; i < 2; i++) {
@@ -515,8 +515,8 @@ public class TexasHoldemFragment extends Fragment {
         List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);
         assert position != null;
         set_selected_card(position.get(0), position.get(1));
-        binding.inputCards.setVisibility(View.VISIBLE);
-        binding.buttonUnknown.setVisibility(View.VISIBLE);
+        binding.mainUi.inputCards.setVisibility(View.VISIBLE);
+        binding.mainUi.buttonUnknown.setVisibility(View.VISIBLE);
     };
 
     private final View.OnClickListener input_card_listener = v -> {
@@ -554,12 +554,12 @@ public class TexasHoldemFragment extends Fragment {
             }
         }
 
-        binding.rangeSlider.setValue(handCount);
+        binding.rangeSelector.rangeSlider.setValue(handCount);
 
         clearSuitSelectorUI();
 
-        binding.mainUi.setVisibility(View.GONE);
-        binding.rangeSelector.setVisibility(View.VISIBLE);
+        binding.mainUi.mainUi.setVisibility(View.GONE);
+        binding.rangeSelector.rangeSelector.setVisibility(View.VISIBLE);
     };
 
 
@@ -574,13 +574,13 @@ public class TexasHoldemFragment extends Fragment {
         Set<String> suits = this.matrixInput.get(row).get(col);
 
         if (GlobalStatic.isAllSuits(suits, row, col)) {
-            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - suits.size());
+            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() - suits.size());
             suits.clear();
             matrixButton.setBackgroundColor(Color.LTGRAY);
         } else if (suits.isEmpty()) {
             GlobalStatic.addAllSuits(suits, row, col);
 
-            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + suits.size());
+            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() + suits.size());
 
             matrixButton.setBackgroundColor(Color.YELLOW);
         }
@@ -608,7 +608,7 @@ public class TexasHoldemFragment extends Fragment {
             setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
         }
 
-        binding.suitSelectorText.setText(R.string.choose_suits);
+        binding.rangeSelector.suitSelectorText.setText(R.string.choose_suits);
     };
 
     private final View.OnClickListener suitsListener = v -> {
@@ -632,11 +632,11 @@ public class TexasHoldemFragment extends Fragment {
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
             suitsButton.setBackgroundResource(0);
-            binding.rangeSlider.setValue(binding.rangeSlider.getValue() - 1);
+            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
             suitsButton.setBackgroundResource(R.drawable.border_selector);
-            binding.rangeSlider.setValue(binding.rangeSlider.getValue() + 1);
+            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() + 1);
         }
 
         if (GlobalStatic.isAllSuits(suits, row, col)) {
@@ -687,7 +687,7 @@ public class TexasHoldemFragment extends Fragment {
             b.setVisibility(View.INVISIBLE);
         }
 
-        binding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
+        binding.rangeSelector.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
     }
 
     private void set_next_selected_card() {
@@ -712,10 +712,10 @@ public class TexasHoldemFragment extends Fragment {
 
         Rect rect = new Rect();
         if(!selected_card_button.getGlobalVisibleRect(rect) || selected_card_button.getHeight() != rect.height() ) {
-            binding.scrollView.post(
-                    () -> binding.scrollView.smoothScrollTo(
+            binding.mainUi.scrollView.post(
+                    () -> binding.mainUi.scrollView.smoothScrollTo(
                             0,
-                            ((LinearLayout) selected_card_button.getParent().getParent().getParent().getParent().getParent()).getBottom() - binding.scrollView.getHeight()
+                            ((LinearLayout) selected_card_button.getParent().getParent().getParent().getParent().getParent()).getBottom() - binding.mainUi.scrollView.getHeight()
                     )
             );
         }
@@ -781,7 +781,7 @@ public class TexasHoldemFragment extends Fragment {
             tieArray[i].setText("");
         }
 
-        binding.resDesc.setText(R.string.checking_random_subset);
+        binding.mainUi.resDesc.setText(R.string.checking_random_subset);
 
         monte_carlo_thread = new Thread(null, monte_carlo_proc);
         exact_calc_thread = new Thread(null, exact_calc_proc);

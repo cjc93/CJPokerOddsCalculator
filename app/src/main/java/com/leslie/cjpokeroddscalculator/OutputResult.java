@@ -29,7 +29,7 @@ public abstract class OutputResult {
 
     public void updateResDesc(int stringId) {
         if (binding != null) {
-            binding.resDesc.setText(stringId);
+            binding.mainUi.resDesc.setText(stringId);
         }
     }
 }
