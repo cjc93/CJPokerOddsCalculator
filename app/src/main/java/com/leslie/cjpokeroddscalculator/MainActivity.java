@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment f = navHostFragment.getChildFragmentManager().getFragments().get(0);
         if (f instanceof TexasHoldemFragment) {
             TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) f;
-            texasHoldemFragment.hideCardSelector(ev);
+            texasHoldemFragment.checkClickToHideCardSelector(ev);
         }
         return super.dispatchTouchEvent(ev);
     }

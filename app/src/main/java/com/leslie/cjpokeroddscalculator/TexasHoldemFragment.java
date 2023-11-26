@@ -68,7 +68,8 @@ public class TexasHoldemFragment extends Fragment {
     public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
-    Map<Button, Integer> remove_row_map = new HashMap<>();
+    Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
+    Map<MaterialButton, Integer> rangeSwitchRowMap = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
 
     CardRow[] cardRows = new CardRow[11];
@@ -133,11 +134,9 @@ public class TexasHoldemFragment extends Fragment {
             if(playersRemainingNo < 10){
                 playersRemainingNo++;
                 binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-                Objects.requireNonNull(rangePositionBiMap.get(playersRemainingNo)).setVisibility(View.GONE);
-                cardRows[playersRemainingNo] = new SpecificCardsRow(2);
-                setCardImage(playersRemainingNo, 0, 0, 0);
-                setCardImage(playersRemainingNo, 1, 0, 0);
-                twoCardsLayouts[playersRemainingNo - 1].setVisibility(View.VISIBLE);
+
+                setEmptyHandRow(playersRemainingNo);
+
                 player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
                 calculate_odds();
             }
@@ -272,7 +271,7 @@ public class TexasHoldemFragment extends Fragment {
         binding = null;
     }
 
-    public void hideCardSelector(MotionEvent event) {
+    public void checkClickToHideCardSelector(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             startClickTime = System.currentTimeMillis();
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -296,7 +295,7 @@ public class TexasHoldemFragment extends Fragment {
                 }
 
                 if (!tapOnButton) {
-                    for (Button b : remove_row_map.keySet()) {
+                    for (Button b : removeRowMap.keySet()) {
                         b.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                             tapOnButton = true;
@@ -306,12 +305,16 @@ public class TexasHoldemFragment extends Fragment {
                 }
 
                 if (!tapOnButton) {
-                    binding.mainUi.inputCards.setVisibility(View.GONE);
-                    binding.mainUi.buttonUnknown.setVisibility(View.GONE);
-                    selected_card_button.setBackgroundResource(0);
+                    hideCardSelector();
                 }
             }
         }
+    }
+
+    private void hideCardSelector() {
+        binding.mainUi.inputCards.setVisibility(View.GONE);
+        binding.mainUi.buttonUnknown.setVisibility(View.GONE);
+        selected_card_button.setBackgroundResource(0);
     }
 
     private void initialise_variables() {
@@ -370,10 +373,12 @@ public class TexasHoldemFragment extends Fragment {
             twoCardsLayouts[i] = binding_player_row.twoCards;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
-            remove_row_map.put(binding_player_row.remove, i + 1);
+            removeRowMap.put(binding_player_row.remove, i + 1);
+            rangeSwitchRowMap.put(binding_player_row.handRangeButton, i + 1);
 
             binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            binding_player_row.remove.setOnClickListener(remove_player_listener);
+            binding_player_row.remove.setOnClickListener(removePlayerListener);
+            binding_player_row.handRangeButton.setOnClickListener(rangeSwitchListener);
         }
 
         for (ImageButton card : cardPositionBiMap.values()) {
@@ -385,6 +390,7 @@ public class TexasHoldemFragment extends Fragment {
 
         for (ImageButton r : rangePositionBiMap.values()) {
             r.setImageBitmap(emptyRangeBitmap);
+            r.setMaxHeight(cardHeight);
         }
 
         for (int i = 2; i < 10; i++) {
@@ -479,9 +485,9 @@ public class TexasHoldemFragment extends Fragment {
         }
     }
 
-    private final View.OnClickListener remove_player_listener = v -> {
-        final Button remove_input = (Button) v;
-        int player_remove_number = remove_row_map.get(remove_input);
+    private final View.OnClickListener removePlayerListener = v -> {
+        final MaterialButton remove_input = (MaterialButton) v;
+        int player_remove_number = removeRowMap.get(remove_input);
 
         playersRemainingNo--;
         binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
@@ -510,6 +516,38 @@ public class TexasHoldemFragment extends Fragment {
 
         calculate_odds();
     };
+
+    private final View.OnClickListener rangeSwitchListener = v -> {
+        final MaterialButton rangeSwitchInput = (MaterialButton) v;
+        int playerRangeSwitchNumber = rangeSwitchRowMap.get(rangeSwitchInput);
+
+        if (cardRows[playerRangeSwitchNumber] instanceof SpecificCardsRow) {
+            for (int i = 0; i < 2; i++) {
+                setInputCardVisible(playerRangeSwitchNumber, i);
+            }
+
+            twoCardsLayouts[playerRangeSwitchNumber - 1].setVisibility(View.GONE);
+            cardRows[playerRangeSwitchNumber] = new RangeRow();
+            ImageButton b = this.rangePositionBiMap.get(playerRangeSwitchNumber);
+            assert b != null;
+            b.setImageBitmap(this.emptyRangeBitmap);
+            b.setVisibility(View.VISIBLE);
+        } else {
+            setEmptyHandRow(playerRangeSwitchNumber);
+        }
+
+        hideCardSelector();
+
+        calculate_odds();
+    };
+
+    private void setEmptyHandRow(int row) {
+        Objects.requireNonNull(rangePositionBiMap.get(row)).setVisibility(View.GONE);
+        cardRows[row] = new SpecificCardsRow(2);
+        setCardImage(row, 0, 0, 0);
+        setCardImage(row, 1, 0, 0);
+        twoCardsLayouts[row - 1].setVisibility(View.VISIBLE);
+    }
 
     private final View.OnClickListener selector_listener = v -> {
         List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);

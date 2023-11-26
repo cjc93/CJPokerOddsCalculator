@@ -37,4 +37,5 @@
     <string name="texas_hold_em_equity_calculator">Texas Hold\'em Equity Calculator</string>
     <string name="texas_hold_em_poker">Texas Hold\'em Poker</string>
     <string name="home">Home</string>
+    <string name="hand_range">Hand/Range</string>
 </resources>
