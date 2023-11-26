@@ -145,24 +145,6 @@ public class TexasHoldemFragment extends Fragment {
             }
         });
 
-        binding.mainUi.addrange.setOnClickListener(v -> {
-            if(playersRemainingNo < 10){
-                playersRemainingNo++;
-                binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-                twoCardsLayouts[playersRemainingNo - 1].setVisibility(View.GONE);
-                cardRows[playersRemainingNo] = new RangeRow();
-                ImageButton b = this.rangePositionBiMap.get(playersRemainingNo);
-                assert b != null;
-                b.setImageBitmap(this.emptyRangeBitmap);
-                b.setVisibility(View.VISIBLE);
-                player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
-                calculate_odds();
-            }
-            else{
-                Toast.makeText(requireActivity(), "Max number of players is 10", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         binding.mainUi.clear.setOnClickListener(v -> {
             for (int i = 0; i < 11; i++) {
                 if (cardRows[i] instanceof SpecificCardsRow) {
