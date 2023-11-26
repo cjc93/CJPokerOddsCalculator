@@ -15,7 +15,7 @@
 
     <string name="player">Player %d</string>
 
-    <string name="add_player">+ Hand</string>
+    <string name="add_player">+ Player</string>
     <string name="clear">Clear</string>
     <string name="unknown_card">\?</string>
     <string name="card1">Card1</string>
@@ -24,7 +24,6 @@
     <string name="checking_combinations">Checking combinations…</string>
     <string name="finished_checking_random_subset">Finished checking random subset.</string>
     <string name="checking_random_subset">Checking random subset…</string>
-    <string name="range">+ Range</string>
     <string name="done">Done</string>
     <string name="matrix_str">%s%s%s</string>
     <string name="_0_0">0.0%</string>
