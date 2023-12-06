@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4" >
+
+            <TextView
+                android:id="@+id/player_text"
+                android:text="@string/player"
+                android:gravity="center_horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#696969" />
+
+            <LinearLayout
+                android:id="@+id/four_cards"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/card1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card1"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/card2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card2"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/card3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card3"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center" >
+
+                    <ImageButton
+                        android:id="@+id/card4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:src="@drawable/unknown_button"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/card4"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:baselineAligned="false">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remove_player"
+                android:minWidth="0dp"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                app:cornerRadius="10dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="16sp"
+                android:text="@string/equity" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/equity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:textSize="35sp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:text="@string/win" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/win"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:textSize="20sp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:text="@string/tie" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tie"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:textSize="20sp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

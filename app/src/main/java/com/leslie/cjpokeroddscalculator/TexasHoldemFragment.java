@@ -39,6 +39,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     private MaterialButton selectedMatrixButton = null;
     private final int[] selectedMatrixPosition = new int[2];
 
+    public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
+
     public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
 
     Map<MaterialButton, Integer> rangeSwitchRowMap = new HashMap<>();
@@ -84,6 +86,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
         tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
         tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
+
+        equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_poker));
 
         for (ImageButton r : rangePositionBiMap.values()) {
             r.setOnClickListener(rangeSelectorListener);

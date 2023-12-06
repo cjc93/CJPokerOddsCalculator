@@ -25,6 +25,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.texasHoldemButton.setOnClickListener(view1 -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_TexasHoldemFragment));
+        binding.omahaHighButton.setOnClickListener(view1 -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_OmahaHighFragment));
     }
 
     @Override

@@ -10,7 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/omaha_high_button"
         android:text="@string/texas_hold_em_equity_calculator" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/omaha_high_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/texas_holdem_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/omaha_high_equity_calculator" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
