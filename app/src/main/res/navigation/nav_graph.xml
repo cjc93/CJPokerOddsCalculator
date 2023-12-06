@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/TexasHoldemFragment"
         android:name="com.leslie.cjpokeroddscalculator.TexasHoldemFragment"
-        tools:layout="@layout/fragment_texas_holdem">
+        tools:layout="@layout/fragment_equity_calculator">
 
         <action
             android:id="@+id/action_TexasHoldemFragment_to_HomeFragment"

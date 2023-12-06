@@ -2,8 +2,8 @@ package com.leslie.cjpokeroddscalculator;
 
 public class FinalUpdate extends OutputResult {
 
-    public FinalUpdate(TexasHoldemFragment texasHoldemFragment) {
-        super(texasHoldemFragment);
+    public FinalUpdate(EquityCalculatorFragment equityCalculatorFragment) {
+        super(equityCalculatorFragment);
     }
 
     public boolean during_simulations(double[]... result) {
@@ -11,28 +11,28 @@ public class FinalUpdate extends OutputResult {
             return false;
         }
 
-        texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_combinations));
+        equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_combinations));
 
         return true;
     }
 
     public void after_all_simulations(double[] equity, double[] win, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (texasHoldemFragment.monte_carlo_thread.isAlive()) {
+            if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {
                 if (isCancelled[0]) {
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
+                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
                 } else {
-                    texasHoldemFragment.monte_carlo_thread.interrupt();
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> {
+                    equityCalculatorFragment.monte_carlo_thread.interrupt();
+                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                         updateWinResults(equity, win);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });
                 }
             } else {
                 if (isCancelled[0]) {
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
+                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
                 } else {
-                    texasHoldemFragment.requireActivity().runOnUiThread(() -> {
+                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                         updateWinResults(equity, win);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });

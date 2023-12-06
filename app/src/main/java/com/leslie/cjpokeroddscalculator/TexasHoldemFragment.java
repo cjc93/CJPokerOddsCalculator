@@ -3,36 +3,26 @@ package com.leslie.cjpokeroddscalculator;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
-import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
-import com.leslie.cjpokeroddscalculator.databinding.FragmentTexasHoldemBinding;
-import com.leslie.cjpokeroddscalculator.databinding.PlayerRowBinding;
+import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
+import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,44 +31,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class TexasHoldemFragment extends Fragment {
-
-    public FragmentTexasHoldemBinding binding;
-    private long startClickTime;
-
-    private ImageButton selected_card_button = null;
-    private final int[] selected_card_position = new int[2];
-
+public class TexasHoldemFragment extends EquityCalculatorFragment {
+    RangeSelectorBinding rangeSelectorBinding;
     private ImageButton selectedRangeButton;
     private int selectedRangePosition;
 
     private MaterialButton selectedMatrixButton = null;
     private final int[] selectedMatrixPosition = new int[2];
 
-    public Thread monte_carlo_thread = null;
-    public Thread exact_calc_thread = null;
-
-    public int playersRemainingNo;
-
-    private final LinearLayout[] player_row_array = new LinearLayout[10];
-    public TextView[] equityArray = new TextView[10];
-    public TextView[] winArray = new TextView[10];
-    public TextView[] tieArray = new TextView[10];
     public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
-    public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
-    HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
-    Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
     Map<MaterialButton, Integer> rangeSwitchRowMap = new HashMap<>();
-    HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
-
-    CardRow[] cardRows = new CardRow[11];
 
     HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
     List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    int cardHeight;
 
     Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
@@ -86,19 +53,22 @@ public class TexasHoldemFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTexasHoldemBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        rangeSelectorBinding = RangeSelectorBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.fullscreenUi, true);
+
+        initialiseTexasHoldemVariables();
+
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (binding.rangeSelector.rangeSelector.getVisibility() == View.VISIBLE) {
-                    binding.rangeSelector.rangeSelector.setVisibility(View.GONE);
-                    binding.mainUi.mainUi.setVisibility(View.VISIBLE);
+                if (rangeSelectorBinding.rangeSelector.getVisibility() == View.VISIBLE) {
+                    rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
+                    equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
                 } else {
                     setEnabled(false);
                     requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -108,63 +78,18 @@ public class TexasHoldemFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        initialise_variables();
-
-        generate_main_layout();
-
         generateRangeSelector();
 
-        binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
         winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
         winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
         tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
         tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
 
-        for (ImageButton b : cardPositionBiMap.values()) {
-            b.setOnClickListener(selector_listener);
-        }
-
         for (ImageButton r : rangePositionBiMap.values()) {
             r.setOnClickListener(rangeSelectorListener);
         }
 
-        binding.mainUi.addplayer.setOnClickListener(v -> {
-            if(playersRemainingNo < 10){
-                playersRemainingNo++;
-                binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-
-                setEmptyHandRow(playersRemainingNo);
-
-                player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
-                calculate_odds();
-            }
-            else{
-                Toast.makeText(requireActivity(), "Max number of players is 10", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        binding.mainUi.clear.setOnClickListener(v -> {
-            for (int i = 0; i < 11; i++) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
-                    SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[i];
-                    for (int j = 0; j < cardRow.cards.length; j++) {
-                        setInputCardVisible(i, j);
-                    }
-                }
-
-                cardRows[i].clear(this, i);
-            }
-
-            binding.mainUi.scrollView.post(() -> binding.mainUi.scrollView.smoothScrollTo(0, 0));
-
-            calculate_odds();
-        });
-
-        binding.mainUi.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
-
-        binding.rangeSelector.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
+        rangeSelectorBinding.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
                 float finalValue = 0;
                 for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
@@ -179,10 +104,10 @@ public class TexasHoldemFragment extends Fragment {
                 }
                 slider.setValue(finalValue);
             }
-            binding.rangeSelector.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
+            rangeSelectorBinding.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
         });
 
-        binding.rangeSelector.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+        rangeSelectorBinding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
                 clearSuitSelectorUI();
@@ -207,7 +132,7 @@ public class TexasHoldemFragment extends Fragment {
             }
         });
 
-        binding.rangeSelector.done.setOnClickListener(v -> {
+        rangeSelectorBinding.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
 
             rangeRow.matrix = GlobalStatic.copyMatrix(this.matrixInput);
@@ -230,13 +155,13 @@ public class TexasHoldemFragment extends Fragment {
             selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
             matrixBitmap.recycle();
 
-            binding.rangeSelector.rangeSelector.setVisibility(View.GONE);
-            binding.mainUi.mainUi.setVisibility(View.VISIBLE);
+            rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
+            equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
 
             calculate_odds();
         });
 
-        binding.mainUi.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
+        equityCalculatorBinding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
     }
 
     @Override
@@ -250,103 +175,45 @@ public class TexasHoldemFragment extends Fragment {
             exact_calc_thread.interrupt();
         }
 
-        binding = null;
+        rangeSelectorBinding = null;
     }
 
-    public void checkClickToHideCardSelector(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            startClickTime = System.currentTimeMillis();
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
-                Rect outRect = new Rect();
-                boolean tapOnButton = false;
-
-                binding.mainUi.bottomBar.getGlobalVisibleRect(outRect);
-                if (outRect.top < (int) event.getRawY()) {
-                    tapOnButton = true;
-                }
-
-                if (!tapOnButton) {
-                    for (ImageButton card : cardPositionBiMap.values()) {
-                        card.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!tapOnButton) {
-                    for (Button b : removeRowMap.keySet()) {
-                        b.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!tapOnButton) {
-                    hideCardSelector();
-                }
-            }
-        }
+    public void setCardsPerHand() {
+        cardsPerHand = 2;
     }
 
-    private void hideCardSelector() {
-        binding.mainUi.inputCards.setVisibility(View.GONE);
-        binding.mainUi.buttonUnknown.setVisibility(View.GONE);
-        selected_card_button.setBackgroundResource(0);
+    public void initialiseTexasHoldemVariables() {
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 1));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(2, 2));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(3, 3));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(4, 4));
+
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 2));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(1, 3));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(1, 4));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(2, 3));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits21, Arrays.asList(2, 4));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits22, Arrays.asList(3, 4));
+
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits00, Arrays.asList(2, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(1, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits03, Arrays.asList(3, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(4, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(1, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(2, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits13, Arrays.asList(3, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits20, Arrays.asList(4, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits21, Arrays.asList(2, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits22, Arrays.asList(3, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits23, Arrays.asList(4, 3));
     }
 
-    private void initialise_variables() {
-        // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        cardHeight = displayMetrics.heightPixels / 9;
+    public void generate_main_layout() {
+        super.generate_main_layout();
 
-        cardRows[0] = new SpecificCardsRow(5);
-
-        for (int i = 1; i <= 10; i++) {
-            cardRows[i] = new SpecificCardsRow(2);
-        }
-
-        playersRemainingNo = 2;
-
-        cardPositionBiMap.put(Arrays.asList(0, 0), binding.mainUi.flop1);
-        cardPositionBiMap.put(Arrays.asList(0, 1), binding.mainUi.flop2);
-        cardPositionBiMap.put(Arrays.asList(0, 2), binding.mainUi.flop3);
-        cardPositionBiMap.put(Arrays.asList(0, 3), binding.mainUi.turn);
-        cardPositionBiMap.put(Arrays.asList(0, 4), binding.mainUi.river);
-
-        suitedButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 1));
-        suitedButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(2, 2));
-        suitedButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(3, 3));
-        suitedButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(4, 4));
-
-        pairButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 2));
-        pairButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(1, 3));
-        pairButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(1, 4));
-        pairButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(2, 3));
-        pairButtonSuitsMap.put(binding.rangeSelector.suits21, Arrays.asList(2, 4));
-        pairButtonSuitsMap.put(binding.rangeSelector.suits22, Arrays.asList(3, 4));
-
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits00, Arrays.asList(2, 1));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits01, Arrays.asList(1, 2));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits02, Arrays.asList(1, 3));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits03, Arrays.asList(3, 1));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits10, Arrays.asList(4, 1));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits11, Arrays.asList(1, 4));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits12, Arrays.asList(2, 3));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits13, Arrays.asList(3, 2));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits20, Arrays.asList(4, 2));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits21, Arrays.asList(2, 4));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits22, Arrays.asList(3, 4));
-        offsuitButtonSuitsMap.put(binding.rangeSelector.suits23, Arrays.asList(4, 3));
-    }
-
-    private void generate_main_layout() {
         for (int i = 0; i < 10; i++) {
-            PlayerRowBinding binding_player_row = PlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), binding.mainUi.playerRows, true);
+            TexasHoldemPlayerRowBinding binding_player_row = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
             player_row_array[i] = binding_player_row.getRoot();
             equityArray[i] = binding_player_row.equity;
             winArray[i] = binding_player_row.win;
@@ -363,53 +230,12 @@ public class TexasHoldemFragment extends Fragment {
             binding_player_row.handRangeButton.setOnClickListener(rangeSwitchListener);
         }
 
-        for (ImageButton card : cardPositionBiMap.values()) {
-            card.setMaxHeight(cardHeight);
-        }
-
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
 
         for (ImageButton r : rangePositionBiMap.values()) {
             r.setImageBitmap(emptyRangeBitmap);
             r.setMaxHeight(cardHeight);
-        }
-
-        for (int i = 2; i < 10; i++) {
-            player_row_array[i].setVisibility(View.GONE);
-        }
-
-        set_selected_card(1, 0);
-
-        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-
-        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1.0f
-        );
-
-        inputSuitRankMap = HashBiMap.create();
-        for (int suit = 1; suit <= 4; suit++) {
-            LinearLayout row = new LinearLayout(requireActivity());
-            row.setLayoutParams(rowParam);
-
-            for (int rank = 2; rank <= 14; rank++) {
-                ImageButton b = new ImageButton(requireActivity());
-                b.setLayoutParams(buttonParam);
-                b.setBackgroundResource(0);
-                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
-                b.setScaleType(ImageButton.ScaleType.FIT_XY);
-                b.setPadding(1, 1, 1, 1);
-                b.setOnClickListener(input_card_listener);
-                row.addView(b);
-                inputSuitRankMap.put(b, Arrays.asList(suit, rank));
-            }
-            binding.mainUi.inputCards.addView(row);
         }
     }
 
@@ -459,45 +285,13 @@ public class TexasHoldemFragment extends Fragment {
                 row.addView(b);
                 this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
             }
-            binding.rangeSelector.rangeMatrix.addView(row);
+            rangeSelectorBinding.rangeMatrix.addView(row);
         }
 
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             b.setOnClickListener(suitsListener);
         }
     }
-
-    private final View.OnClickListener removePlayerListener = v -> {
-        final MaterialButton remove_input = (MaterialButton) v;
-        int player_remove_number = removeRowMap.get(remove_input);
-
-        playersRemainingNo--;
-        binding.mainUi.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-
-        if (cardRows[player_remove_number] instanceof SpecificCardsRow) {
-            for (int i = 0; i < 2; i++) {
-                setInputCardVisible(player_remove_number, i);
-            }
-        }
-
-        for (int i = player_remove_number; i <= playersRemainingNo; i++) {
-            cardRows[i] = cardRows[i + 1].copy();
-            cardRows[i].copyImageBelow(this, i);
-        }
-
-        player_row_array[playersRemainingNo].setVisibility(View.GONE);
-
-        if (selected_card_position[0] > player_remove_number || selected_card_position[0] == playersRemainingNo + 1) {
-            for (int i = selected_card_position[0] - 1; i >= 0; i--) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
-                    set_selected_card(i, selected_card_position[1]);
-                    break;
-                }
-            }
-        }
-
-        calculate_odds();
-    };
 
     private final View.OnClickListener rangeSwitchListener = v -> {
         final MaterialButton rangeSwitchInput = (MaterialButton) v;
@@ -523,30 +317,11 @@ public class TexasHoldemFragment extends Fragment {
         calculate_odds();
     };
 
-    private void setEmptyHandRow(int row) {
+    public void setEmptyHandRow(int row) {
+        super.setEmptyHandRow(row);
         Objects.requireNonNull(rangePositionBiMap.get(row)).setVisibility(View.GONE);
-        cardRows[row] = new SpecificCardsRow(2);
-        setCardImage(row, 0, 0, 0);
-        setCardImage(row, 1, 0, 0);
         twoCardsLayouts[row - 1].setVisibility(View.VISIBLE);
     }
-
-    private final View.OnClickListener selector_listener = v -> {
-        List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);
-        assert position != null;
-        set_selected_card(position.get(0), position.get(1));
-        binding.mainUi.inputCards.setVisibility(View.VISIBLE);
-        binding.mainUi.buttonUnknown.setVisibility(View.VISIBLE);
-    };
-
-    private final View.OnClickListener input_card_listener = v -> {
-        ImageButton card_input = (ImageButton) v;
-        card_input.setVisibility(View.INVISIBLE);
-
-        List<Integer> suit_rank_list = inputSuitRankMap.get(card_input);
-        assert suit_rank_list != null;
-        set_value_to_selected_card(suit_rank_list.get(0), suit_rank_list.get(1));
-    };
 
     private final View.OnClickListener rangeSelectorListener = v -> {
         ImageButton rangeSelectorInput = (ImageButton) v;
@@ -574,12 +349,12 @@ public class TexasHoldemFragment extends Fragment {
             }
         }
 
-        binding.rangeSelector.rangeSlider.setValue(handCount);
+        rangeSelectorBinding.rangeSlider.setValue(handCount);
 
         clearSuitSelectorUI();
 
-        binding.mainUi.mainUi.setVisibility(View.GONE);
-        binding.rangeSelector.rangeSelector.setVisibility(View.VISIBLE);
+        equityCalculatorBinding.mainUi.setVisibility(View.GONE);
+        rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
     };
 
 
@@ -594,13 +369,13 @@ public class TexasHoldemFragment extends Fragment {
         Set<String> suits = this.matrixInput.get(row).get(col);
 
         if (GlobalStatic.isAllSuits(suits, row, col)) {
-            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() - suits.size());
+            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - suits.size());
             suits.clear();
             matrixButton.setBackgroundColor(Color.LTGRAY);
         } else if (suits.isEmpty()) {
             GlobalStatic.addAllSuits(suits, row, col);
 
-            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() + suits.size());
+            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + suits.size());
 
             matrixButton.setBackgroundColor(Color.YELLOW);
         }
@@ -628,7 +403,7 @@ public class TexasHoldemFragment extends Fragment {
             setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
         }
 
-        binding.rangeSelector.suitSelectorText.setText(R.string.choose_suits);
+        rangeSelectorBinding.suitSelectorText.setText(R.string.choose_suits);
     };
 
     private final View.OnClickListener suitsListener = v -> {
@@ -652,11 +427,11 @@ public class TexasHoldemFragment extends Fragment {
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
             suitsButton.setBackgroundResource(0);
-            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() - 1);
+            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
             suitsButton.setBackgroundResource(R.drawable.border_selector);
-            binding.rangeSelector.rangeSlider.setValue(binding.rangeSelector.rangeSlider.getValue() + 1);
+            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + 1);
         }
 
         if (GlobalStatic.isAllSuits(suits, row, col)) {
@@ -707,120 +482,6 @@ public class TexasHoldemFragment extends Fragment {
             b.setVisibility(View.INVISIBLE);
         }
 
-        binding.rangeSelector.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
+        rangeSelectorBinding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
     }
-
-    private void set_next_selected_card() {
-        if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
-            set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
-        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playersRemainingNo) && selected_card_position[1] == 1) {
-            set_selected_card(0, 0);
-        } else {
-            boolean foundNext = false;
-            for (int i = selected_card_position[0] + 1; i < playersRemainingNo + 1; i++) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
-                    set_selected_card(i, 0);
-                    foundNext = true;
-                    break;
-                }
-            }
-
-            if (!foundNext) {
-                set_selected_card(0, 0);
-            }
-        }
-
-        Rect rect = new Rect();
-        if(!selected_card_button.getGlobalVisibleRect(rect) || selected_card_button.getHeight() != rect.height() ) {
-            binding.mainUi.scrollView.post(
-                    () -> binding.mainUi.scrollView.smoothScrollTo(
-                            0,
-                            ((LinearLayout) selected_card_button.getParent().getParent().getParent().getParent().getParent()).getBottom() - binding.mainUi.scrollView.getHeight()
-                    )
-            );
-        }
-    }
-
-    private void set_selected_card(int row_idx, int card_idx) {
-        if (selected_card_button != null) {
-            selected_card_button.setBackgroundResource(0);
-        }
-
-        selected_card_position[0] = row_idx;
-        selected_card_position[1] = card_idx;
-
-        selected_card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
-        assert selected_card_button != null;
-        selected_card_button.setBackgroundResource(R.drawable.border_selector);
-    }
-
-    public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
-        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[row_idx];
-        cardRow.cards[card_idx][0] = suit;
-        cardRow.cards[card_idx][1] = rank;
-
-        setCardImage(row_idx, card_idx, suit, rank);
-    }
-
-    public void set_value_to_selected_card(int suit, int rank) {
-        setInputCardVisible(selected_card_position[0], selected_card_position[1]);
-
-        set_card_value(selected_card_position[0], selected_card_position[1], suit, rank);
-        set_next_selected_card();
-        calculate_odds();
-    }
-
-    public void setInputCardVisible(int row_idx, int card_idx) {
-        int[] suit_rank_array = ((SpecificCardsRow) cardRows[row_idx]).cards[card_idx];
-
-        if (suit_rank_array[0] != 0) {
-            ImageButton card = inputSuitRankMap.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
-            assert card != null;
-            card.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void setCardImage(int row_idx, int card_idx, int suit, int rank) {
-        ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
-        assert card_button != null;
-        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
-    }
-
-    private void calculate_odds() {
-        if (monte_carlo_thread != null) {
-            monte_carlo_thread.interrupt();
-        }
-
-        if (exact_calc_thread != null) {
-            exact_calc_thread.interrupt();
-        }
-
-        for(int i = 0; i < playersRemainingNo; i++) {
-            equityArray[i].setText("");
-            winArray[i].setText("");
-            tieArray[i].setText("");
-        }
-
-        binding.mainUi.resDesc.setText(R.string.checking_random_subset);
-
-        monte_carlo_thread = new Thread(null, monte_carlo_proc);
-        exact_calc_thread = new Thread(null, exact_calc_proc);
-
-        monte_carlo_thread.start();
-        exact_calc_thread.start();
-    }
-
-    private final Runnable monte_carlo_proc = () -> {
-        try {
-            MonteCarloCalc calc_obj = new MonteCarloCalc();
-            calc_obj.monteCarloCalc(cardRows, playersRemainingNo, new LiveUpdate(this));
-        } catch (InterruptedException ignored) { }
-    };
-
-    private final Runnable exact_calc_proc = () -> {
-        try {
-            ExactCalc calc_obj = new ExactCalc();
-            calc_obj.exactCalc(cardRows, playersRemainingNo, new FinalUpdate(this));
-        } catch (InterruptedException ignored) { }
-    };
 }
