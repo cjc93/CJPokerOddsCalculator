@@ -25,13 +25,13 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
-    public void clear(TexasHoldemFragment texasHoldemFragment, int row_idx) {
+    public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         for (int[] card : this.cards) {
             Arrays.fill(card, 0);
         }
 
         for (int i = 0; i < this.cards.length; i++) {
-            texasHoldemFragment.setCardImage(row_idx, i, 0, 0);
+            equityCalculatorFragment.setCardImage(row_idx, i, 0, 0);
         }
     }
 
@@ -39,15 +39,17 @@ public class SpecificCardsRow extends CardRow {
         return new SpecificCardsRow(this);
     }
 
-    public void copyImageBelow(TexasHoldemFragment texasHoldemFragment, int row_idx) {
-        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.GONE);
-
-        for (int i = 0; i < 2; i++) {
-            Drawable d = Objects.requireNonNull(texasHoldemFragment.cardPositionBiMap.get(Arrays.asList(row_idx + 1, i))).getDrawable();
-            Objects.requireNonNull(texasHoldemFragment.cardPositionBiMap.get(Arrays.asList(row_idx, i))).setImageDrawable(d);
+    public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
+        for (int i = 0; i < this.cards.length; i++) {
+            Drawable d = Objects.requireNonNull(equityCalculatorFragment.cardPositionBiMap.get(Arrays.asList(row_idx + 1, i))).getDrawable();
+            Objects.requireNonNull(equityCalculatorFragment.cardPositionBiMap.get(Arrays.asList(row_idx, i))).setImageDrawable(d);
         }
 
-        texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.VISIBLE);
+        if (equityCalculatorFragment instanceof TexasHoldemFragment) {
+            TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
+            Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.GONE);
+            texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.VISIBLE);
+        }
     }
 
     public boolean isKnownPlayer() {
