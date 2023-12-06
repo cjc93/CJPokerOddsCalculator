@@ -45,7 +45,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public TextView[] equityArray = new TextView[10];
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];
-    public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
 
     HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
@@ -249,7 +248,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
 
         if (cardRows[player_remove_number] instanceof SpecificCardsRow) {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < cardsPerHand; i++) {
                 setInputCardVisible(player_remove_number, i);
             }
         }
@@ -274,9 +273,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
     };
 
     public void setEmptyHandRow(int row) {
-        cardRows[row] = new SpecificCardsRow(2);
-        setCardImage(row, 0, 0, 0);
-        setCardImage(row, 1, 0, 0);
+        cardRows[row] = new SpecificCardsRow(cardsPerHand);
+        for (int i = 0; i < cardsPerHand; i++) {
+            setCardImage(row, i, 0, 0);
+        }
     }
 
     private final View.OnClickListener selector_listener = v -> {
@@ -297,9 +297,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     };
 
     private void set_next_selected_card() {
-        if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] == 0) {
+        if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] < (cardsPerHand - 1)) {
             set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
-        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playersRemainingNo) && selected_card_position[1] == 1) {
+        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playersRemainingNo) && selected_card_position[1] == (cardsPerHand - 1)) {
             set_selected_card(0, 0);
         } else {
             boolean foundNext = false;
@@ -319,10 +319,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
         Rect rect = new Rect();
         if(!selected_card_button.getGlobalVisibleRect(rect) || selected_card_button.getHeight() != rect.height() ) {
             equityCalculatorBinding.scrollView.post(
-                    () -> equityCalculatorBinding.scrollView.smoothScrollTo(
-                            0,
-                            ((LinearLayout) selected_card_button.getParent().getParent().getParent().getParent().getParent()).getBottom() - equityCalculatorBinding.scrollView.getHeight()
-                    )
+                () -> equityCalculatorBinding.scrollView.smoothScrollTo(
+                    0,
+                    player_row_array[selected_card_position[0] - 1].getBottom() - equityCalculatorBinding.scrollView.getHeight()
+                )
             );
         }
     }

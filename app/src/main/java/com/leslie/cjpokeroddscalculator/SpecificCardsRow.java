@@ -52,12 +52,16 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
+    // CHANGE TO WORK FOR OMAHA AS WELL
     public boolean isKnownPlayer() {
         return this.cards[0][0] != 0 || this.cards[1][0] != 0;
     }
 
     public String convertPlayerCardsToStr() {
         StringBuilder temp = new StringBuilder();
+
+        // CHANGE TO WORK FOR OMAHA AS WELL
+
         temp.append(GlobalStatic.rankToStr.get(this.cards[0][1]));
         temp.append(GlobalStatic.suitToStr.get(this.cards[0][0]));
         temp.append(GlobalStatic.rankToStr.get(this.cards[1][1]));

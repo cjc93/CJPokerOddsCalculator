@@ -14,6 +14,10 @@
             android:id="@+id/action_HomeFragment_to_TexasHoldemFragment"
             app:destination="@id/TexasHoldemFragment" />
 
+        <action
+            android:id="@+id/action_HomeFragment_to_OmahaHighFragment"
+            app:destination="@id/OmahaHighFragment" />
+
     </fragment>
 
     <fragment
@@ -23,6 +27,17 @@
 
         <action
             android:id="@+id/action_TexasHoldemFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/OmahaHighFragment"
+        android:name="com.leslie.cjpokeroddscalculator.OmahaHighFragment"
+        tools:layout="@layout/fragment_equity_calculator">
+
+        <action
+            android:id="@+id/action_OmahaHighFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
 
     </fragment>
