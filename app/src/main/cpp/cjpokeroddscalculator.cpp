@@ -13,7 +13,7 @@ jdoubleArray cpp_double_array_to_jdouble_array(JNIEnv *pEnv, const double pDoubl
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
+Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemExactCalc_nativeExactCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
     std::vector<omp::CardRange> cardRangeVec = jstr_array_to_card_vec(env, cards);
 
     std::string board_cards_cpp = jstr_to_cppstring(env, board_cards);
@@ -72,7 +72,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_ExactCalc_nativeExactCalc(JNIE
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_leslie_cjpokeroddscalculator_calculation_MonteCarloCalc_nativeMonteCarloCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
+Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nativeMonteCarloCalc(JNIEnv *env, jobject thiz, jobjectArray cards, jstring board_cards) {
     std::vector<omp::CardRange> cardRangeVec = jstr_array_to_card_vec(env, cards);
 
     std::string board_cards_cpp = jstr_to_cppstring(env, board_cards);
