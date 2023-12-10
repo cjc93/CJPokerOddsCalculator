@@ -19,8 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
-import com.leslie.cjpokeroddscalculator.calculation.ExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.MonteCarloCalc;
+import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
+import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
 import java.util.Arrays;
@@ -398,14 +398,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     private final Runnable monte_carlo_proc = () -> {
         try {
-            MonteCarloCalc calc_obj = new MonteCarloCalc();
+            TexasHoldemMonteCarloCalc calc_obj = new TexasHoldemMonteCarloCalc();
             calc_obj.monteCarloCalc(cardRows, playersRemainingNo, new LiveUpdate(this));
         } catch (InterruptedException ignored) { }
     };
 
     private final Runnable exact_calc_proc = () -> {
         try {
-            ExactCalc calc_obj = new ExactCalc();
+            TexasHoldemExactCalc calc_obj = new TexasHoldemExactCalc();
             calc_obj.exactCalc(cardRows, playersRemainingNo, new FinalUpdate(this));
         } catch (InterruptedException ignored) { }
     };
