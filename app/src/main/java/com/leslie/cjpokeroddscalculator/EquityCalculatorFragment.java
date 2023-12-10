@@ -19,8 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
 import java.util.Arrays;
@@ -389,24 +387,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
 
-        monte_carlo_thread = new Thread(null, monte_carlo_proc);
-        exact_calc_thread = new Thread(null, exact_calc_proc);
+        monte_carlo_thread = new Thread(null, monteCarloProc);
+        exact_calc_thread = new Thread(null, exactCalcProc);
 
         monte_carlo_thread.start();
         exact_calc_thread.start();
     }
 
-    private final Runnable monte_carlo_proc = () -> {
-        try {
-            TexasHoldemMonteCarloCalc calc_obj = new TexasHoldemMonteCarloCalc();
-            calc_obj.monteCarloCalc(cardRows, playersRemainingNo, new LiveUpdate(this));
-        } catch (InterruptedException ignored) { }
-    };
+    public Runnable monteCarloProc;
 
-    private final Runnable exact_calc_proc = () -> {
-        try {
-            TexasHoldemExactCalc calc_obj = new TexasHoldemExactCalc();
-            calc_obj.exactCalc(cardRows, playersRemainingNo, new FinalUpdate(this));
-        } catch (InterruptedException ignored) { }
-    };
+    public Runnable exactCalcProc;
 }

@@ -1,10 +1,13 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.outputresult;
 
-public abstract class OutputResult {
+import com.leslie.cjpokeroddscalculator.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.R;
+
+public abstract class TexasHoldemOutputResult {
     public Thread currentThread;
     public EquityCalculatorFragment equityCalculatorFragment;
 
-    public OutputResult (EquityCalculatorFragment equityCalculatorFragment) {
+    public TexasHoldemOutputResult(EquityCalculatorFragment equityCalculatorFragment) {
         this.equityCalculatorFragment = equityCalculatorFragment;
         this.currentThread = Thread.currentThread();
     }

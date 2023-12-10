@@ -26,7 +26,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemExactCalc_nativeExa
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "()Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D[DZ)V");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[DZ)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &is_cancelled, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
@@ -84,7 +84,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nati
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "([D[D)Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "after_all_simulations", "([D[D)V");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[D)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {

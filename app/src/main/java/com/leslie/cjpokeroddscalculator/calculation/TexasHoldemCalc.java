@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.CardRow;
-import com.leslie.cjpokeroddscalculator.OutputResult;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 
 public class TexasHoldemCalc extends Calculation{
@@ -22,13 +21,13 @@ public class TexasHoldemCalc extends Calculation{
         String[] playerCards = new String[playersRemainingNo];
 
         for (int i = 1; i <= playersRemainingNo; i++) {
-            playerCards[i - 1] = cardRows[i].convertPlayerCardsToStr();
+            playerCards[i - 1] = cardRows[i].convertTexasHoldemPlayerCardsToStr();
         }
 
         return playerCards;
     }
 
-    public double[][] average_unknown_equity(double[] equity, double[] win) {
+    public double[][] averageUnknownStats(double[] equity, double[] win) {
         double unknown_players_equity = 0;
         double unknown_players_win = 0;
 
