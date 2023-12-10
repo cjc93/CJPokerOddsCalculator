@@ -3,7 +3,9 @@ package com.leslie.cjpokeroddscalculator;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -52,15 +54,18 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
-    // CHANGE TO WORK FOR OMAHA AS WELL
     public boolean isKnownPlayer() {
-        return this.cards[0][0] != 0 || this.cards[1][0] != 0;
+        for (int[] card : this.cards) {
+            if (card[0] != 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public String convertPlayerCardsToStr() {
+    public String convertTexasHoldemPlayerCardsToStr() {
         StringBuilder temp = new StringBuilder();
-
-        // CHANGE TO WORK FOR OMAHA AS WELL
 
         temp.append(GlobalStatic.rankToStr.get(this.cards[0][1]));
         temp.append(GlobalStatic.suitToStr.get(this.cards[0][0]));
@@ -79,5 +84,16 @@ public class SpecificCardsRow extends CardRow {
         } else {
             return String.valueOf(temp);
         }
+    }
+
+    public String[] convertOmahaCardsToStr() {
+        List<String> omahaCards = new ArrayList<>();
+        for (int[] card : cards) {
+            String cardStr = GlobalStatic.rankToStr.get(card[1]) + GlobalStatic.suitToStr.get(card[0]);
+            if (!cardStr.equals("")) {
+                omahaCards.add(cardStr);
+            }
+        }
+        return omahaCards.toArray(new String[0]);
     }
 }

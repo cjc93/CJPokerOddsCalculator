@@ -5,5 +5,5 @@ public abstract class CardRow {
     public abstract CardRow copy();
     public abstract void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx);
     public abstract boolean isKnownPlayer();
-    public abstract String convertPlayerCardsToStr();
+    public abstract String convertTexasHoldemPlayerCardsToStr();
 }

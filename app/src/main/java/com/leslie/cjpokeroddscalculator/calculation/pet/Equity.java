@@ -25,10 +25,10 @@ public class Equity {
 	 * update percentage won, tied and by rank
 	 */
 	void summariseEquity(int hands) {
-		won = (woncount * 100.0) / hands;
-		tied = (tiedcount * 100.0) / hands;
+		won = (double) woncount / hands;
+		tied = (double) tiedcount / hands;
 
-		total = (woncount * 100.0) / hands;
+		total = (double) woncount / hands;
 		if (tiedcount > 0) {
 			total += (tied * ((tiedcount * 1.0) / tiedwithcount));
 		}

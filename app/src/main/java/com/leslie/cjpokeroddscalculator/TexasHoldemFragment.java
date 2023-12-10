@@ -21,8 +21,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
+import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
+import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
+import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -166,6 +170,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         equityCalculatorBinding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
+
+        monteCarloProc = () -> {
+            try {
+                TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
+                calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemLiveUpdate(this));
+            } catch (InterruptedException ignored) { }
+        };
+
+        exactCalcProc = () -> {
+            try {
+                TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
+                calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemFinalUpdate(this));
+            } catch (InterruptedException ignored) { }
+        };
     }
 
     @Override
@@ -488,4 +506,5 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         rangeSelectorBinding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
     }
+
 }

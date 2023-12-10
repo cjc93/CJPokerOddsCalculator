@@ -1,15 +1,15 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.CardRow;
-import com.leslie.cjpokeroddscalculator.OutputResult;
+import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 
 public class Calculation {
-    public OutputResult outputResultObj;
+    public TexasHoldemOutputResult outputResultObj;
     protected boolean[] known_players;
     protected int no_of_unknown_players;
     protected int playersRemainingNo;
 
-    public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, OutputResult outputResultObj) {
+    public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) {
         this.playersRemainingNo = playersRemainingNo;
         this.outputResultObj = outputResultObj;
 

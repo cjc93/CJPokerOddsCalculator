@@ -1,8 +1,11 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.outputresult;
 
-public class FinalUpdate extends OutputResult {
+import com.leslie.cjpokeroddscalculator.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.R;
 
-    public FinalUpdate(EquityCalculatorFragment equityCalculatorFragment) {
+public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
+
+    public TexasHoldemFinalUpdate(EquityCalculatorFragment equityCalculatorFragment) {
         super(equityCalculatorFragment);
     }
 

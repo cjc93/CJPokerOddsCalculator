@@ -71,7 +71,7 @@ public class RangeRow extends CardRow{
         return false;
     }
 
-    public String convertPlayerCardsToStr() {
+    public String convertTexasHoldemPlayerCardsToStr() {
         StringJoiner sj = new StringJoiner(",");
         String firstRank, secondRank;
 
