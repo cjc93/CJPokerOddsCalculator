@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         assert navHostFragment != null;
         Fragment f = navHostFragment.getChildFragmentManager().getFragments().get(0);
         if (f instanceof EquityCalculatorFragment) {
-            EquityCalculatorFragment texasHoldemFragment = (EquityCalculatorFragment) f;
-            texasHoldemFragment.checkClickToHideCardSelector(ev);
+            EquityCalculatorFragment equityCalculatorFragment = (EquityCalculatorFragment) f;
+            equityCalculatorFragment.checkClickToHideCardSelector(ev);
         }
         return super.dispatchTouchEvent(ev);
     }

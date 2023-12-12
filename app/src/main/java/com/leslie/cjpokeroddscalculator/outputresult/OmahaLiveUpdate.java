@@ -23,8 +23,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
             throw new InterruptedException();
         }
 
-        long current_time = System.currentTimeMillis();
-        if (current_time - lastUpdateTime > 300) {
+        if (System.currentTimeMillis() - lastUpdateTime > 300) {
             EquityUtil.summariseEquities(eqs, count);
 
             equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
