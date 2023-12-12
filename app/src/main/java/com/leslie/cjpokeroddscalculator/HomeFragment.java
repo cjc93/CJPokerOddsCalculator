@@ -24,8 +24,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.texasHoldemButton.setOnClickListener(view1 -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_TexasHoldemFragment));
-        binding.omahaHighButton.setOnClickListener(view1 -> NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_OmahaHighFragment));
+        binding.texasHoldemButton.setOnClickListener(v -> {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_TexasHoldemFragment);
+        });
+
+        binding.omahaHighButton.setOnClickListener(v -> {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_OmahaHighFragment);
+        });
     }
 
     @Override
