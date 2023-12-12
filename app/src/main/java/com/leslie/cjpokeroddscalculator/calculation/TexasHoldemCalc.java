@@ -2,10 +2,18 @@ package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.CardRow;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 
 public class TexasHoldemCalc extends Calculation{
     static {
         System.loadLibrary("cjpokeroddscalculator");
+    }
+
+    public TexasHoldemOutputResult outputResultObj;
+
+    public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) {
+        super.initialiseVariables(cardRows, playersRemainingNo);
+        this.outputResultObj = outputResultObj;
     }
 
     public String convertBoardCardsToStr(int[][] cards) {

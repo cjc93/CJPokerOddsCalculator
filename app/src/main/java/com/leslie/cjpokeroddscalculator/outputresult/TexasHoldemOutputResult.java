@@ -3,18 +3,17 @@ package com.leslie.cjpokeroddscalculator.outputresult;
 import com.leslie.cjpokeroddscalculator.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 
-public abstract class TexasHoldemOutputResult {
+public abstract class TexasHoldemOutputResult extends OutputResult {
     public Thread currentThread;
-    public EquityCalculatorFragment equityCalculatorFragment;
 
     public TexasHoldemOutputResult(EquityCalculatorFragment equityCalculatorFragment) {
-        this.equityCalculatorFragment = equityCalculatorFragment;
+        super(equityCalculatorFragment);
         this.currentThread = Thread.currentThread();
     }
 
-    public abstract boolean during_simulations(double[]... result);
+    public abstract boolean duringSimulations(double[]... result);
 
-    public abstract void after_all_simulations(double[] equity, double[] win, boolean... isCancelled);
+    public abstract void afterAllSimulations(double[] equity, double[] win, boolean... isCancelled);
 
     public void updateWinResults(double[] equity, double[] win) {
         if (equityCalculatorFragment.getActivity() != null) {
@@ -23,12 +22,6 @@ public abstract class TexasHoldemOutputResult {
                 equityCalculatorFragment.winArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, win[i] * 100));
                 equityCalculatorFragment.tieArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
             }
-        }
-    }
-
-    public void updateResDesc(int stringId) {
-        if (equityCalculatorFragment.equityCalculatorBinding != null) {
-            equityCalculatorFragment.equityCalculatorBinding.resDesc.setText(stringId);
         }
     }
 }

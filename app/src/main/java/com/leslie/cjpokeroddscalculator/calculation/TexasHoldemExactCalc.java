@@ -18,12 +18,12 @@ public class TexasHoldemExactCalc extends TexasHoldemCalc {
 
     public native void nativeExactCalc(String[] cards, String boardCards);
 
-    public boolean during_simulations() {
-        return outputResultObj.during_simulations();
+    public boolean duringSimulations() {
+        return outputResultObj.duringSimulations();
     }
 
     public void afterAllSimulations(double[] equity, double[] win, boolean isCancelled) {
         double[][] result = averageUnknownStats(equity, win);
-        outputResultObj.after_all_simulations(result[0], result[1], isCancelled);
+        outputResultObj.afterAllSimulations(result[0], result[1], isCancelled);
     }
 }

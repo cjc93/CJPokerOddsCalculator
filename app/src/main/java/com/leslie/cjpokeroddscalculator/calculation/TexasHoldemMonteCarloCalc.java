@@ -18,13 +18,13 @@ public class TexasHoldemMonteCarloCalc extends TexasHoldemCalc {
 
     public native void nativeMonteCarloCalc(String[] cards, String boardCards);
 
-    public boolean during_simulations(double[] equity, double[] win) {
+    public boolean duringSimulations(double[] equity, double[] win) {
         double[][] result = averageUnknownStats(equity, win);
-        return outputResultObj.during_simulations(result);
+        return outputResultObj.duringSimulations(result);
     }
 
     public void afterAllSimulations(double[] equity, double[] win) {
         double[][] result = averageUnknownStats(equity, win);
-        outputResultObj.after_all_simulations(result[0], result[1]);
+        outputResultObj.afterAllSimulations(result[0], result[1]);
     }
 }
