@@ -10,7 +10,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 
 import java.util.Arrays;
 
@@ -24,10 +24,10 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
-        winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
-        tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
-        tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
+        winArray[0].setText(getString(R.string.two_decimal_perc, 49.33));
+        winArray[1].setText(getString(R.string.two_decimal_perc, 49.33));
+        tieArray[0].setText(getString(R.string.two_decimal_perc, 1.34));
+        tieArray[1].setText(getString(R.string.two_decimal_perc, 1.34));
 
         equityCalculatorBinding.title.setText(getString(R.string.omaha_high_poker));
 
@@ -36,7 +36,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         monteCarloProc = () -> {
             try {
                 OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc();
-                calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemLiveUpdate(this));
+                calcObj.calculate(cardRows, playersRemainingNo, new OmahaLiveUpdate(this, calcObj));
             } catch (InterruptedException ignored) { }
         };
     }

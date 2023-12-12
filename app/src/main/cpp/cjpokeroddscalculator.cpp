@@ -25,7 +25,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemExactCalc_nativeExa
     env->GetJavaVM(&jvm);
 
     jclass jcls = env->GetObjectClass(thiz);
-    jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "()Z");
+    jmethodID mDuringSimulations = env->GetMethodID(jcls, "duringSimulations", "()Z");
     jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[DZ)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
@@ -83,7 +83,7 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nati
     env->GetJavaVM(&jvm);
 
     jclass jcls = env->GetObjectClass(thiz);
-    jmethodID mDuringSimulations = env->GetMethodID(jcls, "during_simulations", "([D[D)Z");
+    jmethodID mDuringSimulations = env->GetMethodID(jcls, "duringSimulations", "([D[D)Z");
     jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[D)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 

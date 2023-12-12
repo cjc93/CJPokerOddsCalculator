@@ -9,7 +9,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
         super(equityCalculatorFragment);
     }
 
-    public boolean during_simulations(double[]... result) {
+    public boolean duringSimulations(double[]... result) {
         if (this.currentThread.isInterrupted()) {
             return false;
         }
@@ -19,7 +19,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
         return true;
     }
 
-    public void after_all_simulations(double[] equity, double[] win, boolean... isCancelled) {
+    public void afterAllSimulations(double[] equity, double[] win, boolean... isCancelled) {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {
                 if (isCancelled[0]) {
