@@ -129,6 +129,12 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 cardRows[i].clear(this, i);
             }
 
+            if (playersRemainingNo > 0 && cardRows[1] instanceof SpecificCardsRow) {
+                set_selected_card(1, 0);
+            } else {
+                set_selected_card(0, 0);
+            }
+
             equityCalculatorBinding.scrollView.post(() -> equityCalculatorBinding.scrollView.smoothScrollTo(0, 0));
 
             calculate_odds();
