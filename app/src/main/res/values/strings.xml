@@ -35,11 +35,9 @@
     <string name="win">Win</string>
     <string name="tie">Tie</string>
     <string name="texas_hold_em_equity_calculator">Texas Hold\'em Equity Calculator</string>
-    <string name="texas_hold_em_poker">Texas Hold\'em Poker</string>
     <string name="home">Home</string>
     <string name="hand_range">Hand/Range</string>
     <string name="omaha_high_equity_calculator">Omaha High Equity Calculator</string>
-    <string name="omaha_high_poker">Omaha High Poker</string>
     <string name="card3">Card3</string>
     <string name="card4">Card4</string>
 </resources>
