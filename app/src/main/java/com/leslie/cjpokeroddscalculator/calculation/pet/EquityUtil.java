@@ -42,7 +42,7 @@ public class EquityUtil {
                     e.woncount++;
 				} else {
 					e.tiedcount++;
-					e.tiedwithcount += maxcount;
+					e.tiedequity += 1.0 / maxcount;
 				}
 			}
 		}

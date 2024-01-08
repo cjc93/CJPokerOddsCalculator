@@ -18,8 +18,8 @@ public class Equity {
 	int woncount;
 	/** number of samples tied */
 	int tiedcount;
-	/** number of people tied with including self */
-	int tiedwithcount;
+
+	public double tiedequity;
 
 	/**
 	 * update percentage won, tied and by rank
@@ -28,9 +28,6 @@ public class Equity {
 		won = (double) woncount / hands;
 		tied = (double) tiedcount / hands;
 
-		total = (double) woncount / hands;
-		if (tiedcount > 0) {
-			total += (tied * ((tiedcount * 1.0) / tiedwithcount));
-		}
+		total = (woncount + tiedequity) / hands;
 	}
 }

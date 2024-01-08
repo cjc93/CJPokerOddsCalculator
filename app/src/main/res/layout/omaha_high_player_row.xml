@@ -165,7 +165,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textSize="16sp"
-                android:text="@string/equity" />
+                android:text="@string/equity"
+                android:layout_marginEnd="3dp"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/equity"
@@ -188,7 +189,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textSize="14sp"
-                android:text="@string/win" />
+                android:text="@string/win"
+                android:layout_marginEnd="3dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/win"
@@ -211,7 +213,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:textSize="14sp"
-                android:text="@string/tie" />
+                android:text="@string/tie"
+                android:layout_marginEnd="3dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tie"
