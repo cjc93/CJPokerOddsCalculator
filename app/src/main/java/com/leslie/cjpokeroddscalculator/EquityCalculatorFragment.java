@@ -97,8 +97,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
         set_selected_card(1, 0);
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
 
         for (ImageButton b : cardPositionBiMap.values()) {
             b.setOnClickListener(selector_listener);

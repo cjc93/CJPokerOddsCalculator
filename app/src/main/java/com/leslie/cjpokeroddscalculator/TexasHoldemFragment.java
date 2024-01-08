@@ -86,12 +86,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         generateRangeSelector();
 
+        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
+        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
         winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
         winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
         tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
         tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
 
-        equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_poker));
+        equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
         for (ImageButton r : rangePositionBiMap.values()) {
             r.setOnClickListener(rangeSelectorListener);

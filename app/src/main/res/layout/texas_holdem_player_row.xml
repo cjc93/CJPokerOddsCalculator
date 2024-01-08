@@ -128,7 +128,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:gravity="center|right"
-                        android:textSize="35sp"
+                        android:textSize="30sp"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -184,7 +184,8 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/remove"
