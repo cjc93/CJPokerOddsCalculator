@@ -200,8 +200,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelectorBinding = null;
     }
 
-    public void setCardsPerHand() {
+    public void initialiseVariables() {
+        super.initialiseVariables();
+
         cardsPerHand = 2;
+        fragmentName = "TexasHoldem";
     }
 
     public void initialiseTexasHoldemVariables() {
@@ -231,8 +234,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         offsuitButtonSuitsMap.put(rangeSelectorBinding.suits23, Arrays.asList(4, 3));
     }
 
-    public void generate_main_layout() {
-        super.generate_main_layout();
+    public void generateMainLayout() {
+        super.generateMainLayout();
 
         for (int i = 0; i < 10; i++) {
             TexasHoldemPlayerRowBinding binding_player_row = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);

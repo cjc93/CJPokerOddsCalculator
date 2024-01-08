@@ -53,12 +53,15 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         }
     }
 
-    public void setCardsPerHand() {
+    public void initialiseVariables() {
+        super.initialiseVariables();
+
         cardsPerHand = 4;
+        fragmentName = "OmahaHigh";
     }
 
-    public void generate_main_layout() {
-        super.generate_main_layout();
+    public void generateMainLayout() {
+        super.generateMainLayout();
 
         for (int i = 0; i < 10; i++) {
             OmahaHighPlayerRowBinding binding_player_row = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);

@@ -3,12 +3,21 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.core.PreferencesKeys;
+import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
+import androidx.datastore.rxjava3.RxDataStore;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
+    public RxDataStore<Preferences> dataStore = new RxPreferenceDataStoreBuilder(this, "general").build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +25,29 @@ public class MainActivity extends AppCompatActivity {
 
         com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
+
+        Boolean startFragmentKeyExist = dataStore.data().map(prefs -> prefs.contains(START_FRAGMENT_KEY)).blockingFirst();
+        String startFragmentStr = "";
+        if (startFragmentKeyExist) {
+            startFragmentStr = dataStore.data().map(prefs -> prefs.get(START_FRAGMENT_KEY)).blockingFirst();
+        }
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+        assert navHostFragment != null;
+        NavController navController = navHostFragment.getNavController();
+        NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
+
+        if (Objects.equals(startFragmentStr, "TexasHoldem")) {
+            navGraph.setStartDestination(R.id.TexasHoldemFragment);
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh")) {
+            navGraph.setStartDestination(R.id.OmahaHighFragment);
+        } else {
+            navGraph.setStartDestination(R.id.HomeFragment);
+        }
+
+        navController.setGraph(navGraph);
     }
 
     @Override
@@ -28,5 +60,12 @@ public class MainActivity extends AppCompatActivity {
             equityCalculatorFragment.checkClickToHideCardSelector(ev);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        dataStore.dispose();
     }
 }
