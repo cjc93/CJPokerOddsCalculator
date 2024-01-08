@@ -4,6 +4,7 @@
 
     <string name="players_remaining">Players remaining: %d</string>
     <string name="two_decimal_perc">%.2f%%</string>
+    <string name="one_decimal_perc">%.1f%%</string>
     <string name="hands_perc">%.1f%%</string>
     <string name="flop">Flop</string>
     <string name="flop1">Flop1</string>

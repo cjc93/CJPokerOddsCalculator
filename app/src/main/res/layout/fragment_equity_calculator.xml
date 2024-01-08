@@ -33,7 +33,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                />
 
         </LinearLayout>
 
@@ -211,7 +216,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="68">
+            android:layout_weight="66">
 
             <LinearLayout
                 android:id="@+id/player_rows"
@@ -273,7 +278,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="32"
+            android:layout_weight="34"
             android:background="#2F3540" >
 
         </LinearLayout>

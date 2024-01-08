@@ -202,7 +202,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void initialiseVariables() {
         // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        cardHeight = displayMetrics.heightPixels / 9;
+        cardHeight = displayMetrics.heightPixels / 10;
 
         cardRows[0] = new SpecificCardsRow(5);
 

@@ -25,9 +25,9 @@ public abstract class OmahaOutputResult extends OutputResult {
             double[][] result = omahaCalc.averageUnknownStats(eqs);
 
             for(int i = 0; i < eqs.length; i++) {
-                equityCalculatorFragment.equityArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, result[0][i] * 100));
-                equityCalculatorFragment.winArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, result[1][i] * 100));
-                equityCalculatorFragment.tieArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, result[2][i] * 100));
+                equityCalculatorFragment.equityArray[i].setText(equityCalculatorFragment.getString(R.string.one_decimal_perc, result[0][i] * 100));
+                equityCalculatorFragment.winArray[i].setText(equityCalculatorFragment.getString(R.string.one_decimal_perc, result[1][i] * 100));
+                equityCalculatorFragment.tieArray[i].setText(equityCalculatorFragment.getString(R.string.one_decimal_perc, result[2][i] * 100));
             }
         }
     }
