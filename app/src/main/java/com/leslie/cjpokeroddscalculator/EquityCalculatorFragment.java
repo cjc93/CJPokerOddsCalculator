@@ -15,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.datastore.preferences.core.MutablePreferences;
+import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
@@ -25,6 +28,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.rxjava3.core.Single;
 
 public abstract class EquityCalculatorFragment extends Fragment {
 
@@ -55,6 +60,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     int cardsPerHand;
 
+    public String fragmentName;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         equityCalculatorBinding = FragmentEquityCalculatorBinding.inflate(inflater, container, false);
@@ -64,15 +71,20 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initialiseEquityCalculatorVariables();
-
-        setCardsPerHand();
+        initialiseVariables();
 
         for (int i = 1; i <= 10; i++) {
             cardRows[i] = new SpecificCardsRow(cardsPerHand);
         }
 
-        generate_main_layout();
+        generateMainLayout();
+
+        ((MainActivity) requireActivity()).dataStore.updateDataAsync(prefsIn -> {
+            Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
+            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
+            mutablePreferences.set(START_FRAGMENT_KEY, fragmentName);
+            return Single.just(mutablePreferences);
+        });
 
         for (ImageButton card : cardPositionBiMap.values()) {
             card.setMaxHeight(cardHeight);
@@ -126,8 +138,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
     }
-
-    public abstract void setCardsPerHand();
 
     @Override
     public void onDestroyView() {
@@ -189,7 +199,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         selected_card_button.setBackgroundResource(0);
     }
 
-    public void initialiseEquityCalculatorVariables() {
+    public void initialiseVariables() {
         // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         cardHeight = displayMetrics.heightPixels / 9;
@@ -205,7 +215,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         cardPositionBiMap.put(Arrays.asList(0, 4), equityCalculatorBinding.river);
     }
 
-    public void generate_main_layout() {
+    public void generateMainLayout() {
         LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,

@@ -36,9 +36,9 @@ public class OmahaCalc extends Calculation{
             }
         }
 
-        double[] equity = new double[10];
-        double[] win = new double[10];
-        double[] tie = new double[10];
+        double[] equity = new double[playersRemainingNo];
+        double[] win = new double[playersRemainingNo];
+        double[] tie = new double[playersRemainingNo];
 
         unknown_players_equity = unknown_players_equity / this.no_of_unknown_players;
         unknown_players_win = unknown_players_win / this.no_of_unknown_players;
