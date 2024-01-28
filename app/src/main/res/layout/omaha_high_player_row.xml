@@ -198,7 +198,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center|left"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_weight="1" />
 
         </LinearLayout>
@@ -222,7 +222,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center|left"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_weight="1" />
 
         </LinearLayout>

@@ -26,12 +26,12 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        equityArray[0].setText(getString(R.string.one_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.one_decimal_perc, 50.0));
-        winArray[0].setText(getString(R.string.one_decimal_perc, 49.3));
-        winArray[1].setText(getString(R.string.one_decimal_perc, 49.3));
-        tieArray[0].setText(getString(R.string.one_decimal_perc, 1.3));
-        tieArray[1].setText(getString(R.string.one_decimal_perc, 1.3));
+        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
+        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
+        winArray[0].setText(getString(R.string.two_decimal_perc, 49.33));
+        winArray[1].setText(getString(R.string.two_decimal_perc, 49.33));
+        tieArray[0].setText(getString(R.string.two_decimal_perc, 1.33));
+        tieArray[1].setText(getString(R.string.two_decimal_perc, 1.33));
 
         equityCalculatorBinding.title.setText(getString(R.string.omaha_high_equity_calculator));
 
