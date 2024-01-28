@@ -8,8 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 
 import java.util.Arrays;
@@ -39,6 +41,13 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             try {
                 OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc();
                 calcObj.calculate(cardRows, playersRemainingNo, new OmahaLiveUpdate(this, calcObj));
+            } catch (InterruptedException ignored) { }
+        };
+
+        exactCalcProc = () -> {
+            try {
+                OmahaExactCalc calcObj = new OmahaExactCalc();
+                calcObj.calculate(cardRows, playersRemainingNo, new OmahaFinalUpdate(this, calcObj));
             } catch (InterruptedException ignored) { }
         };
     }

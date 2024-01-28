@@ -34,7 +34,7 @@ public abstract class Cards {
 		}
 	}
 	/** how many boards are there */
-	abstract int count();
+	public abstract int count();
 	/** create the next board */
 	abstract void next();
 }

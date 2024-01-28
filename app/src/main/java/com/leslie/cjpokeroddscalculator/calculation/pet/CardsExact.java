@@ -43,12 +43,12 @@ public class CardsExact extends Cards {
 	}
 	
 	@Override
-	int count() {
+	public int count() {
 		int totalCount = 1;
 
 		for (int count : countArray) {
-            totalCount *= count;
-        }
+			totalCount = Math.multiplyExact(totalCount, count);
+		}
 
 		return totalCount;
 	}

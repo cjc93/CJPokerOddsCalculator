@@ -16,7 +16,7 @@ public class CardsMonteCarlo extends Cards {
 	}
 	
 	@Override
-	int count() {
+	public int count() {
 		return count;
 	}
 

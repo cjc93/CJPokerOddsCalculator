@@ -26,24 +26,32 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         if (System.currentTimeMillis() - lastUpdateTime > 300) {
             EquityUtil.summariseEquities(eqs, count);
 
-            equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
+            if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
+                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
+                    updateWinResults(eqs);
+                    updateResDesc(R.string.checking_combinations);
+                });
+            } else {
+                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
+                    updateWinResults(eqs);
+                    updateResDesc(R.string.checking_random_subset);
+                });
+            }
 
             lastUpdateTime = System.currentTimeMillis();
         }
     }
 
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
-        if (Thread.interrupted()) {
-            throw new InterruptedException();
-        }
-
-        if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
-            equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
-        } else {
-            equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                updateWinResults(eqs);
-                updateResDesc(R.string.finished_checking_random_subset);
-            });
+        if (!Thread.interrupted()) {
+            if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
+                equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
+            } else {
+                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
+                    updateWinResults(eqs);
+                    updateResDesc(R.string.finished_checking_random_subset);
+                });
+            }
         }
     }
 }
