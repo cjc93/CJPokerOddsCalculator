@@ -4,12 +4,12 @@ import com.leslie.cjpokeroddscalculator.CardRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Cards;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
-import com.leslie.cjpokeroddscalculator.calculation.pet.CardsMonteCarlo;
+import com.leslie.cjpokeroddscalculator.calculation.pet.CardsExact;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Poker;
 
-public class OmahaMonteCarloCalc extends OmahaCalc {
+public class OmahaExactCalc extends OmahaCalc {
 
     public void calculate(CardRow[] cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) throws InterruptedException {
         initialiseVariables(cardRows, playersRemainingNo, outputResultObj);
@@ -22,8 +22,13 @@ public class OmahaMonteCarloCalc extends OmahaCalc {
 
         String[] deck = Poker.remdeck(playerCards, boardCards);
 
-        Cards cards = new CardsMonteCarlo(deck, boardCards, playerCards, 2000000000);
-        this.totalSimulations = cards.count();
+        Cards cards = new CardsExact(deck, boardCards, playerCards);
+
+        try {
+            this.totalSimulations = cards.count();
+        } catch (ArithmeticException e) {
+            throw new InterruptedException();
+        }
 
         outputResultObj.beforeAllSimulations();
 

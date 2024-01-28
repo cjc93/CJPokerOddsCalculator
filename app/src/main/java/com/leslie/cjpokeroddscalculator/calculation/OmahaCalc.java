@@ -7,6 +7,7 @@ import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
 public class OmahaCalc extends Calculation{
     public OmahaOutputResult outputResultObj;
+    public int totalSimulations;
 
     public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) {
         super.initialiseVariables(cardRows, playersRemainingNo);
