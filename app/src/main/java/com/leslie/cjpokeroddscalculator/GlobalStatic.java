@@ -52,7 +52,7 @@ public class GlobalStatic {
             "2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"
     };
 
-    static String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
+    public static String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
 
     public static List<List<Set<String>>> copyMatrix(List<List<Set<String>>> original) {
         List<List<Set<String>>> copy = new ArrayList<>(13);

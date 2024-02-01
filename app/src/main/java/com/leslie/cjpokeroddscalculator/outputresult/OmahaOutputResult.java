@@ -1,6 +1,6 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;

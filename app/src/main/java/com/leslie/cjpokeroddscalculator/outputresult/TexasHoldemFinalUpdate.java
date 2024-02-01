@@ -1,6 +1,6 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 
 public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {

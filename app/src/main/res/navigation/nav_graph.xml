@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.leslie.cjpokeroddscalculator.HomeFragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.HomeFragment"
         tools:layout="@layout/fragment_home">
 
         <action
@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/TexasHoldemFragment"
-        android:name="com.leslie.cjpokeroddscalculator.TexasHoldemFragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment"
         tools:layout="@layout/fragment_equity_calculator">
 
         <action
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/OmahaHighFragment"
-        android:name="com.leslie.cjpokeroddscalculator.OmahaHighFragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.OmahaHighFragment"
         tools:layout="@layout/fragment_equity_calculator">
 
         <action

@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -21,6 +21,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.RangeRow;
+import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;

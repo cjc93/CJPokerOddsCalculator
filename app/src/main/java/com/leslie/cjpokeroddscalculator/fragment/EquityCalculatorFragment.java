@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,6 +22,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.MainActivity;
+import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
 import java.util.Arrays;
@@ -49,7 +54,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];
 
-    HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
+    public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
 

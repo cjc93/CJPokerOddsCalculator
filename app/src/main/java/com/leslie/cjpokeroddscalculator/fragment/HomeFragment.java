@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
