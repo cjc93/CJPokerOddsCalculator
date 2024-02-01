@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -60,6 +61,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
     Map<ImageButton, List<Integer>> offsuitButtonSuitsMap = new HashMap<>();
+
+    public TextView[][] handStats = new TextView[10][9];
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -249,6 +252,15 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             equityArray[i] = binding_player_row.equity;
             winArray[i] = binding_player_row.win;
             tieArray[i] = binding_player_row.tie;
+            handStats[i][0] = binding_player_row.highCard;
+            handStats[i][1] = binding_player_row.onePair;
+            handStats[i][2] = binding_player_row.twoPair;
+            handStats[i][3] = binding_player_row.threeOfAKind;
+            handStats[i][4] = binding_player_row.straight;
+            handStats[i][5] = binding_player_row.flush;
+            handStats[i][6] = binding_player_row.fullHouse;
+            handStats[i][7] = binding_player_row.fourOfAKind;
+            handStats[i][8] = binding_player_row.straightFlush;
             rangePositionBiMap.put(i + 1, binding_player_row.range);
             twoCardsLayouts[i] = binding_player_row.twoCards;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
