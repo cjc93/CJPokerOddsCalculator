@@ -97,12 +97,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         generateRangeSelector();
 
-        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
-        winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
-        winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
-        tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
-        tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
+        for (int i = 0; i < 2; i++) {
+            equityArray[i].setText(getString(R.string.two_decimal_perc, 50.0));
+            winArray[i].setText(getString(R.string.two_decimal_perc, 47.97));
+            tieArray[i].setText(getString(R.string.two_decimal_perc, 2.03));
+            handStats[i][0].setText(getString(R.string.two_decimal_perc, 17.41));
+            handStats[i][1].setText(getString(R.string.two_decimal_perc, 43.82));
+            handStats[i][2].setText(getString(R.string.two_decimal_perc, 23.5));
+            handStats[i][3].setText(getString(R.string.two_decimal_perc, 4.83));
+            handStats[i][4].setText(getString(R.string.two_decimal_perc, 4.62));
+            handStats[i][5].setText(getString(R.string.two_decimal_perc, 3.03));
+            handStats[i][6].setText(getString(R.string.two_decimal_perc, 2.6));
+            handStats[i][7].setText(getString(R.string.two_decimal_perc, 0.17));
+            handStats[i][8].setText(getString(R.string.two_decimal_perc, 0.03));
+        }
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
