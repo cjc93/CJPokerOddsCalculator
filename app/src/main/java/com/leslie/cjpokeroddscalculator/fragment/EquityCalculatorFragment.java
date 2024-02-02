@@ -170,38 +170,46 @@ public abstract class EquityCalculatorFragment extends Fragment {
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
                 Rect outRect = new Rect();
-                boolean tapOnButton = false;
+                boolean hideCardSelectorFlag = true;
 
                 equityCalculatorBinding.bottomBar.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
-                    tapOnButton = true;
+                    hideCardSelectorFlag = false;
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
                     for (ImageButton card : cardPositionBiMap.values()) {
                         card.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
+                            hideCardSelectorFlag = false;
                             break;
                         }
                     }
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
                     for (Button b : removeRowMap.keySet()) {
                         b.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
+                            hideCardSelectorFlag = false;
                             break;
                         }
                     }
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
+                    hideCardSelectorFlag = checkAdditionalButtonsToHideCardSelector(event);
+                }
+
+                if (hideCardSelectorFlag) {
                     hideCardSelector();
                 }
             }
         }
+    }
+
+    public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
+        return true;
     }
 
     public void hideCardSelector() {

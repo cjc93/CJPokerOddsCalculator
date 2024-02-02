@@ -189,20 +189,31 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/remove"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:text="@string/remove_player"
                     android:minWidth="0dp"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:layout_weight="1"
+                    android:padding="0dp"
                     app:cornerRadius="10dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/hand_range_button"
-                    android:layout_width="match_parent"
+                    android:layout_width="50dp"
                     android:layout_height="0dp"
                     android:text="@string/hand_range"
+                    android:textSize="11sp"
+                    android:padding="0dp"
+                    android:layout_weight="1"
+                    app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/stats_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:text="@string/stats"
                     android:textSize="11sp"
                     android:padding="0dp"
                     android:layout_weight="1"
@@ -215,9 +226,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/stats_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="horizontal"
