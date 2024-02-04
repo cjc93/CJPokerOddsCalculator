@@ -408,11 +408,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             exact_calc_thread.interrupt();
         }
 
-        for(int i = 0; i < playersRemainingNo; i++) {
-            equityArray[i].setText("");
-            winArray[i].setText("");
-            tieArray[i].setText("");
-        }
+        clearNumbers();
 
         equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
 
@@ -421,6 +417,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         monte_carlo_thread.start();
         exact_calc_thread.start();
+    }
+
+    public void clearNumbers() {
+        for(int i = 0; i < playersRemainingNo; i++) {
+            equityArray[i].setText("");
+            winArray[i].setText("");
+            tieArray[i].setText("");
+        }
     }
 
     public Runnable monteCarloProc;

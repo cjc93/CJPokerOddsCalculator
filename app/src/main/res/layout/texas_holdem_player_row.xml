@@ -194,10 +194,13 @@
                     android:text="@string/remove_player"
                     android:minWidth="0dp"
                     android:textStyle="bold"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:layout_weight="1"
                     android:padding="0dp"
-                    app:cornerRadius="10dp" />
+                    app:cornerRadius="5dp"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:layout_margin="1dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/hand_range_button"
@@ -207,7 +210,10 @@
                     android:textSize="11sp"
                     android:padding="0dp"
                     android:layout_weight="1"
-                    app:cornerRadius="10dp" />
+                    app:cornerRadius="5dp"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:layout_margin="1dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/stats_button"
@@ -217,7 +223,10 @@
                     android:textSize="11sp"
                     android:padding="0dp"
                     android:layout_weight="1"
-                    app:cornerRadius="10dp" />
+                    app:cornerRadius="5dp"
+                    android:insetBottom="0dp"
+                    android:insetTop="0dp"
+                    android:layout_margin="1dp"/>
 
             </LinearLayout>
 
@@ -241,6 +250,8 @@
                 android:text="@string/high_card"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -248,12 +259,16 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
                 android:text="@string/flush"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -261,6 +276,8 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -274,6 +291,8 @@
                 android:text="@string/one_pair"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -281,12 +300,16 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
                 android:text="@string/full_house"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -294,6 +317,8 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -307,6 +332,8 @@
                 android:text="@string/two_pair"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -314,12 +341,16 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
                 android:text="@string/_4_of_a_kind"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -327,6 +358,8 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
         </LinearLayout>
@@ -340,6 +373,8 @@
                 android:text="@string/_3_of_a_kind"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -347,20 +382,26 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:paddingRight="50dp"/>
 
             <TextView
                 android:text="@string/straight_flush"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:paddingLeft="20dp" />
 
             <TextView
                 android:id="@+id/straight_flush"
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:paddingRight="50dp"/>
 
         </LinearLayout>
 
@@ -373,6 +414,8 @@
                 android:text="@string/straight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <TextView
@@ -380,6 +423,8 @@
                 android:gravity="center|right"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingRight="50dp"
+                android:textSize="12sp"
                 android:layout_weight="1"/>
 
             <View

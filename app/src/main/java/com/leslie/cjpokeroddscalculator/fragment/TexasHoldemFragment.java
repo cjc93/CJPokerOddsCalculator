@@ -564,4 +564,13 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         return true;
     }
+
+    public void clearNumbers() {
+        super.clearNumbers();
+        for(int i = 0; i < playersRemainingNo; i++) {
+            for(int j = 0; j < 9; j++) {
+                handStats[i][j].setText("");
+            }
+        }
+    }
 }

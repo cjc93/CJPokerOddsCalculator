@@ -253,7 +253,7 @@ void EquityCalculator::evaluateHands(const Hand* playerHands, unsigned nplayers,
         Hand hand = board + playerHands[i];
         unsigned rank = mEval.evaluate<tFlushPossible>(hand);
 
-        stats->handStats[i][rank / 4096 - 1] += weight;
+        stats->handStats[stats->playerIds[i]][rank / 4096 - 1] += weight;
 
         if (rank > bestRank) {
             bestRank = rank;

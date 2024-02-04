@@ -50,4 +50,6 @@
     <string name="straight_flush">Straight Flush</string>
     <string name="straight">Straight</string>
     <string name="stats">Stats</string>
+    <string name="range">Range</string>
+    <string name="hand">Hand</string>
 </resources>
