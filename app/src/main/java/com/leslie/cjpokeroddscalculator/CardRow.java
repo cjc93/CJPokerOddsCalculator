@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator;
 
+import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+
 public abstract class CardRow {
     public abstract void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx);
     public abstract CardRow copy();

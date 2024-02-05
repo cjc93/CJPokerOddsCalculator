@@ -252,6 +252,9 @@ void EquityCalculator::evaluateHands(const Hand* playerHands, unsigned nplayers,
     for (unsigned i = 0, m = 1; i < nplayers; ++i, m <<= 1) {
         Hand hand = board + playerHands[i];
         unsigned rank = mEval.evaluate<tFlushPossible>(hand);
+
+        stats->handStats[stats->playerIds[i]][rank / 4096 - 1] += weight;
+
         if (rank > bestRank) {
             bestRank = rank;
             winnersMask = m;
@@ -777,6 +780,12 @@ double EquityCalculator::combineResults(const BatchResults& batch)
             }
         }
         mResults.winsByPlayerMask[actualPlayerMask] += batch.winsByPlayerMask[i];
+    }
+
+    for (unsigned j = 0; j < mResults.players; ++j) {
+        for (unsigned k = 0; k < 9; k++) {
+            mResults.handStats[batch.playerIds[j]][k] += batch.handStats[batch.playerIds[j]][k];
+        }
     }
 
     mResults.evaluations += batch.evalCount;

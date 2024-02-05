@@ -62,6 +62,8 @@ public:
         bool enumerateAll = false;
         // Is calculation finished. (Includes stopping.)
         bool finished = false;
+
+        uint64_t handStats[MAX_PLAYERS][9] = {};
     };
 
     // Start a new calculation. Returns false if calculation is impossible for given hand ranges and board/dead cards.
@@ -139,6 +141,8 @@ private:
         uint64_t evalCount = 0;
         uint8_t playerIds[MAX_PLAYERS];
         unsigned winsByPlayerMask[1 << MAX_PLAYERS] = {};
+
+        unsigned handStats[MAX_PLAYERS][9] = {};
     };
 
     // Ad-hoc struct used when sorting hands.

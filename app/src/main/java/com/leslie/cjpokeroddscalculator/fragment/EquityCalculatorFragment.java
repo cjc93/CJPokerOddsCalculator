@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -22,6 +22,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.MainActivity;
+import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
 import java.util.Arrays;
@@ -49,7 +54,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];
 
-    HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
+    public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
     HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
 
@@ -165,38 +170,46 @@ public abstract class EquityCalculatorFragment extends Fragment {
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
                 Rect outRect = new Rect();
-                boolean tapOnButton = false;
+                boolean hideCardSelectorFlag = true;
 
                 equityCalculatorBinding.bottomBar.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
-                    tapOnButton = true;
+                    hideCardSelectorFlag = false;
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
                     for (ImageButton card : cardPositionBiMap.values()) {
                         card.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
+                            hideCardSelectorFlag = false;
                             break;
                         }
                     }
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
                     for (Button b : removeRowMap.keySet()) {
                         b.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            tapOnButton = true;
+                            hideCardSelectorFlag = false;
                             break;
                         }
                     }
                 }
 
-                if (!tapOnButton) {
+                if (hideCardSelectorFlag) {
+                    hideCardSelectorFlag = checkAdditionalButtonsToHideCardSelector(event);
+                }
+
+                if (hideCardSelectorFlag) {
                     hideCardSelector();
                 }
             }
         }
+    }
+
+    public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
+        return true;
     }
 
     public void hideCardSelector() {
@@ -395,11 +408,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             exact_calc_thread.interrupt();
         }
 
-        for(int i = 0; i < playersRemainingNo; i++) {
-            equityArray[i].setText("");
-            winArray[i].setText("");
-            tieArray[i].setText("");
-        }
+        clearNumbers();
 
         equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
 
@@ -408,6 +417,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         monte_carlo_thread.start();
         exact_calc_thread.start();
+    }
+
+    public void clearNumbers() {
+        for(int i = 0; i < playersRemainingNo; i++) {
+            equityArray[i].setText("");
+            winArray[i].setText("");
+            tieArray[i].setText("");
+        }
     }
 
     public Runnable monteCarloProc;

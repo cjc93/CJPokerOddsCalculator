@@ -1,17 +1,21 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -21,6 +25,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.RangeRow;
+import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
@@ -56,6 +64,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
     Map<ImageButton, List<Integer>> offsuitButtonSuitsMap = new HashMap<>();
+    Map<MaterialButton, LinearLayout> statsButtonMap = new HashMap<>();
+
+    public TextView[][] handStats = new TextView[10][9];
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -86,12 +97,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         generateRangeSelector();
 
-        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
-        winArray[0].setText(getString(R.string.two_decimal_perc, 47.97));
-        winArray[1].setText(getString(R.string.two_decimal_perc, 47.97));
-        tieArray[0].setText(getString(R.string.two_decimal_perc, 2.03));
-        tieArray[1].setText(getString(R.string.two_decimal_perc, 2.03));
+        for (int i = 0; i < 2; i++) {
+            equityArray[i].setText(getString(R.string.two_decimal_perc, 50.0));
+            winArray[i].setText(getString(R.string.two_decimal_perc, 47.97));
+            tieArray[i].setText(getString(R.string.two_decimal_perc, 2.03));
+            handStats[i][0].setText(getString(R.string.two_decimal_perc, 17.41));
+            handStats[i][1].setText(getString(R.string.two_decimal_perc, 43.82));
+            handStats[i][2].setText(getString(R.string.two_decimal_perc, 23.5));
+            handStats[i][3].setText(getString(R.string.two_decimal_perc, 4.83));
+            handStats[i][4].setText(getString(R.string.two_decimal_perc, 4.62));
+            handStats[i][5].setText(getString(R.string.two_decimal_perc, 3.03));
+            handStats[i][6].setText(getString(R.string.two_decimal_perc, 2.6));
+            handStats[i][7].setText(getString(R.string.two_decimal_perc, 0.17));
+            handStats[i][8].setText(getString(R.string.two_decimal_perc, 0.03));
+        }
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
@@ -240,21 +259,32 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         super.generateMainLayout();
 
         for (int i = 0; i < 10; i++) {
-            TexasHoldemPlayerRowBinding binding_player_row = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
-            player_row_array[i] = binding_player_row.getRoot();
-            equityArray[i] = binding_player_row.equity;
-            winArray[i] = binding_player_row.win;
-            tieArray[i] = binding_player_row.tie;
-            rangePositionBiMap.put(i + 1, binding_player_row.range);
-            twoCardsLayouts[i] = binding_player_row.twoCards;
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
-            removeRowMap.put(binding_player_row.remove, i + 1);
-            rangeSwitchRowMap.put(binding_player_row.handRangeButton, i + 1);
+            TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
+            player_row_array[i] = bindingPlayerRow.getRoot();
+            equityArray[i] = bindingPlayerRow.equity;
+            winArray[i] = bindingPlayerRow.win;
+            tieArray[i] = bindingPlayerRow.tie;
+            handStats[i][0] = bindingPlayerRow.highCard;
+            handStats[i][1] = bindingPlayerRow.onePair;
+            handStats[i][2] = bindingPlayerRow.twoPair;
+            handStats[i][3] = bindingPlayerRow.threeOfAKind;
+            handStats[i][4] = bindingPlayerRow.straight;
+            handStats[i][5] = bindingPlayerRow.flush;
+            handStats[i][6] = bindingPlayerRow.fullHouse;
+            handStats[i][7] = bindingPlayerRow.fourOfAKind;
+            handStats[i][8] = bindingPlayerRow.straightFlush;
+            rangePositionBiMap.put(i + 1, bindingPlayerRow.range);
+            twoCardsLayouts[i] = bindingPlayerRow.twoCards;
+            cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
+            removeRowMap.put(bindingPlayerRow.remove, i + 1);
+            rangeSwitchRowMap.put(bindingPlayerRow.handRangeButton, i + 1);
+            statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);
 
-            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            binding_player_row.remove.setOnClickListener(removePlayerListener);
-            binding_player_row.handRangeButton.setOnClickListener(rangeSwitchListener);
+            bindingPlayerRow.playerText.setText(getString(R.string.player, i + 1));
+            bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
+            bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
+            bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
         }
 
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
@@ -342,6 +372,18 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         hideCardSelector();
 
         calculate_odds();
+    };
+
+    private final View.OnClickListener statsButtonListener = v -> {
+        final MaterialButton statsButtonInput = (MaterialButton) v;
+        LinearLayout statsView = statsButtonMap.get(statsButtonInput);
+
+        assert statsView != null;
+        if (statsView.getVisibility() == View.VISIBLE) {
+            statsView.setVisibility(View.GONE);
+        } else {
+            statsView.setVisibility(View.VISIBLE);
+        }
     };
 
     public void setEmptyHandRow(int row) {
@@ -512,4 +554,24 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelectorBinding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
     }
 
+    public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
+        Rect outRect = new Rect();
+        for (Button b : statsButtonMap.keySet()) {
+            b.getGlobalVisibleRect(outRect);
+            if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void clearNumbers() {
+        super.clearNumbers();
+        for(int i = 0; i < playersRemainingNo; i++) {
+            for(int j = 0; j < 9; j++) {
+                handStats[i][j].setText("");
+            }
+        }
+    }
 }

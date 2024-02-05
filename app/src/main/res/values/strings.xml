@@ -40,4 +40,16 @@
     <string name="omaha_high_equity_calculator">Omaha High Equity Calculator</string>
     <string name="card3">Card3</string>
     <string name="card4">Card4</string>
+    <string name="high_card">High Card</string>
+    <string name="flush">Flush</string>
+    <string name="one_pair">One Pair</string>
+    <string name="full_house">Full House</string>
+    <string name="two_pair">Two Pair</string>
+    <string name="_4_of_a_kind">4 of a Kind</string>
+    <string name="_3_of_a_kind">3 of a Kind</string>
+    <string name="straight_flush">Straight Flush</string>
+    <string name="straight">Straight</string>
+    <string name="stats">Stats</string>
+    <string name="range">Range</string>
+    <string name="hand">Hand</string>
 </resources>

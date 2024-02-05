@@ -7,6 +7,8 @@ std::vector<omp::CardRange> jstr_array_to_card_vec(JNIEnv *pEnv, jobjectArray pA
 
 std::string jstr_to_cppstring(JNIEnv *pEnv, jstring pJstring);
 
+jdoubleArray hand_stats_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results, int rank_idx);
+
 jdoubleArray win_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results);
 
 jdoubleArray cpp_double_array_to_jdouble_array(JNIEnv *pEnv, const double pDouble[10]);
@@ -26,7 +28,8 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemExactCalc_nativeExa
 
     jclass jcls = env->GetObjectClass(thiz);
     jmethodID mDuringSimulations = env->GetMethodID(jcls, "duringSimulations", "()Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[DZ)V");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations",
+                                                      "([D[D[D[D[D[D[D[D[D[D[DZ)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &is_cancelled, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
@@ -61,10 +64,30 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemExactCalc_nativeExa
     jdoubleArray equity = cpp_double_array_to_jdouble_array(env, r.equity);
     jdoubleArray win = win_to_jdouble_array(env, r);
 
-    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win, is_cancelled ? JNI_TRUE : JNI_FALSE);
+    jdoubleArray jhighCard = hand_stats_to_jdouble_array(env, r, 0);
+    jdoubleArray jonePair = hand_stats_to_jdouble_array(env, r, 1);
+    jdoubleArray jtwoPair = hand_stats_to_jdouble_array(env, r, 2);
+    jdoubleArray jthreeOfAKind = hand_stats_to_jdouble_array(env, r, 3);
+    jdoubleArray jstraight = hand_stats_to_jdouble_array(env, r, 4);
+    jdoubleArray jflush = hand_stats_to_jdouble_array(env, r, 5);
+    jdoubleArray jfullHouse = hand_stats_to_jdouble_array(env, r, 6);
+    jdoubleArray jfourOfAKind = hand_stats_to_jdouble_array(env, r, 7);
+    jdoubleArray jstraightFlush = hand_stats_to_jdouble_array(env, r, 8);
+
+    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win, jhighCard, jonePair, jtwoPair, jthreeOfAKind, jstraight, jflush, jfullHouse, jfourOfAKind, jstraightFlush, is_cancelled ? JNI_TRUE : JNI_FALSE);
 
     env->DeleteLocalRef(equity);
     env->DeleteLocalRef(win);
+
+    env->DeleteLocalRef(jhighCard);
+    env->DeleteLocalRef(jonePair);
+    env->DeleteLocalRef(jtwoPair);
+    env->DeleteLocalRef(jthreeOfAKind);
+    env->DeleteLocalRef(jstraight);
+    env->DeleteLocalRef(jflush);
+    env->DeleteLocalRef(jfullHouse);
+    env->DeleteLocalRef(jfourOfAKind);
+    env->DeleteLocalRef(jstraightFlush);
 
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
@@ -83,8 +106,10 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nati
     env->GetJavaVM(&jvm);
 
     jclass jcls = env->GetObjectClass(thiz);
-    jmethodID mDuringSimulations = env->GetMethodID(jcls, "duringSimulations", "([D[D)Z");
-    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations", "([D[D)V");
+    jmethodID mDuringSimulations = env->GetMethodID(jcls, "duringSimulations",
+                                                    "([D[D[D[D[D[D[D[D[D[D[D)Z");
+    jmethodID mAfterAllSimulations = env->GetMethodID(jcls, "afterAllSimulations",
+                                                      "([D[D[D[D[D[D[D[D[D[D[D)V");
     jobject jObjGlobal = env->NewGlobalRef(thiz);
 
     auto callback = [&eq, &jvm, &jObjGlobal, &mDuringSimulations](const omp::EquityCalculator::Results& results) {
@@ -94,12 +119,32 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nati
         jdoubleArray jequity = cpp_double_array_to_jdouble_array(myNewEnv, results.equity);
         jdoubleArray jwin = win_to_jdouble_array(myNewEnv, results);
 
-        if (myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations, jequity, jwin) == JNI_FALSE) {
+        jdoubleArray jhighCard = hand_stats_to_jdouble_array(myNewEnv, results, 0);
+        jdoubleArray jonePair = hand_stats_to_jdouble_array(myNewEnv, results, 1);
+        jdoubleArray jtwoPair = hand_stats_to_jdouble_array(myNewEnv, results, 2);
+        jdoubleArray jthreeOfAKind = hand_stats_to_jdouble_array(myNewEnv, results, 3);
+        jdoubleArray jstraight = hand_stats_to_jdouble_array(myNewEnv, results, 4);
+        jdoubleArray jflush = hand_stats_to_jdouble_array(myNewEnv, results, 5);
+        jdoubleArray jfullHouse = hand_stats_to_jdouble_array(myNewEnv, results, 6);
+        jdoubleArray jfourOfAKind = hand_stats_to_jdouble_array(myNewEnv, results, 7);
+        jdoubleArray jstraightFlush = hand_stats_to_jdouble_array(myNewEnv, results, 8);
+
+        if (myNewEnv->CallBooleanMethod(jObjGlobal, mDuringSimulations, jequity, jwin, jhighCard, jonePair, jtwoPair, jthreeOfAKind, jstraight, jflush, jfullHouse, jfourOfAKind, jstraightFlush) == JNI_FALSE) {
             eq.stop();
         }
 
         myNewEnv->DeleteLocalRef(jequity);
         myNewEnv->DeleteLocalRef(jwin);
+
+        myNewEnv->DeleteLocalRef(jhighCard);
+        myNewEnv->DeleteLocalRef(jonePair);
+        myNewEnv->DeleteLocalRef(jtwoPair);
+        myNewEnv->DeleteLocalRef(jthreeOfAKind);
+        myNewEnv->DeleteLocalRef(jstraight);
+        myNewEnv->DeleteLocalRef(jflush);
+        myNewEnv->DeleteLocalRef(jfullHouse);
+        myNewEnv->DeleteLocalRef(jfourOfAKind);
+        myNewEnv->DeleteLocalRef(jstraightFlush);
 
         jvm->DetachCurrentThread();
     };
@@ -121,13 +166,42 @@ Java_com_leslie_cjpokeroddscalculator_calculation_TexasHoldemMonteCarloCalc_nati
     jdoubleArray equity = cpp_double_array_to_jdouble_array(env, r.equity);
     jdoubleArray win = win_to_jdouble_array(env, r);
 
-    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win);
+    jdoubleArray jhighCard = hand_stats_to_jdouble_array(env, r, 0);
+    jdoubleArray jonePair = hand_stats_to_jdouble_array(env, r, 1);
+    jdoubleArray jtwoPair = hand_stats_to_jdouble_array(env, r, 2);
+    jdoubleArray jthreeOfAKind = hand_stats_to_jdouble_array(env, r, 3);
+    jdoubleArray jstraight = hand_stats_to_jdouble_array(env, r, 4);
+    jdoubleArray jflush = hand_stats_to_jdouble_array(env, r, 5);
+    jdoubleArray jfullHouse = hand_stats_to_jdouble_array(env, r, 6);
+    jdoubleArray jfourOfAKind = hand_stats_to_jdouble_array(env, r, 7);
+    jdoubleArray jstraightFlush = hand_stats_to_jdouble_array(env, r, 8);
+
+    env->CallVoidMethod(thiz, mAfterAllSimulations, equity, win, jhighCard, jonePair, jtwoPair, jthreeOfAKind, jstraight, jflush, jfullHouse, jfourOfAKind, jstraightFlush);
 
     env->DeleteLocalRef(equity);
     env->DeleteLocalRef(win);
 
+    env->DeleteLocalRef(jhighCard);
+    env->DeleteLocalRef(jonePair);
+    env->DeleteLocalRef(jtwoPair);
+    env->DeleteLocalRef(jthreeOfAKind);
+    env->DeleteLocalRef(jstraight);
+    env->DeleteLocalRef(jflush);
+    env->DeleteLocalRef(jfullHouse);
+    env->DeleteLocalRef(jfourOfAKind);
+    env->DeleteLocalRef(jstraightFlush);
+
     env->DeleteGlobalRef(jObjGlobal);
     env->DeleteLocalRef(jcls);
+}
+
+jdoubleArray hand_stats_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results, int rank_idx) {
+    double hand_stats[10];
+    for (int i=0; i < 10; ++i) {
+        hand_stats[i] = cpp_results.handStats[i][rank_idx] / (double) cpp_results.hands;
+    }
+
+    return cpp_double_array_to_jdouble_array(pEnv, hand_stats);
 }
 
 jdoubleArray win_to_jdouble_array(JNIEnv *pEnv, const omp::EquityCalculator::Results& cpp_results) {
