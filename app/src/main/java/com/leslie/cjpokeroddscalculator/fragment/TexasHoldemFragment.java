@@ -378,6 +378,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         final MaterialButton statsButtonInput = (MaterialButton) v;
         LinearLayout statsView = statsButtonMap.get(statsButtonInput);
 
+        assert statsView != null;
         if (statsView.getVisibility() == View.VISIBLE) {
             statsView.setVisibility(View.GONE);
         } else {
