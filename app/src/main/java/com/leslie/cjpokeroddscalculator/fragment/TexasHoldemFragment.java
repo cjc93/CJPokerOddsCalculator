@@ -20,12 +20,18 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.datastore.preferences.core.MutablePreferences;
+import androidx.datastore.preferences.core.Preferences;
+import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.RangeRow;
 import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
@@ -42,6 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import io.reactivex.rxjava3.core.Single;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
     RangeSelectorBinding rangeSelectorBinding;
@@ -169,9 +177,29 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         requireActivity().getSupportFragmentManager().setFragmentResultListener("add_preset_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
+            String rangeName = (String) result.get("range_name");
+
+            Gson gson = new Gson();
+            String json = gson.toJson(this.matrixInput);
+
+            Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + rangeName);
+
+            ((MainActivity) requireActivity()).dataStore.updateDataAsync(prefsIn -> {
+                MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
+                mutablePreferences.set(RANGE_NAME_KEY, json);
+                return Single.just(mutablePreferences);
+            });
+
             MaterialButton b = new MaterialButton(requireActivity());
             b.setId(View.generateViewId());
-            b.setText((CharSequence) result.get("range_name"));
+            b.setText(rangeName);
+            b.setOnClickListener(v -> {
+                String jsonStr = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(RANGE_NAME_KEY)).blockingFirst();
+                List<List<Set<String>>> savedMatrix = gson.fromJson(jsonStr, new TypeToken<List<List<Set<String>>>>(){}.getType());
+
+                updateRangeSelector(savedMatrix);
+            });
+
             rangeSelectorBinding.presetHandRangeLayout.addView(b);
             rangeSelectorBinding.presetHandRangeFlow.addView(b);
         });
@@ -414,7 +442,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
 
-        this.matrixInput = GlobalStatic.copyMatrix(rangeRow.matrix);
+        updateRangeSelector(rangeRow.matrix);
+        
+        equityCalculatorBinding.mainUi.setVisibility(View.GONE);
+        rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+    };
+
+    public void updateRangeSelector(List<List<Set<String>>> matrix) {
+        this.matrixInput = GlobalStatic.copyMatrix(matrix);
 
         int handCount = 0;
 
@@ -436,11 +471,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelectorBinding.rangeSlider.setValue(handCount);
 
         clearSuitSelectorUI();
-
-        equityCalculatorBinding.mainUi.setVisibility(View.GONE);
-        rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
-    };
-
+    }
 
     private final View.OnClickListener matrixListener = v -> {
         MaterialButton matrixButton = (MaterialButton) v;
