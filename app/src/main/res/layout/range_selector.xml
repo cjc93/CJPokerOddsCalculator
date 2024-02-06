@@ -68,11 +68,13 @@
         android:layout_weight="1">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/preset_hand_range_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/preset_hand_range_initial_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/click_save_button_to_save_current_hand_range"
@@ -80,7 +82,7 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.constraintlayout.helper.widget.Flow
-                android:id="@+id/flow1"
+                android:id="@+id/preset_hand_range_flow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids=""

@@ -161,6 +161,21 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             }
         });
 
+        rangeSelectorBinding.addRangeButton.setOnClickListener(v -> {
+            rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.GONE);
+
+            AddPresetHandRangeFragment dialog = new AddPresetHandRangeFragment();
+            dialog.show(getParentFragmentManager(), "ADD_PRESET_HAND_RANGE_DIALOG");
+        });
+
+        requireActivity().getSupportFragmentManager().setFragmentResultListener("add_preset_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
+            MaterialButton b = new MaterialButton(requireActivity());
+            b.setId(View.generateViewId());
+            b.setText((CharSequence) result.get("range_name"));
+            rangeSelectorBinding.presetHandRangeLayout.addView(b);
+            rangeSelectorBinding.presetHandRangeFlow.addView(b);
+        });
+
         rangeSelectorBinding.done.setOnClickListener(v -> {
             RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
 
