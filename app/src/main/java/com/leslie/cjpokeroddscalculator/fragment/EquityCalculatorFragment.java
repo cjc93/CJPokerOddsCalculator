@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
+
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -84,12 +86,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         generateMainLayout();
 
-        ((MainActivity) requireActivity()).dataStore.updateDataAsync(prefsIn -> {
-            Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
-            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-            mutablePreferences.set(START_FRAGMENT_KEY, fragmentName);
-            return Single.just(mutablePreferences);
-        });
+        writeToDataStore(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("start_fragment"), fragmentName);
 
         for (ImageButton card : cardPositionBiMap.values()) {
             card.setMaxHeight(cardHeight);

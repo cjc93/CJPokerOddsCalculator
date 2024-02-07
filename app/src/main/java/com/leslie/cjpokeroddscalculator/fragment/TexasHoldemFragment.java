@@ -1,5 +1,8 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
+
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -20,7 +23,6 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.navigation.fragment.NavHostFragment;
@@ -43,13 +45,12 @@ import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import io.reactivex.rxjava3.core.Single;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
     RangeSelectorBinding rangeSelectorBinding;
@@ -75,6 +76,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     Map<MaterialButton, LinearLayout> statsButtonMap = new HashMap<>();
 
     public TextView[][] handStats = new TextView[10][9];
+    Gson gson = new Gson();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -170,8 +172,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         rangeSelectorBinding.addRangeButton.setOnClickListener(v -> {
-            rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.GONE);
-
             AddPresetHandRangeFragment dialog = new AddPresetHandRangeFragment();
             dialog.show(getParentFragmentManager(), "ADD_PRESET_HAND_RANGE_DIALOG");
         });
@@ -179,29 +179,29 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         requireActivity().getSupportFragmentManager().setFragmentResultListener("add_preset_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
-            Gson gson = new Gson();
-            String json = gson.toJson(this.matrixInput);
+            writeToDataStore(
+                ((MainActivity) requireActivity()).dataStore,
+                PreferencesKeys.stringKey("thec_" + rangeName),
+                gson.toJson(this.matrixInput)
+            );
 
-            Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + rangeName);
+            Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            ((MainActivity) requireActivity()).dataStore.updateDataAsync(prefsIn -> {
-                MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-                mutablePreferences.set(RANGE_NAME_KEY, json);
-                return Single.just(mutablePreferences);
-            });
+            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY);
 
-            MaterialButton b = new MaterialButton(requireActivity());
-            b.setId(View.generateViewId());
-            b.setText(rangeName);
-            b.setOnClickListener(v -> {
-                String jsonStr = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(RANGE_NAME_KEY)).blockingFirst();
-                List<List<Set<String>>> savedMatrix = gson.fromJson(jsonStr, new TypeToken<List<List<Set<String>>>>(){}.getType());
+            if (rangeNamesJson == null) {
+                writeToDataStore(
+                    ((MainActivity) requireActivity()).dataStore,
+                    ALL_NAMES_KEY,
+                    gson.toJson(Collections.singletonList(rangeName))
+                );
+            } else {
+                List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
+                rangeNameList.add(rangeName);
+                writeToDataStore(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+            }
 
-                updateRangeSelector(savedMatrix);
-            });
-
-            rangeSelectorBinding.presetHandRangeLayout.addView(b);
-            rangeSelectorBinding.presetHandRangeFlow.addView(b);
+            appendPresetRangeButton(rangeName);
         });
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
@@ -248,6 +248,24 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         };
+    }
+
+    public void appendPresetRangeButton(String rangeName) {
+        Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + rangeName);
+
+        MaterialButton b = new MaterialButton(requireActivity());
+        b.setId(View.generateViewId());
+        b.setText(rangeName);
+        b.setOnClickListener(v -> {
+            String matrixJson = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(RANGE_NAME_KEY)).blockingFirst();
+            List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
+
+            updateRangeSelector(savedMatrix);
+        });
+
+        rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.GONE);
+        rangeSelectorBinding.presetHandRangeLayout.addView(b);
+        rangeSelectorBinding.presetHandRangeFlow.addView(b);
     }
 
     @Override
@@ -386,6 +404,18 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
             }
             rangeSelectorBinding.rangeMatrix.addView(row);
+        }
+
+        String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
+
+        if (rangeNamesJson != null) {
+
+
+            List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
+
+            for (String rangeName : rangeNameList) {
+                appendPresetRangeButton(rangeName);
+            }
         }
 
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
