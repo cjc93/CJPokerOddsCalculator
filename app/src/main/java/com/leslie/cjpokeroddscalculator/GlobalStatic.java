@@ -114,6 +114,14 @@ public class GlobalStatic {
         }
     }
 
+    public static void deleteKeyFromDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<String> key) {
+        dataStore.updateDataAsync(prefsIn -> {
+            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
+            mutablePreferences.remove(key);
+            return Single.just(mutablePreferences);
+        });
+    }
+
     public static Map<Integer, Map<Integer, Integer>> suitRankDrawableMap = new HashMap<>();
     static {
         Map<Integer, Integer> temp_map = new HashMap<>();

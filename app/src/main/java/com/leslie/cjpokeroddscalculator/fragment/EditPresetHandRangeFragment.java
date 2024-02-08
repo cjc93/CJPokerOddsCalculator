@@ -36,7 +36,8 @@ public class EditPresetHandRangeFragment extends DialogFragment {
             .setView(editTextField)
             .setPositiveButton("Rename", (dialog, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("range_name", editTextField.getText().toString());
+                bundle.putString("old_range_name", rangeName);
+                bundle.putString("new_range_name", editTextField.getText().toString());
                 requireActivity().getSupportFragmentManager().setFragmentResult("rename_preset_hand_range", bundle);
             })
             .setNegativeButton("Cancel", (dialog, id) -> {})

@@ -1,5 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.deleteKeyFromDataStore;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
@@ -258,8 +259,37 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         requireActivity().getSupportFragmentManager().setFragmentResultListener("rename_preset_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
-            String rangeName = (String) result.get("range_name");
+            String oldRangeName = (String) result.get("old_range_name");
+            String newRangeName = (String) result.get("new_range_name");
 
+            Preferences.Key<String> OLD_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + oldRangeName);
+            Preferences.Key<String> NEW_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + newRangeName);
+
+            String matrixJson = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(OLD_RANGE_NAME_KEY)).blockingFirst();
+
+            deleteKeyFromDataStore(((MainActivity) requireActivity()).dataStore, OLD_RANGE_NAME_KEY);
+
+            writeToDataStore(
+                    ((MainActivity) requireActivity()).dataStore,
+                    NEW_RANGE_NAME_KEY,
+                    matrixJson
+            );
+
+            Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
+
+            String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(ALL_NAMES_KEY)).blockingFirst();
+
+            List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
+            assert rangeNameList != null;
+            Collections.replaceAll(rangeNameList, oldRangeName, newRangeName);
+            writeToDataStore(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+
+            MaterialButton presetHandRangeButton = presetHandRangeMap.get(oldRangeName);
+            assert presetHandRangeButton != null;
+            presetHandRangeButton.setText(newRangeName);
+
+            presetHandRangeMap.remove(oldRangeName);
+            presetHandRangeMap.put(newRangeName, presetHandRangeButton);
         });
 
         requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_preset_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
@@ -273,7 +303,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(ALL_NAMES_KEY)).blockingFirst();
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
             assert rangeNameList != null;
@@ -288,13 +318,12 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void appendPresetRangeButton(String rangeName) {
-        Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + rangeName);
-
         MaterialButton b = new MaterialButton(requireActivity());
         b.setId(View.generateViewId());
         b.setText(rangeName);
 
         b.setOnClickListener(v -> {
+            Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
             String matrixJson = ((MainActivity) requireActivity()).dataStore.data().map(prefs -> prefs.get(RANGE_NAME_KEY)).blockingFirst();
             List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
 
@@ -302,7 +331,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         b.setOnLongClickListener(v -> {
-            EditPresetHandRangeFragment dialog = EditPresetHandRangeFragment.newInstance(rangeName);
+            EditPresetHandRangeFragment dialog = EditPresetHandRangeFragment.newInstance((String) b.getText());
             dialog.show(getParentFragmentManager(), "EDIT_PRESET_HAND_RANGE_DIALOG");
             return true;
         });
