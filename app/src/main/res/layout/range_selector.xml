@@ -57,7 +57,9 @@
             android:id="@+id/add_range_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add" />
+            android:text="@string/add"
+            android:layout_marginStart="30dp"
+            app:backgroundTint="#FFA500"/>
 
     </LinearLayout>
 
@@ -89,7 +91,10 @@
                 app:flow_wrapMode="chain"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:flow_horizontalGap="10dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_horizontalBias="0"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

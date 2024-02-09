@@ -314,7 +314,12 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             MaterialButton presetHandRangeButton = presetHandRangeMap.get(rangeName);
             rangeSelectorBinding.presetHandRangeLayout.removeView(presetHandRangeButton);
             rangeSelectorBinding.presetHandRangeFlow.removeView(presetHandRangeButton);
+
             presetHandRangeMap.remove(rangeName);
+
+            if (presetHandRangeMap.isEmpty()) {
+                rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -322,6 +327,13 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         MaterialButton b = new MaterialButton(requireActivity());
         b.setId(View.generateViewId());
         b.setText(rangeName);
+        b.setTextSize(12);
+        b.setCornerRadius(20);
+        b.setPadding(40, 30, 40, 30);
+        b.setMinimumHeight(0);
+        b.setMinHeight(0);
+        b.setMinWidth(0);
+        b.setMinimumWidth(0);
 
         b.setOnClickListener(v -> {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
