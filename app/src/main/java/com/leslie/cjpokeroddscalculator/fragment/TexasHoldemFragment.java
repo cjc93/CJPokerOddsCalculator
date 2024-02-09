@@ -46,6 +46,7 @@ import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -177,7 +178,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         rangeSelectorBinding.addRangeButton.setOnClickListener(v -> {
-            AddPresetHandRangeFragment dialog = new AddPresetHandRangeFragment();
+            AddPresetHandRangeFragment dialog = AddPresetHandRangeFragment.newInstance(new ArrayList<>(presetHandRangeMap.keySet()));
             dialog.show(getParentFragmentManager(), "ADD_PRESET_HAND_RANGE_DIALOG");
         });
 
@@ -331,7 +332,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
 
         b.setOnLongClickListener(v -> {
-            EditPresetHandRangeFragment dialog = EditPresetHandRangeFragment.newInstance((String) b.getText());
+            EditPresetHandRangeFragment dialog = EditPresetHandRangeFragment.newInstance((String) b.getText(), new ArrayList<>(presetHandRangeMap.keySet()));
             dialog.show(getParentFragmentManager(), "EDIT_PRESET_HAND_RANGE_DIALOG");
             return true;
         });
