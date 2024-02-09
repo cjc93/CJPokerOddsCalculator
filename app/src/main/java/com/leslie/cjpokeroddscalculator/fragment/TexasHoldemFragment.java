@@ -367,30 +367,30 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void initialiseTexasHoldemVariables() {
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 1));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(2, 2));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(3, 3));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(4, 4));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 1));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 2));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits9, Arrays.asList(3, 3));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(4, 4));
 
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 2));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(1, 3));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(1, 4));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(2, 3));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits21, Arrays.asList(2, 4));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits22, Arrays.asList(3, 4));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits1, Arrays.asList(1, 2));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits2, Arrays.asList(1, 3));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 4));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 3));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits5, Arrays.asList(2, 4));
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits6, Arrays.asList(3, 4));
 
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits00, Arrays.asList(2, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits01, Arrays.asList(1, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits02, Arrays.asList(1, 3));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits03, Arrays.asList(3, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(4, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(1, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(2, 3));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits13, Arrays.asList(3, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits20, Arrays.asList(4, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits21, Arrays.asList(2, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits22, Arrays.asList(3, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits23, Arrays.asList(4, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits1, Arrays.asList(1, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits2, Arrays.asList(1, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits5, Arrays.asList(2, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits6, Arrays.asList(3, 4));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits7, Arrays.asList(2, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits8, Arrays.asList(3, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits9, Arrays.asList(4, 1));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(3, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(4, 2));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(4, 3));
     }
 
     public void generateMainLayout() {
@@ -486,8 +486,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
 
         if (rangeNamesJson != null) {
-
-
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
 
             for (String rangeName : rangeNameList) {
