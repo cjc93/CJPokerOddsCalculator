@@ -19,9 +19,6 @@ import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 
 import java.util.Objects;
 
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Flowable;
-
 public class MainActivity extends AppCompatActivity {
     public RxDataStore<Preferences> dataStore = new RxPreferenceDataStoreBuilder(this, "general").build();
 

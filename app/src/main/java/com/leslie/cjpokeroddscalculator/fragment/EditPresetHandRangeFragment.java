@@ -3,7 +3,6 @@ package com.leslie.cjpokeroddscalculator.fragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class EditPresetHandRangeFragment extends DialogFragment {
     static EditPresetHandRangeFragment newInstance(String currentRangeName, ArrayList<String> rangeNames) {
