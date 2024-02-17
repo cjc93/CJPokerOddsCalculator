@@ -59,7 +59,10 @@
             android:layout_height="wrap_content"
             android:text="@string/add"
             android:layout_marginStart="30dp"
-            app:backgroundTint="#FFA500"/>
+            app:backgroundTint="#FFA500"
+            android:minWidth="0dp"
+            android:padding="10dp"
+            app:cornerRadius="10dp"/>
 
     </LinearLayout>
 
