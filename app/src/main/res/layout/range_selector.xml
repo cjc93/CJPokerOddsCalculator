@@ -42,6 +42,72 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/saved_hand_range" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_range_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:layout_marginStart="30dp"
+            app:backgroundTint="#FFA500"
+            android:minWidth="0dp"
+            android:padding="10dp"
+            app:cornerRadius="10dp"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/preset_hand_range_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/preset_hand_range_initial_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/click_save_button_to_save_current_hand_range"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/preset_hand_range_flow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids=""
+                app:flow_wrapMode="chain"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:flow_horizontalGap="10dp"
+                app:flow_horizontalStyle="packed"
+                app:flow_horizontalBias="0"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <TextView
         android:id="@+id/suit_selector_text"
         android:text="@string/select_a_hand_to_choose_suits"
@@ -70,7 +136,7 @@
                 android:gravity="center" >
 
                 <ImageButton
-                    android:id="@+id/suits00"
+                    android:id="@+id/suits1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -92,7 +158,7 @@
                 android:gravity="center" >
 
                 <ImageButton
-                    android:id="@+id/suits01"
+                    android:id="@+id/suits2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -113,7 +179,7 @@
                 android:gravity="center" >
 
                 <ImageButton
-                    android:id="@+id/suits02"
+                    android:id="@+id/suits3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -135,7 +201,7 @@
                 android:gravity="center" >
 
                 <ImageButton
-                    android:id="@+id/suits03"
+                    android:id="@+id/suits4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
@@ -147,6 +213,49 @@
                     android:layout_margin="3dp"
                     android:contentDescription="@string/suits" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/suits5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/suits" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/suits6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/suits" />
             </LinearLayout>
 
         </LinearLayout>
@@ -157,6 +266,73 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:baselineAligned="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/suits7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/suits" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/suits8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/suits" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
+
+                <ImageButton
+                    android:id="@+id/suits9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/unknown_button"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="5dp"
+                    android:layout_margin="3dp"
+                    android:contentDescription="@string/suits" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -176,7 +352,6 @@
                     android:padding="5dp"
                     android:layout_margin="3dp"
                     android:contentDescription="@string/suits" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -198,6 +373,7 @@
                     android:padding="5dp"
                     android:layout_margin="3dp"
                     android:contentDescription="@string/suits" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -222,125 +398,8 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
         </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="false">
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits20"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits21"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
-                    android:contentDescription="@string/suits" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits22"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits23"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
+        
     </LinearLayout>
 
     <Button

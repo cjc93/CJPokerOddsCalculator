@@ -1,4 +1,6 @@
 package com.leslie.cjpokeroddscalculator;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
+
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -29,11 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
 
-        Boolean startFragmentKeyExist = dataStore.data().map(prefs -> prefs.contains(START_FRAGMENT_KEY)).blockingFirst();
-        String startFragmentStr = "";
-        if (startFragmentKeyExist) {
-            startFragmentStr = dataStore.data().map(prefs -> prefs.get(START_FRAGMENT_KEY)).blockingFirst();
-        }
+        String startFragmentStr = getDataFromDataStoreIfExist(dataStore, START_FRAGMENT_KEY);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         assert navHostFragment != null;
