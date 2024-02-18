@@ -1,8 +1,9 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.cardrow;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment;
 

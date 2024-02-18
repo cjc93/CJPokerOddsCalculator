@@ -22,11 +22,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
-import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
 import java.util.Arrays;

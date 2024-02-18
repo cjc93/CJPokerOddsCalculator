@@ -51,7 +51,7 @@ public class GlobalStatic {
     public static Set<String> pairSuits = Sets.newHashSet("hs", "cs", "ds", "ch", "dh", "dc");
     public static Set<String> offSuits = Sets.newHashSet("sh", "sc", "sd", "hs", "hc", "hd", "cs", "ch", "cd", "ds", "dh", "dc");
 
-    static String[] all_possible_cards = new String[] {
+    public static String[] all_possible_cards = new String[] {
             "2d","3d","4d","5d","6d","7d","8d","9d","Td","Jd","Qd","Kd","Ad",
             "2c","3c","4c","5c","6c","7c","8c","9c","Tc","Jc","Qc","Kc","Ac",
             "2h","3h","4h","5h","6h","7h","8h","9h","Th","Jh","Qh","Kh","Ah",

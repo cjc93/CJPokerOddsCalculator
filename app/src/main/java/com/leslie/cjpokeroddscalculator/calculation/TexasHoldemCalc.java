@@ -1,6 +1,6 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
-import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 

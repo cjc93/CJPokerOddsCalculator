@@ -1,9 +1,9 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
-import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Cards;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
-import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.CardsMonteCarlo;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;

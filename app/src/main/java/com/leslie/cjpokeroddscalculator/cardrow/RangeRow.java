@@ -1,8 +1,9 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.cardrow;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
-public class RangeRow extends CardRow{
+public class RangeRow extends CardRow {
     public List<List<Set<String>>> matrix;
 
     public RangeRow() {
