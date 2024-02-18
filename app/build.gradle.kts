@@ -10,8 +10,8 @@ android {
         applicationId = "com.leslie.cjpokeroddscalculator"
         minSdk = 26
         targetSdk = 34
-        versionCode = 16
-        versionName = "2.2"
+        versionCode = 17
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -47,8 +47,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.navigation:navigation-fragment:2.7.6")
-    implementation("androidx.navigation:navigation-ui:2.7.6")
+    implementation("androidx.navigation:navigation-fragment:2.7.7")
+    implementation("androidx.navigation:navigation-ui:2.7.7")
     implementation("com.google.guava:guava:32.1.2-jre")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.datastore:datastore-preferences-rxjava3:1.0.0")
