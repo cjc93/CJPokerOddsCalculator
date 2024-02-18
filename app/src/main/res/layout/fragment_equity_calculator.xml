@@ -250,8 +250,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:maxLines="1"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMaxTextSize="14sp"
                 android:layout_weight="1" />
 
             <Button
@@ -264,8 +262,8 @@
 
             <Button
                 android:id="@+id/button_unknown"
-                app:autoSizeTextType="uniform"
                 android:text="@string/unknown_card"
+                android:textSize="20sp"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
