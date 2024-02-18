@@ -1,8 +1,8 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
-import com.leslie.cjpokeroddscalculator.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
-import com.leslie.cjpokeroddscalculator.SpecificCardsRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
 public class TexasHoldemMonteCarloCalc extends TexasHoldemCalc {
 

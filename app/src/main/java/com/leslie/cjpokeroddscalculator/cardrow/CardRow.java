@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.cardrow;
 
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 
