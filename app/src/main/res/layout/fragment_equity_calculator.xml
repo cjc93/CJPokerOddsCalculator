@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fullscreen_ui"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true" >
+    android:keepScreenOn="true">
 
     <LinearLayout
         android:id="@+id/main_ui"
@@ -77,15 +75,8 @@
 
                         <ImageButton
                             android:id="@+id/flop1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:src="@drawable/unknown_button"
-                            android:layout_gravity="center"
-                            android:scaleType="fitCenter"
-                            android:adjustViewBounds="true"
                             android:contentDescription="@string/flop1"
-                            android:padding="5dp" />
+                            style="@style/SelectCardButton" />
 
                     </LinearLayout>
 
@@ -98,15 +89,8 @@
 
                         <ImageButton
                             android:id="@+id/flop2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:src="@drawable/unknown_button"
-                            android:layout_gravity="center"
-                            android:scaleType="fitCenter"
-                            android:adjustViewBounds="true"
                             android:contentDescription="@string/flop2"
-                            android:padding="5dp" />
+                            style="@style/SelectCardButton" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -118,15 +102,8 @@
 
                         <ImageButton
                             android:id="@+id/flop3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@null"
-                            android:src="@drawable/unknown_button"
-                            android:layout_gravity="center"
-                            android:scaleType="fitCenter"
-                            android:adjustViewBounds="true"
                             android:contentDescription="@string/flop3"
-                            android:padding="5dp" />
+                            style="@style/SelectCardButton" />
 
                     </LinearLayout>
 
@@ -145,27 +122,15 @@
                 <TextView
                     android:text="@string/turn"
                     android:gravity="center_horizontal"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
-                <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center" >
+                    android:background="#696969" />
 
-                    <ImageButton
-                        android:id="@+id/turn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/unknown_button"
-                        android:layout_gravity="center"
-                        android:scaleType="fitCenter"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/turn"
-                        android:padding="5dp" />
-                </LinearLayout>
+                <ImageButton
+                    android:id="@+id/turn"
+                    android:contentDescription="@string/turn"
+                    style="@style/SelectCardButton" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -177,21 +142,14 @@
                 <TextView
                     android:text="@string/river"
                     android:gravity="center_horizontal"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="#696969" />
 
                 <ImageButton
                     android:id="@+id/river"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
                     android:contentDescription="@string/river"
-                    android:padding="5dp" />
+                    style="@style/SelectCardButton" />
 
             </LinearLayout>
 

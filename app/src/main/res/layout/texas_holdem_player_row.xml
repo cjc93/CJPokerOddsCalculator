@@ -27,7 +27,7 @@
                 android:id="@+id/player_text"
                 android:text="@string/player"
                 android:gravity="center_horizontal"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#696969" />
 
@@ -59,15 +59,8 @@
 
                     <ImageButton
                         android:id="@+id/card1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/unknown_button"
-                        android:layout_gravity="center"
-                        android:scaleType="fitCenter"
-                        android:adjustViewBounds="true"
                         android:contentDescription="@string/card1"
-                        android:padding="5dp" />
+                        style="@style/SelectCardButton" />
 
                 </LinearLayout>
 
@@ -80,15 +73,8 @@
 
                     <ImageButton
                         android:id="@+id/card2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:src="@drawable/unknown_button"
-                        android:layout_gravity="center"
-                        android:scaleType="fitCenter"
-                        android:adjustViewBounds="true"
                         android:contentDescription="@string/card2"
-                        android:padding="5dp" />
+                        style="@style/SelectCardButton" />
 
                 </LinearLayout>
 
@@ -249,37 +235,19 @@
 
             <TextView
                 android:text="@string/high_card"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameLeft"/>
 
             <TextView
                 android:id="@+id/high_card"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
             <TextView
                 android:text="@string/flush"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameRight"/>
 
             <TextView
                 android:id="@+id/flush"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
         </LinearLayout>
 
@@ -290,37 +258,19 @@
 
             <TextView
                 android:text="@string/one_pair"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameLeft"/>
 
             <TextView
                 android:id="@+id/one_pair"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
             <TextView
                 android:text="@string/full_house"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameRight"/>
 
             <TextView
                 android:id="@+id/full_house"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
         </LinearLayout>
 
@@ -331,37 +281,19 @@
 
             <TextView
                 android:text="@string/two_pair"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameLeft"/>
 
             <TextView
                 android:id="@+id/two_pair"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
             <TextView
                 android:text="@string/_4_of_a_kind"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameRight"/>
 
             <TextView
                 android:id="@+id/four_of_a_kind"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
         </LinearLayout>
 
@@ -372,37 +304,19 @@
 
             <TextView
                 android:text="@string/_3_of_a_kind"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameLeft"/>
 
             <TextView
                 android:id="@+id/three_of_a_kind"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="12sp"
-                android:paddingRight="50dp"/>
+                style="@style/StatsValue"/>
 
             <TextView
                 android:text="@string/straight_flush"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="12sp"
-                android:paddingLeft="20dp" />
+                style="@style/StatsNameRight"/>
 
             <TextView
                 android:id="@+id/straight_flush"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="12sp"
-                android:paddingRight="50dp"/>
+                style="@style/StatsValue"/>
 
         </LinearLayout>
 
@@ -413,20 +327,11 @@
 
             <TextView
                 android:text="@string/straight"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsNameLeft"/>
 
             <TextView
                 android:id="@+id/straight"
-                android:gravity="center|right"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingRight="50dp"
-                android:textSize="12sp"
-                android:layout_weight="1"/>
+                style="@style/StatsValue"/>
 
             <View
                 android:layout_width="0dp"
