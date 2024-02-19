@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
 import android.graphics.Rect;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public abstract class EquityCalculatorFragment extends Fragment {
@@ -55,7 +58,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
-    HashBiMap<ImageButton, List<Integer>> inputSuitRankMap;
+    HashBiMap<ImageButton, String> inputSuitRankMap;
 
     CardRow[] cardRows = new CardRow[11];
 
@@ -141,7 +144,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             calculate_odds();
         });
 
-        equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(0, 0));
+        equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(""));
     }
 
     @Override
@@ -242,20 +245,20 @@ public abstract class EquityCalculatorFragment extends Fragment {
         );
 
         inputSuitRankMap = HashBiMap.create();
-        for (int suit = 1; suit <= 4; suit++) {
+        for (String suit : suitStrings) {
             LinearLayout row = new LinearLayout(requireActivity());
             row.setLayoutParams(rowParam);
 
-            for (int rank = 2; rank <= 14; rank++) {
+            for (String rank : rankStrings) {
                 ImageButton b = new ImageButton(requireActivity());
                 b.setLayoutParams(buttonParam);
                 b.setBackgroundResource(0);
-                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
+                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(rank + suit));
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
                 row.addView(b);
-                inputSuitRankMap.put(b, Arrays.asList(suit, rank));
+                inputSuitRankMap.put(b, rank + suit);
             }
             equityCalculatorBinding.inputCards.addView(row);
         }
@@ -296,7 +299,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void setEmptyHandRow(int row) {
         cardRows[row] = new SpecificCardsRow(cardsPerHand);
         for (int i = 0; i < cardsPerHand; i++) {
-            setCardImage(row, i, 0, 0);
+            setCardImage(row, i, "");
         }
     }
 
@@ -312,9 +315,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
         ImageButton card_input = (ImageButton) v;
         card_input.setVisibility(View.INVISIBLE);
 
-        List<Integer> suit_rank_list = inputSuitRankMap.get(card_input);
-        assert suit_rank_list != null;
-        set_value_to_selected_card(suit_rank_list.get(0), suit_rank_list.get(1));
+        String cardStr = inputSuitRankMap.get(card_input);
+        set_value_to_selected_card(cardStr);
     };
 
     private void set_next_selected_card() {
@@ -361,36 +363,35 @@ public abstract class EquityCalculatorFragment extends Fragment {
         selected_card_button.setBackgroundResource(R.drawable.border_selector);
     }
 
-    public void set_card_value(int row_idx, int card_idx, int suit, int rank) {
+    public void set_card_value(int row_idx, int card_idx, String cardStr) {
         SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[row_idx];
-        cardRow.cards[card_idx][0] = suit;
-        cardRow.cards[card_idx][1] = rank;
+        cardRow.cards[card_idx] = cardStr;
 
-        setCardImage(row_idx, card_idx, suit, rank);
+        setCardImage(row_idx, card_idx, cardStr);
     }
 
-    public void set_value_to_selected_card(int suit, int rank) {
+    public void set_value_to_selected_card(String cardStr) {
         setInputCardVisible(selected_card_position[0], selected_card_position[1]);
 
-        set_card_value(selected_card_position[0], selected_card_position[1], suit, rank);
+        set_card_value(selected_card_position[0], selected_card_position[1], cardStr);
         set_next_selected_card();
         calculate_odds();
     }
 
     public void setInputCardVisible(int row_idx, int card_idx) {
-        int[] suit_rank_array = ((SpecificCardsRow) cardRows[row_idx]).cards[card_idx];
+        String cardStr = ((SpecificCardsRow) cardRows[row_idx]).cards[card_idx];
 
-        if (suit_rank_array[0] != 0) {
-            ImageButton card = inputSuitRankMap.inverse().get(Arrays.asList(suit_rank_array[0], suit_rank_array[1]));
+        if (!Objects.equals(cardStr, "")) {
+            ImageButton card = inputSuitRankMap.inverse().get(cardStr);
             assert card != null;
             card.setVisibility(View.VISIBLE);
         }
     }
 
-    public void setCardImage(int row_idx, int card_idx, int suit, int rank) {
+    public void setCardImage(int row_idx, int card_idx, String cardStr) {
         ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
         assert card_button != null;
-        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(suit).get(rank));
+        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(cardStr));
     }
 
     public void calculate_odds() {

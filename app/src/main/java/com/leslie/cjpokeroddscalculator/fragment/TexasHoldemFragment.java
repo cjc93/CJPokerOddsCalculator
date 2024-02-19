@@ -2,6 +2,7 @@ package com.leslie.cjpokeroddscalculator.fragment;
 
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.deleteKeyFromDataStore;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
 import android.content.res.ColorStateList;
@@ -75,9 +76,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     List<List<Set<String>>> matrixInput;
     public Bitmap emptyRangeBitmap;
 
-    Map<ImageButton, List<Integer>> pairButtonSuitsMap = new HashMap<>();
-    Map<ImageButton, List<Integer>> suitedButtonSuitsMap = new HashMap<>();
-    Map<ImageButton, List<Integer>> offsuitButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
     Map<MaterialButton, LinearLayout> statsButtonMap = new HashMap<>();
     Map<String, MaterialButton> presetHandRangeMap = new HashMap<>();
 
@@ -379,30 +380,31 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void initialiseTexasHoldemVariables() {
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 1));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 2));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits9, Arrays.asList(3, 3));
-        suitedButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(4, 4));
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits3, "ss");
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits4, "hh");
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits9, "cc");
+        suitedButtonSuitsMap.put(rangeSelectorBinding.suits10, "dd");
 
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits1, Arrays.asList(1, 2));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits2, Arrays.asList(1, 3));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 4));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 3));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits5, Arrays.asList(2, 4));
-        pairButtonSuitsMap.put(rangeSelectorBinding.suits6, Arrays.asList(3, 4));
+        // The order of characters in these strings needs to be the same as GlobalStatic.pairSuits
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits1, "hs");
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits2, "cs");
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits3, "ds");
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits4, "ch");
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits5, "dh");
+        pairButtonSuitsMap.put(rangeSelectorBinding.suits6, "dc");
 
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits1, Arrays.asList(1, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits2, Arrays.asList(1, 3));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits3, Arrays.asList(1, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits4, Arrays.asList(2, 3));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits5, Arrays.asList(2, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits6, Arrays.asList(3, 4));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits7, Arrays.asList(2, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits8, Arrays.asList(3, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits9, Arrays.asList(4, 1));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits10, Arrays.asList(3, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, Arrays.asList(4, 2));
-        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, Arrays.asList(4, 3));
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits1, "sh");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits2, "sc");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits3, "sd");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits4, "hc");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits5, "hd");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits6, "cd");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits7, "hs");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits8, "cs");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits9, "ds");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits10, "ch");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, "dh");
+        offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, "dc");
     }
 
     public void generateMainLayout() {
@@ -482,11 +484,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 b.setOnClickListener(matrixListener);
 
                 if (row_idx == col_idx) {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[row_idx], GlobalStatic.matrixStrings[row_idx], ""));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[row_idx], GlobalStatic.rankStrings[row_idx], ""));
                 } else if (col_idx > row_idx) {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[row_idx], GlobalStatic.matrixStrings[col_idx], "s"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[row_idx], GlobalStatic.rankStrings[col_idx], "s"));
                 } else {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.matrixStrings[col_idx], GlobalStatic.matrixStrings[row_idx], "o"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[col_idx], GlobalStatic.rankStrings[row_idx], "o"));
                 }
 
                 row.addView(b);
@@ -623,15 +625,15 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         selectedMatrixButton.setStrokeWidth(2);
 
         if (row == col) {
-            int rank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            String rank = rankStrings[row];
             setSuitSelectorUI(pairButtonSuitsMap, rank, rank, suits);
         } else if (col > row) {
-            int highRank = GlobalStatic.convertMatrixPositionToRankInt(row);
-            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(col);
+            String highRank = rankStrings[row];
+            String lowRank = rankStrings[col];
             setSuitSelectorUI(suitedButtonSuitsMap, highRank, lowRank, suits);
         } else {
-            int highRank = GlobalStatic.convertMatrixPositionToRankInt(col);
-            int lowRank = GlobalStatic.convertMatrixPositionToRankInt(row);
+            String highRank = rankStrings[col];
+            String lowRank = rankStrings[row];
             setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
         }
 
@@ -645,17 +647,16 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         int col = selectedMatrixPosition[1];
 
         Set<String> suits = this.matrixInput.get(row).get(col);
-        List<Integer> s;
+        String currentSuit;
         if (row == col) {
-            s = pairButtonSuitsMap.get(suitsButton);
+            currentSuit = pairButtonSuitsMap.get(suitsButton);
         } else if (col > row) {
-            s = suitedButtonSuitsMap.get(suitsButton);
+            currentSuit = suitedButtonSuitsMap.get(suitsButton);
         } else {
-            s = offsuitButtonSuitsMap.get(suitsButton);
+            currentSuit = offsuitButtonSuitsMap.get(suitsButton);
         }
 
-        assert s != null;
-        String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
+        assert currentSuit != null;
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
             suitsButton.setBackgroundResource(0);
@@ -676,14 +677,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     };
 
 
-    private void setSuitSelectorUI(Map<ImageButton, List<Integer>> buttonSuitsMap, int highRank, int lowRank, Set<String> suits) {
+    private void setSuitSelectorUI(Map<ImageButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
-            List<Integer> s = buttonSuitsMap.get(b);
-            if (s == null) {
+            String currentSuit = buttonSuitsMap.get(b);
+            if (currentSuit == null) {
                 b.setVisibility(View.INVISIBLE);
             } else {
-                Drawable leftCard = ContextCompat.getDrawable(requireActivity(), GlobalStatic.suitRankDrawableMap.get(s.get(0)).get(highRank));
-                Drawable rightCard = ContextCompat.getDrawable(requireActivity(), GlobalStatic.suitRankDrawableMap.get(s.get(1)).get(lowRank));
+                Drawable leftCard = ContextCompat.getDrawable(requireActivity(), GlobalStatic.suitRankDrawableMap.get(highRank + currentSuit.charAt(0)));
+                Drawable rightCard = ContextCompat.getDrawable(requireActivity(), GlobalStatic.suitRankDrawableMap.get(lowRank + currentSuit.charAt(1)));
 
                 LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
                 assert rightCard != null;
@@ -691,8 +692,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 combinedDrawable.setLayerGravity(1, Gravity.RIGHT);
 
                 b.setImageDrawable(combinedDrawable);
-
-                String currentSuit = GlobalStatic.suitToStr.get(s.get(0)) + GlobalStatic.suitToStr.get(s.get(1));
 
                 if (suits.contains(currentSuit)) {
                     b.setBackgroundResource(R.drawable.border_selector);

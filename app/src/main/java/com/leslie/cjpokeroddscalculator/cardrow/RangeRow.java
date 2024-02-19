@@ -82,14 +82,14 @@ public class RangeRow extends CardRow {
         for (int row_idx = 0; row_idx < 13; row_idx++) {
             for (int col_idx = 0; col_idx < 13; col_idx++) {
                 if (row_idx == col_idx) {
-                    firstRank = GlobalStatic.matrixStrings[row_idx];
-                    secondRank = GlobalStatic.matrixStrings[row_idx];
+                    firstRank = GlobalStatic.rankStrings[row_idx];
+                    secondRank = GlobalStatic.rankStrings[row_idx];
                 } else if (col_idx > row_idx) {
-                    firstRank = GlobalStatic.matrixStrings[row_idx];
-                    secondRank = GlobalStatic.matrixStrings[col_idx];
+                    firstRank = GlobalStatic.rankStrings[row_idx];
+                    secondRank = GlobalStatic.rankStrings[col_idx];
                 } else {
-                    firstRank = GlobalStatic.matrixStrings[col_idx];
-                    secondRank = GlobalStatic.matrixStrings[row_idx];
+                    firstRank = GlobalStatic.rankStrings[col_idx];
+                    secondRank = GlobalStatic.rankStrings[row_idx];
                 }
 
                 for (String s : this.matrix.get(row_idx).get(col_idx)) {
