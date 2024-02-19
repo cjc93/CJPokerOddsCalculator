@@ -137,15 +137,7 @@
 
                 <ImageButton
                     android:id="@+id/suits1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -159,15 +151,7 @@
 
                 <ImageButton
                     android:id="@+id/suits2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
             </LinearLayout>
 
@@ -180,15 +164,7 @@
 
                 <ImageButton
                     android:id="@+id/suits3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -202,15 +178,7 @@
 
                 <ImageButton
                     android:id="@+id/suits4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -224,15 +192,7 @@
 
                 <ImageButton
                     android:id="@+id/suits5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -246,15 +206,7 @@
 
                 <ImageButton
                     android:id="@+id/suits6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
             </LinearLayout>
 
@@ -276,15 +228,7 @@
 
                 <ImageButton
                     android:id="@+id/suits7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -298,15 +242,7 @@
 
                 <ImageButton
                     android:id="@+id/suits8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -320,15 +256,7 @@
 
                 <ImageButton
                     android:id="@+id/suits9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -342,15 +270,7 @@
 
                 <ImageButton
                     android:id="@+id/suits10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
             </LinearLayout>
 
@@ -363,15 +283,7 @@
 
                 <ImageButton
                     android:id="@+id/suits11"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
@@ -385,15 +297,7 @@
 
                 <ImageButton
                     android:id="@+id/suits12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:src="@drawable/unknown_button"
-                    android:layout_gravity="center"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="5dp"
-                    android:layout_margin="3dp"
+                    style="@style/SuitSelectorButton"
                     android:contentDescription="@string/suits" />
 
             </LinearLayout>
