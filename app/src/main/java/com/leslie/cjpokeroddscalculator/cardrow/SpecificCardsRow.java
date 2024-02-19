@@ -14,30 +14,26 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class SpecificCardsRow extends CardRow {
-    public int[][] cards;
+    public String[] cards;
 
     public SpecificCardsRow(int numOfCards) {
-        cards = new int[numOfCards][];
+        cards = new String[numOfCards];
 
         for (int i = 0; i < numOfCards; i++) {
-            cards[i] = new int[]{0, 0};
+            cards[i] = "";
         }
     }
 
     public SpecificCardsRow(SpecificCardsRow other) {
-        this.cards = new int[other.cards.length][];
-        for (int i = 0; i < other.cards.length; i++) {
-            this.cards[i] = Arrays.copyOf(other.cards[i], other.cards[i].length);
-        }
+        this.cards = new String[other.cards.length];
+        System.arraycopy(other.cards, 0, this.cards, 0, other.cards.length);
     }
 
     public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
-        for (int[] card : this.cards) {
-            Arrays.fill(card, 0);
-        }
+        Arrays.fill(this.cards, "");
 
         for (int i = 0; i < this.cards.length; i++) {
-            equityCalculatorFragment.setCardImage(row_idx, i, 0, 0);
+            equityCalculatorFragment.setCardImage(row_idx, i, "");
         }
     }
 
@@ -59,8 +55,8 @@ public class SpecificCardsRow extends CardRow {
     }
 
     public boolean isKnownPlayer() {
-        for (int[] card : this.cards) {
-            if (card[0] != 0) {
+        for (String card : this.cards) {
+            if (!Objects.equals(card, "")) {
                 return true;
             }
         }
@@ -71,10 +67,8 @@ public class SpecificCardsRow extends CardRow {
     public String convertTexasHoldemPlayerCardsToStr() {
         StringBuilder temp = new StringBuilder();
 
-        temp.append(GlobalStatic.rankToStr.get(this.cards[0][1]));
-        temp.append(GlobalStatic.suitToStr.get(this.cards[0][0]));
-        temp.append(GlobalStatic.rankToStr.get(this.cards[1][1]));
-        temp.append(GlobalStatic.suitToStr.get(this.cards[1][0]));
+        temp.append(this.cards[0]);
+        temp.append(this.cards[1]);
         if (String.valueOf(temp).equals("")) {
             return "random";
         } else if (temp.length() == 2) {
@@ -92,10 +86,9 @@ public class SpecificCardsRow extends CardRow {
 
     public String[] convertOmahaCardsToStr() {
         List<String> omahaCards = new ArrayList<>();
-        for (int[] card : cards) {
-            String cardStr = GlobalStatic.rankToStr.get(card[1]) + GlobalStatic.suitToStr.get(card[0]);
-            if (!cardStr.equals("")) {
-                omahaCards.add(cardStr);
+        for (String card : cards) {
+            if (!card.equals("")) {
+                omahaCards.add(card);
             }
         }
         return omahaCards.toArray(new String[0]);

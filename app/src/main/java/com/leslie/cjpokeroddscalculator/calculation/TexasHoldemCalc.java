@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 
 public class TexasHoldemCalc extends Calculation{
@@ -16,11 +15,10 @@ public class TexasHoldemCalc extends Calculation{
         this.outputResultObj = outputResultObj;
     }
 
-    public String convertBoardCardsToStr(int[][] cards) {
+    public String convertBoardCardsToStr(String[] cards) {
         StringBuilder boardCards = new StringBuilder();
-        for (int[] card : cards) {
-            boardCards.append(GlobalStatic.rankToStr.get(card[1]));
-            boardCards.append(GlobalStatic.suitToStr.get(card[0]));
+        for (String card : cards) {
+            boardCards.append(card);
         }
         return String.valueOf(boardCards);
     }

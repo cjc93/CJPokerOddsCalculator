@@ -20,34 +20,9 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GlobalStatic {
 
-    public static Map<Integer, String> rankToStr = new HashMap<>();
-    static {
-        rankToStr.put(0, "");
-        rankToStr.put(2, "2");
-        rankToStr.put(3, "3");
-        rankToStr.put(4, "4");
-        rankToStr.put(5, "5");
-        rankToStr.put(6, "6");
-        rankToStr.put(7, "7");
-        rankToStr.put(8, "8");
-        rankToStr.put(9, "9");
-        rankToStr.put(10, "T");
-        rankToStr.put(11, "J");
-        rankToStr.put(12, "Q");
-        rankToStr.put(13, "K");
-        rankToStr.put(14, "A");
-    }
-
-    public static Map<Integer, String> suitToStr = new HashMap<>();
-    static {
-        suitToStr.put(0, "");
-        suitToStr.put(1, "d");
-        suitToStr.put(2, "c");
-        suitToStr.put(3, "h");
-        suitToStr.put(4, "s");
-    }
-
     public static Set<String> suitedSuits = Sets.newHashSet("dd", "cc", "hh", "ss");
+
+    // Don't change the order of characters in these strings, it will cause a bug when user have saved a hand range with a different order
     public static Set<String> pairSuits = Sets.newHashSet("hs", "cs", "ds", "ch", "dh", "dc");
     public static Set<String> offSuits = Sets.newHashSet("sh", "sc", "sd", "hs", "hc", "hd", "cs", "ch", "cd", "ds", "dh", "dc");
 
@@ -58,7 +33,8 @@ public class GlobalStatic {
             "2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"
     };
 
-    public static String[] matrixStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
+    public static String[] rankStrings = {"A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"};
+    public static String[] suitStrings = {"s", "h", "c", "d"};
 
     public static List<List<Set<String>>> copyMatrix(List<List<Set<String>>> original) {
         List<List<Set<String>>> copy = new ArrayList<>(13);
@@ -92,11 +68,7 @@ public class GlobalStatic {
             suits.addAll(offSuits);
         }
     }
-
-    public static int convertMatrixPositionToRankInt(int matrixPosition) {
-        return 14 - matrixPosition;
-    }
-
+    
     public static void writeToDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<String> key, String value) {
         dataStore.updateDataAsync(prefsIn -> {
             MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
@@ -121,75 +93,65 @@ public class GlobalStatic {
         });
     }
 
-    public static Map<Integer, Map<Integer, Integer>> suitRankDrawableMap = new HashMap<>();
+    public static Map<String, Integer> suitRankDrawableMap = new HashMap<>();
     static {
-        Map<Integer, Integer> temp_map = new HashMap<>();
-        temp_map.put(0, R.drawable.unknown_button);
-        suitRankDrawableMap.put(0, temp_map);
+        suitRankDrawableMap.put("", R.drawable.unknown_button);
 
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.d2_button);
-        temp_map.put(3, R.drawable.d3_button);
-        temp_map.put(4, R.drawable.d4_button);
-        temp_map.put(5, R.drawable.d5_button);
-        temp_map.put(6, R.drawable.d6_button);
-        temp_map.put(7, R.drawable.d7_button);
-        temp_map.put(8, R.drawable.d8_button);
-        temp_map.put(9, R.drawable.d9_button);
-        temp_map.put(10, R.drawable.d10_button);
-        temp_map.put(11, R.drawable.d11_button);
-        temp_map.put(12, R.drawable.d12_button);
-        temp_map.put(13, R.drawable.d13_button);
-        temp_map.put(14, R.drawable.d14_button);
-        suitRankDrawableMap.put(1, temp_map);
+        suitRankDrawableMap.put("2d", R.drawable.d2_button);
+        suitRankDrawableMap.put("3d", R.drawable.d3_button);
+        suitRankDrawableMap.put("4d", R.drawable.d4_button);
+        suitRankDrawableMap.put("5d", R.drawable.d5_button);
+        suitRankDrawableMap.put("6d", R.drawable.d6_button);
+        suitRankDrawableMap.put("7d", R.drawable.d7_button);
+        suitRankDrawableMap.put("8d", R.drawable.d8_button);
+        suitRankDrawableMap.put("9d", R.drawable.d9_button);
+        suitRankDrawableMap.put("Td", R.drawable.d10_button);
+        suitRankDrawableMap.put("Jd", R.drawable.d11_button);
+        suitRankDrawableMap.put("Qd", R.drawable.d12_button);
+        suitRankDrawableMap.put("Kd", R.drawable.d13_button);
+        suitRankDrawableMap.put("Ad", R.drawable.d14_button);
 
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.c2_button);
-        temp_map.put(3, R.drawable.c3_button);
-        temp_map.put(4, R.drawable.c4_button);
-        temp_map.put(5, R.drawable.c5_button);
-        temp_map.put(6, R.drawable.c6_button);
-        temp_map.put(7, R.drawable.c7_button);
-        temp_map.put(8, R.drawable.c8_button);
-        temp_map.put(9, R.drawable.c9_button);
-        temp_map.put(10, R.drawable.c10_button);
-        temp_map.put(11, R.drawable.c11_button);
-        temp_map.put(12, R.drawable.c12_button);
-        temp_map.put(13, R.drawable.c13_button);
-        temp_map.put(14, R.drawable.c14_button);
-        suitRankDrawableMap.put(2, temp_map);
+        suitRankDrawableMap.put("2c", R.drawable.c2_button);
+        suitRankDrawableMap.put("3c", R.drawable.c3_button);
+        suitRankDrawableMap.put("4c", R.drawable.c4_button);
+        suitRankDrawableMap.put("5c", R.drawable.c5_button);
+        suitRankDrawableMap.put("6c", R.drawable.c6_button);
+        suitRankDrawableMap.put("7c", R.drawable.c7_button);
+        suitRankDrawableMap.put("8c", R.drawable.c8_button);
+        suitRankDrawableMap.put("9c", R.drawable.c9_button);
+        suitRankDrawableMap.put("Tc", R.drawable.c10_button);
+        suitRankDrawableMap.put("Jc", R.drawable.c11_button);
+        suitRankDrawableMap.put("Qc", R.drawable.c12_button);
+        suitRankDrawableMap.put("Kc", R.drawable.c13_button);
+        suitRankDrawableMap.put("Ac", R.drawable.c14_button);
 
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.h2_button);
-        temp_map.put(3, R.drawable.h3_button);
-        temp_map.put(4, R.drawable.h4_button);
-        temp_map.put(5, R.drawable.h5_button);
-        temp_map.put(6, R.drawable.h6_button);
-        temp_map.put(7, R.drawable.h7_button);
-        temp_map.put(8, R.drawable.h8_button);
-        temp_map.put(9, R.drawable.h9_button);
-        temp_map.put(10, R.drawable.h10_button);
-        temp_map.put(11, R.drawable.h11_button);
-        temp_map.put(12, R.drawable.h12_button);
-        temp_map.put(13, R.drawable.h13_button);
-        temp_map.put(14, R.drawable.h14_button);
-        suitRankDrawableMap.put(3, temp_map);
+        suitRankDrawableMap.put("2h", R.drawable.h2_button);
+        suitRankDrawableMap.put("3h", R.drawable.h3_button);
+        suitRankDrawableMap.put("4h", R.drawable.h4_button);
+        suitRankDrawableMap.put("5h", R.drawable.h5_button);
+        suitRankDrawableMap.put("6h", R.drawable.h6_button);
+        suitRankDrawableMap.put("7h", R.drawable.h7_button);
+        suitRankDrawableMap.put("8h", R.drawable.h8_button);
+        suitRankDrawableMap.put("9h", R.drawable.h9_button);
+        suitRankDrawableMap.put("Th", R.drawable.h10_button);
+        suitRankDrawableMap.put("Jh", R.drawable.h11_button);
+        suitRankDrawableMap.put("Qh", R.drawable.h12_button);
+        suitRankDrawableMap.put("Kh", R.drawable.h13_button);
+        suitRankDrawableMap.put("Ah", R.drawable.h14_button);
 
-        temp_map = new HashMap<>();
-        temp_map.put(2, R.drawable.s2_button);
-        temp_map.put(3, R.drawable.s3_button);
-        temp_map.put(4, R.drawable.s4_button);
-        temp_map.put(5, R.drawable.s5_button);
-        temp_map.put(6, R.drawable.s6_button);
-        temp_map.put(7, R.drawable.s7_button);
-        temp_map.put(8, R.drawable.s8_button);
-        temp_map.put(9, R.drawable.s9_button);
-        temp_map.put(10, R.drawable.s10_button);
-        temp_map.put(11, R.drawable.s11_button);
-        temp_map.put(12, R.drawable.s12_button);
-        temp_map.put(13, R.drawable.s13_button);
-        temp_map.put(14, R.drawable.s14_button);
-        suitRankDrawableMap.put(4, temp_map);
+        suitRankDrawableMap.put("2s", R.drawable.s2_button);
+        suitRankDrawableMap.put("3s", R.drawable.s3_button);
+        suitRankDrawableMap.put("4s", R.drawable.s4_button);
+        suitRankDrawableMap.put("5s", R.drawable.s5_button);
+        suitRankDrawableMap.put("6s", R.drawable.s6_button);
+        suitRankDrawableMap.put("7s", R.drawable.s7_button);
+        suitRankDrawableMap.put("8s", R.drawable.s8_button);
+        suitRankDrawableMap.put("9s", R.drawable.s9_button);
+        suitRankDrawableMap.put("Ts", R.drawable.s10_button);
+        suitRankDrawableMap.put("Js", R.drawable.s11_button);
+        suitRankDrawableMap.put("Qs", R.drawable.s12_button);
+        suitRankDrawableMap.put("Ks", R.drawable.s13_button);
+        suitRankDrawableMap.put("As", R.drawable.s14_button);
     }
 
     public static SortedMap<Integer, List<Integer>> bestHandsMap = new TreeMap<>();
