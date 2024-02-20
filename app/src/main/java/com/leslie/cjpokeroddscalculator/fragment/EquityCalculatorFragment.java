@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 
@@ -51,7 +52,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public int playersRemainingNo;
 
-    public final LinearLayout[] player_row_array = new LinearLayout[10];
+    public final ConstraintLayout[] player_row_array = new ConstraintLayout[10];
     public TextView[] equityArray = new TextView[10];
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];

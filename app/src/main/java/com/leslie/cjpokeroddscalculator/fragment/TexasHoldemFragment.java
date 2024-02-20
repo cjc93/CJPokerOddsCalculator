@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
@@ -66,7 +67,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     private MaterialButton selectedMatrixButton = null;
     private final int[] selectedMatrixPosition = new int[2];
 
-    public LinearLayout[] twoCardsLayouts = new LinearLayout[10];
+    public Group[] twoCardsLayouts = new Group[10];
 
     public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
 
@@ -79,7 +80,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
-    Map<MaterialButton, LinearLayout> statsButtonMap = new HashMap<>();
+    Map<MaterialButton, Group> statsButtonMap = new HashMap<>();
     Map<String, MaterialButton> presetHandRangeMap = new HashMap<>();
 
     public TextView[][] handStats = new TextView[10][9];
@@ -283,8 +284,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
             assert rangeNameList != null;
-            Collections.replaceAll(rangeNameList, oldRangeName, newRangeName);
-            writeToDataStore(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+            if (Collections.replaceAll(rangeNameList, oldRangeName, newRangeName)) {
+                writeToDataStore(((MainActivity) requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+            }
 
             MaterialButton presetHandRangeButton = presetHandRangeMap.get(oldRangeName);
             assert presetHandRangeButton != null;
@@ -538,7 +540,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     private final View.OnClickListener statsButtonListener = v -> {
         final MaterialButton statsButtonInput = (MaterialButton) v;
-        LinearLayout statsView = statsButtonMap.get(statsButtonInput);
+        Group statsView = statsButtonMap.get(statsButtonInput);
 
         assert statsView != null;
         if (statsView.getVisibility() == View.VISIBLE) {
