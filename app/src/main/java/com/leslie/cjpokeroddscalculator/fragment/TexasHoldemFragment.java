@@ -415,7 +415,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         for (int i = 0; i < 10; i++) {
             TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
-            player_row_array[i] = bindingPlayerRow.getRoot();
+            ConstraintLayout playerRow = bindingPlayerRow.getRoot();
+            playerRow.setId(View.generateViewId());
+            player_row_array[i] = playerRow;
             equityArray[i] = bindingPlayerRow.equity;
             winArray[i] = bindingPlayerRow.win;
             tieArray[i] = bindingPlayerRow.tie;
@@ -440,6 +442,16 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
             bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
             bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) playerRow.getLayoutParams();
+
+            if (i == 0) {
+                layoutParams.topToTop = ConstraintSet.PARENT_ID;
+            } else {
+                layoutParams.topToBottom = player_row_array[i - 1].getId();
+            }
+
+            playerRow.setLayoutParams(layoutParams);
         }
 
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
@@ -482,12 +494,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                     b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
                 }
 
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                );
-                b.setLayoutParams(layoutParams);
-
                 rangeSelectorBinding.rangeSelector.addView(b);
                 this.inputMatrixMap.put(b, Arrays.asList(rowIdx, colIdx));
             }
@@ -496,8 +502,10 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
-                MaterialButton button = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx)));
-                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                );
 
                 if (rowIdx == 0) {
                     layoutParams.topToTop = ConstraintSet.PARENT_ID;
@@ -519,6 +527,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                     layoutParams.leftMargin = 1;
                 }
 
+                MaterialButton button = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx)));
                 button.setLayoutParams(layoutParams);
             }
         }

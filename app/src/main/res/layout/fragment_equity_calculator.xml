@@ -1,244 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fullscreen_ui"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main_ui"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:textSize="20sp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/home_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/home"
-                android:layout_gravity="center_vertical"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/top_row"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:baselineAligned="false" >
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@id/home_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/home_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/home"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:text="@string/flop"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
+        <TextView
+            android:id="@+id/flop_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#696969"
+            android:gravity="center_horizontal"
+            android:text="@string/flop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/turn_text"
+            app:layout_constraintTop_toBottomOf="@id/home_button"
+            app:layout_constraintWidth_percent="0.6" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:baselineAligned="false">
+        <TextView
+            android:id="@+id/turn_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#696969"
+            android:gravity="center_horizontal"
+            android:text="@string/turn"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            app:layout_constraintLeft_toRightOf="@id/flop_text"
+            app:layout_constraintRight_toLeftOf="@id/river_text"
+            app:layout_constraintTop_toBottomOf="@id/home_button"
+            app:layout_constraintWidth_percent="0.2" />
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center" >
+        <TextView
+            android:id="@+id/river_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#696969"
+            android:gravity="center_horizontal"
+            android:text="@string/river"
+            app:layout_constraintLeft_toRightOf="@id/turn_text"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/home_button"
+            app:layout_constraintWidth_percent="0.2" />
 
-                        <ImageButton
-                            android:id="@+id/flop1"
-                            android:contentDescription="@string/flop1"
-                            style="@style/SelectCardButton" />
+        <ImageButton
+            android:id="@+id/flop1"
+            style="@style/SelectCardButton"
+            android:contentDescription="@string/flop1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/flop2"
+            app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-                    </LinearLayout>
+        <ImageButton
+            android:id="@+id/flop2"
+            style="@style/SelectCardButton"
+            android:contentDescription="@string/flop2"
+            app:layout_constraintLeft_toRightOf="@id/flop1"
+            app:layout_constraintRight_toLeftOf="@id/flop3"
+            app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center" >
+        <ImageButton
+            android:id="@+id/flop3"
+            style="@style/SelectCardButton"
+            android:contentDescription="@string/flop3"
+            app:layout_constraintLeft_toRightOf="@id/flop2"
+            app:layout_constraintRight_toRightOf="@id/flop_text"
+            app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-                        <ImageButton
-                            android:id="@+id/flop2"
-                            android:contentDescription="@string/flop2"
-                            style="@style/SelectCardButton" />
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center" >
+        <ImageButton
+            android:id="@+id/turn"
+            style="@style/SelectCardButton"
+            android:contentDescription="@string/turn"
+            app:layout_constraintLeft_toLeftOf="@id/turn_text"
+            app:layout_constraintRight_toRightOf="@id/turn_text"
+            app:layout_constraintTop_toBottomOf="@id/turn_text" />
 
-                        <ImageButton
-                            android:id="@+id/flop3"
-                            android:contentDescription="@string/flop3"
-                            style="@style/SelectCardButton" />
+        <ImageButton
+            android:id="@+id/river"
+            style="@style/SelectCardButton"
+            android:contentDescription="@string/river"
+            app:layout_constraintLeft_toLeftOf="@id/river_text"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/river_text" />
 
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:layout_weight="1" >
-
-                <TextView
-                    android:text="@string/turn"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
-
-                <ImageButton
-                    android:id="@+id/turn"
-                    android:contentDescription="@string/turn"
-                    style="@style/SelectCardButton" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <TextView
-                    android:text="@string/river"
-                    android:gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#696969" />
-
-                <ImageButton
-                    android:id="@+id/river"
-                    android:contentDescription="@string/river"
-                    style="@style/SelectCardButton" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/playersremaining"
-                android:textSize="26sp"
-                android:text="@string/players_remaining"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/playersremaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/players_remaining"
+            android:textSize="26sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flop1"
+            app:layout_constraintBottom_toTopOf="@id/scroll_view" />
 
         <ScrollView
             android:id="@+id/scroll_view"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="66">
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/playersremaining"
+            app:layout_constraintBottom_toTopOf="@id/res_desc">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/player_rows"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 
         <TextView
             android:id="@+id/res_desc"
-            android:text="@string/all_combinations_checked_result_is_exact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="11sp" />
+            android:text="@string/all_combinations_checked_result_is_exact"
+            android:textSize="11sp"
+            app:layout_constraintTop_toBottomOf="@id/scroll_view"
+            app:layout_constraintBottom_toTopOf="@id/addplayer" />
 
-        <LinearLayout
-            android:id="@+id/bottom_bar"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addplayer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#2F3540" >
+            android:gravity="center_vertical|center_horizontal"
+            android:maxLines="1"
+            android:text="@string/add_player"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/clear"
+            app:layout_constraintTop_toBottomOf="@id/res_desc"
+            app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-            <Button
-                android:id="@+id/addplayer"
-                android:text="@string/add_player"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:maxLines="1"
-                android:layout_weight="1" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/clear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/clear"
+            app:layout_constraintLeft_toRightOf="@id/addplayer"
+            app:layout_constraintRight_toLeftOf="@id/button_unknown"
+            app:layout_constraintTop_toBottomOf="@id/res_desc"
+            app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-            <Button
-                android:id="@+id/clear"
-                android:text="@string/clear"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_unknown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/unknown_card"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@id/clear"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/res_desc"
+            app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-            <Button
-                android:id="@+id/button_unknown"
-                android:text="@string/unknown_card"
-                android:textSize="20sp"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/input_cards"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="34"
-            android:background="#2F3540" >
+            app:layout_constraintTop_toBottomOf="@id/addplayer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHeight_percent="0.24" >
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
