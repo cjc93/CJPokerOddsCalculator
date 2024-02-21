@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.R;
@@ -76,19 +78,31 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         super.generateMainLayout();
 
         for (int i = 0; i < 10; i++) {
-            OmahaHighPlayerRowBinding binding_player_row = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
-            player_row_array[i] = binding_player_row.getRoot();
-            equityArray[i] = binding_player_row.equity;
-            winArray[i] = binding_player_row.win;
-            tieArray[i] = binding_player_row.tie;
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), binding_player_row.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), binding_player_row.card2);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 2), binding_player_row.card3);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 3), binding_player_row.card4);
-            removeRowMap.put(binding_player_row.remove, i + 1);
+            OmahaHighPlayerRowBinding bindingPlayerRow = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
+            ConstraintLayout playerRow = bindingPlayerRow.getRoot();
+            playerRow.setId(View.generateViewId());
+            player_row_array[i] = playerRow;
+            equityArray[i] = bindingPlayerRow.equity;
+            winArray[i] = bindingPlayerRow.win;
+            tieArray[i] = bindingPlayerRow.tie;
+            cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 2), bindingPlayerRow.card3);
+            cardPositionBiMap.put(Arrays.asList(i + 1, 3), bindingPlayerRow.card4);
+            removeRowMap.put(bindingPlayerRow.remove, i + 1);
 
-            binding_player_row.playerText.setText(getString(R.string.player, i + 1));
-            binding_player_row.remove.setOnClickListener(removePlayerListener);
+            bindingPlayerRow.playerText.setText(getString(R.string.player, i + 1));
+            bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) playerRow.getLayoutParams();
+
+            if (i == 0) {
+                layoutParams.topToTop = ConstraintSet.PARENT_ID;
+            } else {
+                layoutParams.topToBottom = player_row_array[i - 1].getId();
+            }
+
+            playerRow.setLayoutParams(layoutParams);
         }
     }
 }

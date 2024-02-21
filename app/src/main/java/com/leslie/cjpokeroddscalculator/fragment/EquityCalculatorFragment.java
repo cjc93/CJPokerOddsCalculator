@@ -14,12 +14,12 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 
@@ -170,7 +170,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 Rect outRect = new Rect();
                 boolean hideCardSelectorFlag = true;
 
-                equityCalculatorBinding.bottomBar.getGlobalVisibleRect(outRect);
+                equityCalculatorBinding.addplayer.getGlobalVisibleRect(outRect);
                 if (outRect.top < (int) event.getRawY()) {
                     hideCardSelectorFlag = false;
                 }
@@ -233,35 +233,55 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void generateMainLayout() {
-        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1.0f
-        );
-
-        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1.0f
-        );
-
         inputSuitRankMap = HashBiMap.create();
         for (String suit : suitStrings) {
-            LinearLayout row = new LinearLayout(requireActivity());
-            row.setLayoutParams(rowParam);
-
             for (String rank : rankStrings) {
                 ImageButton b = new ImageButton(requireActivity());
-                b.setLayoutParams(buttonParam);
+                b.setId(View.generateViewId());
                 b.setBackgroundResource(0);
                 b.setImageResource(GlobalStatic.suitRankDrawableMap.get(rank + suit));
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
-                row.addView(b);
                 inputSuitRankMap.put(b, rank + suit);
+
+                equityCalculatorBinding.inputCards.addView(b);
             }
-            equityCalculatorBinding.inputCards.addView(row);
+        }
+
+        for (int i = 0; i < suitStrings.length; i++) {
+            for (int j = 0; j < rankStrings.length; j++) {
+                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
+                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+                );
+
+                if (i == 0) {
+                    layoutParams.topToTop = ConstraintSet.PARENT_ID;
+                    layoutParams.bottomToTop = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[1])).getId();
+                } else if (i == 3) {
+                    layoutParams.topToBottom = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[2])).getId();
+                    layoutParams.bottomToBottom = ConstraintSet.PARENT_ID;
+                } else {
+                    layoutParams.topToBottom = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i - 1])).getId();
+                    layoutParams.bottomToTop = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i + 1])).getId();
+                }
+
+                if (j == 0) {
+                    layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
+                    layoutParams.rightToLeft = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[1] + suitStrings[i])).getId();
+                } else if (j == 12) {
+                    layoutParams.leftToRight = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[11] + suitStrings[i])).getId();
+                    layoutParams.rightToRight = ConstraintSet.PARENT_ID;
+                } else {
+                    layoutParams.leftToRight = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j - 1] + suitStrings[i])).getId();
+                    layoutParams.rightToLeft = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j + 1] + suitStrings[i])).getId();
+                }
+
+                ImageButton button = this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i]);
+                assert button != null;
+                button.setLayoutParams(layoutParams);
+            }
         }
     }
 
