@@ -1,82 +1,70 @@
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/range_selector"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone" >
 
-    <LinearLayout
-        android:id="@+id/range_matrix"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/hands_perc"
+        android:text="@string/_0_0"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:layout_constraintTop_toTopOf="@id/range_slider"
+        app:layout_constraintBottom_toBottomOf="@id/range_slider"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/range_slider"
+        app:layout_constraintWidth_percent="0.2"
+        android:gravity="center" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.slider.Slider
+        android:id="@+id/range_slider"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:valueFrom="0"
+        android:valueTo="1326"
+        android:stepSize="1"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintLeft_toRightOf="@id/hands_perc"
+        app:layout_constraintRight_toRightOf="parent"
+        app:labelBehavior="gone" />
 
-        <TextView
-            android:id="@+id/hands_perc"
-            android:text="@string/_0_0"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center" />
+    <TextView
+        android:id="@+id/preset_hand_range_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="@id/add_range_button"
+        app:layout_constraintBottom_toBottomOf="@id/add_range_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="@string/saved_hand_range" />
 
-        <com.google.android.material.slider.Slider
-            android:id="@+id/range_slider"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:valueFrom="0"
-            android:valueTo="1326"
-            android:stepSize="1"
-            android:layout_weight="7"
-            android:layout_marginEnd="50dp"
-            app:labelBehavior="gone"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/saved_hand_range" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_range_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add"
-            android:layout_marginStart="30dp"
-            app:backgroundTint="#FFA500"
-            android:minWidth="0dp"
-            android:padding="10dp"
-            app:cornerRadius="10dp"/>
-
-    </LinearLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/add_range_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        android:layout_marginStart="30dp"
+        app:backgroundTint="#FFA500"
+        android:minWidth="0dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@id/range_slider"
+        app:layout_constraintLeft_toRightOf="@id/preset_hand_range_title"
+        app:cornerRadius="10dp"/>
 
     <ScrollView
+        android:id="@+id/preset_hand_range_scroll_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        app:layout_constraintTop_toBottomOf="@id/add_range_button"
+        app:layout_constraintBottom_toTopOf="@id/preset_hand_range_divider"
+        android:layout_height="0dp" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/preset_hand_range_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/preset_hand_range_initial_text"
@@ -99,218 +87,140 @@
                 app:flow_horizontalStyle="packed"
                 app:flow_horizontalBias="0"/>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
 
     <View
+        android:id="@+id/preset_hand_range_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        app:layout_constraintTop_toTopOf="@id/preset_hand_range_scroll_view"
+        app:layout_constraintBottom_toTopOf="@id/done"
         android:background="@android:color/darker_gray"/>
 
     <TextView
         android:id="@+id/suit_selector_text"
         android:text="@string/select_a_hand_to_choose_suits"
+        app:layout_constraintTop_toBottomOf="@id/preset_hand_range_divider"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/suits_selector"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
+    <ImageButton
+        android:id="@+id/suits1"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits7"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/suits2"
+        android:contentDescription="@string/suits" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="false">
+    <ImageButton
+        android:id="@+id/suits2"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits8"
+        app:layout_constraintLeft_toRightOf="@id/suits1"
+        app:layout_constraintRight_toLeftOf="@id/suits3"
+        android:contentDescription="@string/suits" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
+    <ImageButton
+        android:id="@+id/suits3"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits9"
+        app:layout_constraintLeft_toRightOf="@id/suits2"
+        app:layout_constraintRight_toLeftOf="@id/suits4"
+        android:contentDescription="@string/suits" />
 
-                <ImageButton
-                    android:id="@+id/suits1"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
+    <ImageButton
+        android:id="@+id/suits4"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits10"
+        app:layout_constraintLeft_toRightOf="@id/suits3"
+        app:layout_constraintRight_toLeftOf="@id/suits5"
+        android:contentDescription="@string/suits" />
 
-            </LinearLayout>
+    <ImageButton
+        android:id="@+id/suits5"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits11"
+        app:layout_constraintLeft_toRightOf="@id/suits4"
+        app:layout_constraintRight_toLeftOf="@id/suits6"
+        android:contentDescription="@string/suits" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
+    <ImageButton
+        android:id="@+id/suits6"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
+        app:layout_constraintBottom_toTopOf="@id/suits12"
+        app:layout_constraintLeft_toRightOf="@id/suits5"
+        app:layout_constraintRight_toRightOf="parent"
+        android:contentDescription="@string/suits" />
 
-                <ImageButton
-                    android:id="@+id/suits2"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-            </LinearLayout>
+    <ImageButton
+        android:id="@+id/suits7"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/suits8"
+        android:contentDescription="@string/suits" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
+    <ImageButton
+        android:id="@+id/suits8"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toRightOf="@id/suits7"
+        app:layout_constraintRight_toLeftOf="@id/suits9"
+        android:contentDescription="@string/suits" />
 
-                <ImageButton
-                    android:id="@+id/suits3"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
+    <ImageButton
+        android:id="@+id/suits9"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toRightOf="@id/suits8"
+        app:layout_constraintRight_toLeftOf="@id/suits10"
+        android:contentDescription="@string/suits" />
 
-            </LinearLayout>
+    <ImageButton
+        android:id="@+id/suits10"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toRightOf="@id/suits9"
+        app:layout_constraintRight_toLeftOf="@id/suits11"
+        android:contentDescription="@string/suits" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
+    <ImageButton
+        android:id="@+id/suits11"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toRightOf="@id/suits10"
+        app:layout_constraintRight_toLeftOf="@id/suits12"
+        android:contentDescription="@string/suits" />
 
-                <ImageButton
-                    android:id="@+id/suits4"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits5"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits6"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:baselineAligned="false">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits7"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits8"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits9"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits10"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits11"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center" >
-
-                <ImageButton
-                    android:id="@+id/suits12"
-                    style="@style/SuitSelectorButton"
-                    android:contentDescription="@string/suits" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-        
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/suits12"
+        style="@style/SuitSelectorButton"
+        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintBottom_toTopOf="@id/done"
+        app:layout_constraintLeft_toRightOf="@id/suits11"
+        app:layout_constraintRight_toRightOf="parent"
+        android:contentDescription="@string/suits" />
 
     <Button
         android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:text="@string/done" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
