@@ -19,11 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.datastore.preferences.core.MutablePreferences;
@@ -451,30 +452,18 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     private void generateRangeSelector() {
-        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f
-        );
-        buttonParam.setMargins(1, 1,1,1);
-
         int squareHeight = displayMetrics.widthPixels / 13;
         this.inputMatrixMap = HashBiMap.create();
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
-            LinearLayout row = new LinearLayout(requireActivity());
-            row.setLayoutParams(rowParam);
 
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
+        for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
+            for (int colIdx = 0; colIdx < 13; colIdx++) {
                 MaterialButton b = new MaterialButton(requireActivity());
-                b.setLayoutParams(buttonParam);
+                b.setId(View.generateViewId());
                 b.setPadding(0, 0, 0, 0);
                 b.setHeight(squareHeight);
                 b.setMinimumHeight(squareHeight);
+                b.setMinimumWidth(0);
+                b.setMinWidth(0);
                 b.setBackgroundColor(Color.LTGRAY);
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
@@ -485,19 +474,58 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 b.setStrokeColor(ColorStateList.valueOf(Color.RED));
                 b.setOnClickListener(matrixListener);
 
-                if (row_idx == col_idx) {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[row_idx], GlobalStatic.rankStrings[row_idx], ""));
-                } else if (col_idx > row_idx) {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[row_idx], GlobalStatic.rankStrings[col_idx], "s"));
+                if (rowIdx == colIdx) {
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[rowIdx], ""));
+                } else if (colIdx > rowIdx) {
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[colIdx], "s"));
                 } else {
-                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[col_idx], GlobalStatic.rankStrings[row_idx], "o"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
                 }
 
-                row.addView(b);
-                this.inputMatrixMap.put(b, Arrays.asList(row_idx, col_idx));
+                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                );
+                b.setLayoutParams(layoutParams);
+
+                rangeSelectorBinding.rangeSelector.addView(b);
+                this.inputMatrixMap.put(b, Arrays.asList(rowIdx, colIdx));
             }
-            rangeSelectorBinding.rangeMatrix.addView(row);
         }
+
+
+        for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
+            for (int colIdx = 0; colIdx < 13; colIdx++) {
+                MaterialButton button = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx)));
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) button.getLayoutParams();
+
+                if (rowIdx == 0) {
+                    layoutParams.topToTop = ConstraintSet.PARENT_ID;
+                } else {
+                    layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx - 1, colIdx))).getId();
+                    layoutParams.topMargin = 1;
+                }
+
+                if (colIdx == 0) {
+                    layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
+                    layoutParams.rightToLeft = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, 1))).getId();
+                } else if (colIdx == 12) {
+                    layoutParams.rightToRight = ConstraintSet.PARENT_ID;
+                    layoutParams.leftToRight = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, 11))).getId();
+                    layoutParams.leftMargin = 1;
+                } else {
+                    layoutParams.leftToRight = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx - 1))).getId();
+                    layoutParams.rightToLeft = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx + 1))).getId();
+                    layoutParams.leftMargin = 1;
+                }
+
+                button.setLayoutParams(layoutParams);
+            }
+        }
+
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) rangeSelectorBinding.rangeSlider.getLayoutParams();
+        layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(12, 0))).getId();
+        rangeSelectorBinding.rangeSlider.setLayoutParams(layoutParams);
 
         String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
 
@@ -691,7 +719,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
                 assert rightCard != null;
                 combinedDrawable.setLayerInsetRight(0, rightCard.getIntrinsicWidth());
-                combinedDrawable.setLayerGravity(1, Gravity.RIGHT);
+                combinedDrawable.setLayerGravity(1, Gravity.END);
 
                 b.setImageDrawable(combinedDrawable);
 
