@@ -74,7 +74,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.setFragmentResultListeners();
 
         for (int i = 0; i < 2; i++) {
-            equityArray[i].setText(getString(R.string.two_decimal_perc, 50.0));
+            equityArray.get(i).setText(getString(R.string.two_decimal_perc, 50.0));
             winArray[i].setText(getString(R.string.two_decimal_perc, 47.97));
             tieArray[i].setText(getString(R.string.two_decimal_perc, 2.03));
             handStats[i][0].setText(getString(R.string.two_decimal_perc, 17.41));
@@ -140,7 +140,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
             playerRowList.add(playerRow);
-            equityArray[i] = bindingPlayerRow.equity;
+            equityArray.add(bindingPlayerRow.equity);
             winArray[i] = bindingPlayerRow.win;
             tieArray[i] = bindingPlayerRow.tie;
             handStats[i][0] = bindingPlayerRow.highCard;

@@ -21,7 +21,7 @@ public abstract class TexasHoldemOutputResult extends OutputResult {
     public void updateWinResults(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush) {
         if (equityCalculatorFragment.getActivity() != null) {
             for(int i = 0; i < equityCalculatorFragment.playersRemainingNo; i++) {
-                equityCalculatorFragment.equityArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, equity[i] * 100));
+                equityCalculatorFragment.equityArray.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, equity[i] * 100));
                 equityCalculatorFragment.winArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, win[i] * 100));
                 equityCalculatorFragment.tieArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
 

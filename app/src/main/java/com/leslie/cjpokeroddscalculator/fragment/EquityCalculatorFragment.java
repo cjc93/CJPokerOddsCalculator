@@ -54,7 +54,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public int playersRemainingNo;
 
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
-    public TextView[] equityArray = new TextView[10];
+    public List<TextView> equityArray = new ArrayList<>();
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];
 
@@ -438,7 +438,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void clearNumbers() {
         for(int i = 0; i < playersRemainingNo; i++) {
-            equityArray[i].setText("");
+            equityArray.get(i).setText("");
             winArray[i].setText("");
             tieArray[i].setText("");
         }

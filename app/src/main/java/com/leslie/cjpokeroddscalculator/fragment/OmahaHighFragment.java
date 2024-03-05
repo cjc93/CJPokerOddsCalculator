@@ -28,8 +28,8 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        equityArray[0].setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray[1].setText(getString(R.string.two_decimal_perc, 50.0));
+        equityArray.get(0).setText(getString(R.string.two_decimal_perc, 50.0));
+        equityArray.get(1).setText(getString(R.string.two_decimal_perc, 50.0));
         winArray[0].setText(getString(R.string.two_decimal_perc, 49.33));
         winArray[1].setText(getString(R.string.two_decimal_perc, 49.33));
         tieArray[0].setText(getString(R.string.two_decimal_perc, 1.33));
@@ -81,7 +81,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
             playerRowList.add(playerRow);
-            equityArray[i] = bindingPlayerRow.equity;
+            equityArray.add(bindingPlayerRow.equity);
             winArray[i] = bindingPlayerRow.win;
             tieArray[i] = bindingPlayerRow.tie;
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
