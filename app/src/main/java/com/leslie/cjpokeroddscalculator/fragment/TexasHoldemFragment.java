@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -165,16 +166,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
             bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
             bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
-
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) playerRow.getLayoutParams();
-
-            if (i == 0) {
-                layoutParams.topToTop = ConstraintSet.PARENT_ID;
-            } else {
-                layoutParams.topToBottom = player_row_array[i - 1].getId();
-            }
-
-            playerRow.setLayoutParams(layoutParams);
         }
 
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);

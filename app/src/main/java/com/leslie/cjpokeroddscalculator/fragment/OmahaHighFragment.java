@@ -93,16 +93,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
 
             bindingPlayerRow.playerText.setText(getString(R.string.player, i + 1));
             bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
-
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) playerRow.getLayoutParams();
-
-            if (i == 0) {
-                layoutParams.topToTop = ConstraintSet.PARENT_ID;
-            } else {
-                layoutParams.topToBottom = player_row_array[i - 1].getId();
-            }
-
-            playerRow.setLayoutParams(layoutParams);
         }
     }
 }
