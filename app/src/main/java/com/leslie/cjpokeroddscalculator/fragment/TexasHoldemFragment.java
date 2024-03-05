@@ -10,12 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -141,7 +139,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
-            player_row_array[i] = playerRow;
+            playerRowList.add(playerRow);
             equityArray[i] = bindingPlayerRow.equity;
             winArray[i] = bindingPlayerRow.win;
             tieArray[i] = bindingPlayerRow.tie;

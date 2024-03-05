@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.R;
@@ -81,7 +80,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             OmahaHighPlayerRowBinding bindingPlayerRow = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
-            player_row_array[i] = playerRow;
+            playerRowList.add(playerRow);
             equityArray[i] = bindingPlayerRow.equity;
             winArray[i] = bindingPlayerRow.win;
             tieArray[i] = bindingPlayerRow.tie;

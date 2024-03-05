@@ -32,6 +32,7 @@ import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +53,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public int playersRemainingNo;
 
-    public final ConstraintLayout[] player_row_array = new ConstraintLayout[10];
+    public List<ConstraintLayout> playerRowList = new ArrayList<>();
     public TextView[] equityArray = new TextView[10];
     public TextView[] winArray = new TextView[10];
     public TextView[] tieArray = new TextView[10];
@@ -94,7 +95,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
 
         for (int i = 2; i < 10; i++) {
-            player_row_array[i].setVisibility(View.GONE);
+            playerRowList.get(i).setVisibility(View.GONE);
         }
 
         set_selected_card(1, 0);
@@ -112,7 +113,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
                 setEmptyHandRow(playersRemainingNo);
 
-                player_row_array[playersRemainingNo - 1].setVisibility(View.VISIBLE);
+                playerRowList.get(playersRemainingNo - 1).setVisibility(View.VISIBLE);
                 calculate_odds();
             }
             else{
@@ -303,7 +304,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             cardRows[i].copyImageBelow(this, i);
         }
 
-        player_row_array[playersRemainingNo].setVisibility(View.GONE);
+        playerRowList.get(playersRemainingNo).setVisibility(View.GONE);
 
         if ((selected_card_position[0] > player_remove_number || selected_card_position[0] > playersRemainingNo) && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
             for (int i = selected_card_position[0] - 1; i >= 0; i--) {
@@ -365,7 +366,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             equityCalculatorBinding.scrollView.post(
                 () -> equityCalculatorBinding.scrollView.smoothScrollTo(
                     0,
-                    player_row_array[selected_card_position[0] - 1].getBottom() - equityCalculatorBinding.scrollView.getHeight()
+                    playerRowList.get(selected_card_position[0] - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
                 )
             );
         }
