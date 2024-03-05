@@ -305,7 +305,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         player_row_array[playersRemainingNo].setVisibility(View.GONE);
 
-        if (selected_card_position[0] >= player_remove_number && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
+        if ((selected_card_position[0] > player_remove_number || selected_card_position[0] > playersRemainingNo) && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
             for (int i = selected_card_position[0] - 1; i >= 0; i--) {
                 if (cardRows[i] instanceof SpecificCardsRow) {
                     set_selected_card(i, selected_card_position[1]);
