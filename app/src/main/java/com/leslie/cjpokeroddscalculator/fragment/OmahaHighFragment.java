@@ -28,12 +28,12 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        equityArray.get(0).setText(getString(R.string.two_decimal_perc, 50.0));
-        equityArray.get(1).setText(getString(R.string.two_decimal_perc, 50.0));
-        winArray.get(0).setText(getString(R.string.two_decimal_perc, 49.33));
-        winArray.get(1).setText(getString(R.string.two_decimal_perc, 49.33));
-        tieArray[0].setText(getString(R.string.two_decimal_perc, 1.33));
-        tieArray[1].setText(getString(R.string.two_decimal_perc, 1.33));
+        equityList.get(0).setText(getString(R.string.two_decimal_perc, 50.0));
+        equityList.get(1).setText(getString(R.string.two_decimal_perc, 50.0));
+        winList.get(0).setText(getString(R.string.two_decimal_perc, 49.33));
+        winList.get(1).setText(getString(R.string.two_decimal_perc, 49.33));
+        tieList.get(0).setText(getString(R.string.two_decimal_perc, 1.33));
+        tieList.get(1).setText(getString(R.string.two_decimal_perc, 1.33));
 
         equityCalculatorBinding.title.setText(getString(R.string.omaha_high_equity_calculator));
 
@@ -81,9 +81,9 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
             playerRowList.add(playerRow);
-            equityArray.add(bindingPlayerRow.equity);
-            winArray.add(bindingPlayerRow.win);
-            tieArray[i] = bindingPlayerRow.tie;
+            equityList.add(bindingPlayerRow.equity);
+            winList.add(bindingPlayerRow.win);
+            tieList.add(bindingPlayerRow.tie);
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
             cardPositionBiMap.put(Arrays.asList(i + 1, 2), bindingPlayerRow.card3);

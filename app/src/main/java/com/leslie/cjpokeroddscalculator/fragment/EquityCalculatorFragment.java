@@ -54,9 +54,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public int playersRemainingNo;
 
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
-    public List<TextView> equityArray = new ArrayList<>();
-    public List<TextView> winArray = new ArrayList<>();
-    public TextView[] tieArray = new TextView[10];
+    public List<TextView> equityList = new ArrayList<>();
+    public List<TextView> winList = new ArrayList<>();
+    public List<TextView> tieList = new ArrayList<>();
 
     public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
@@ -438,9 +438,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void clearNumbers() {
         for(int i = 0; i < playersRemainingNo; i++) {
-            equityArray.get(i).setText("");
-            winArray.get(i).setText("");
-            tieArray[i].setText("");
+            equityList.get(i).setText("");
+            winList.get(i).setText("");
+            tieList.get(i).setText("");
         }
     }
 

@@ -21,9 +21,9 @@ public abstract class TexasHoldemOutputResult extends OutputResult {
     public void updateWinResults(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush) {
         if (equityCalculatorFragment.getActivity() != null) {
             for(int i = 0; i < equityCalculatorFragment.playersRemainingNo; i++) {
-                equityCalculatorFragment.equityArray.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, equity[i] * 100));
-                equityCalculatorFragment.winArray.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, win[i] * 100));
-                equityCalculatorFragment.tieArray[i].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
+                equityCalculatorFragment.equityList.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, equity[i] * 100));
+                equityCalculatorFragment.winList.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, win[i] * 100));
+                equityCalculatorFragment.tieList.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
 
                 texasHoldemFragment.handStats[i][0].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, highCard[i] * 100));
                 texasHoldemFragment.handStats[i][1].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, onePair[i] * 100));

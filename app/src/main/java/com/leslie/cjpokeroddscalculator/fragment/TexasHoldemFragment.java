@@ -74,9 +74,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.setFragmentResultListeners();
 
         for (int i = 0; i < 2; i++) {
-            equityArray.get(i).setText(getString(R.string.two_decimal_perc, 50.0));
-            winArray.get(i).setText(getString(R.string.two_decimal_perc, 47.97));
-            tieArray[i].setText(getString(R.string.two_decimal_perc, 2.03));
+            equityList.get(i).setText(getString(R.string.two_decimal_perc, 50.0));
+            winList.get(i).setText(getString(R.string.two_decimal_perc, 47.97));
+            tieList.get(i).setText(getString(R.string.two_decimal_perc, 2.03));
             handStats[i][0].setText(getString(R.string.two_decimal_perc, 17.41));
             handStats[i][1].setText(getString(R.string.two_decimal_perc, 43.82));
             handStats[i][2].setText(getString(R.string.two_decimal_perc, 23.5));
@@ -140,9 +140,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             ConstraintLayout playerRow = bindingPlayerRow.getRoot();
             playerRow.setId(View.generateViewId());
             playerRowList.add(playerRow);
-            equityArray.add(bindingPlayerRow.equity);
-            winArray.add(bindingPlayerRow.win);
-            tieArray[i] = bindingPlayerRow.tie;
+            equityList.add(bindingPlayerRow.equity);
+            winList.add(bindingPlayerRow.win);
+            tieList.add(bindingPlayerRow.tie);
             handStats[i][0] = bindingPlayerRow.highCard;
             handStats[i][1] = bindingPlayerRow.onePair;
             handStats[i][2] = bindingPlayerRow.twoPair;
