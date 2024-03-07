@@ -62,7 +62,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
     HashBiMap<ImageButton, String> inputSuitRankMap;
 
-    CardRow[] cardRows = new CardRow[11];
+    List<CardRow> cardRows = new ArrayList<>();
 
     DisplayMetrics displayMetrics = new DisplayMetrics();
     int cardHeight;
@@ -83,7 +83,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         initialiseVariables();
 
         for (int i = 1; i <= 10; i++) {
-            cardRows[i] = new SpecificCardsRow(cardsPerHand);
+            cardRows.add(new SpecificCardsRow(cardsPerHand));
         }
 
         generateMainLayout();
@@ -123,18 +123,18 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.clear.setOnClickListener(v -> {
             for (int i = 0; i < 11; i++) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
-                    SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[i];
+                if (cardRows.get(i) instanceof SpecificCardsRow) {
+                    SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(i);
                     for (int j = 0; j < cardRow.cards.length; j++) {
                         setInputCardVisible(i, j);
                     }
                 }
 
-                cardRows[i].clear(this, i);
+                cardRows.get(i).clear(this, i);
             }
 
             if (equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
-                if (playersRemainingNo > 0 && cardRows[1] instanceof SpecificCardsRow) {
+                if (playersRemainingNo > 0 && cardRows.get(1) instanceof SpecificCardsRow) {
                     set_selected_card(1, 0);
                 } else {
                     set_selected_card(0, 0);
@@ -222,7 +222,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         cardHeight = displayMetrics.heightPixels / 10;
 
-        cardRows[0] = new SpecificCardsRow(5);
+        cardRows.add(new SpecificCardsRow(5));
 
         playersRemainingNo = 2;
 
@@ -293,22 +293,22 @@ public abstract class EquityCalculatorFragment extends Fragment {
         playersRemainingNo--;
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
 
-        if (cardRows[player_remove_number] instanceof SpecificCardsRow) {
+        if (cardRows.get(player_remove_number) instanceof SpecificCardsRow) {
             for (int i = 0; i < cardsPerHand; i++) {
                 setInputCardVisible(player_remove_number, i);
             }
         }
 
         for (int i = player_remove_number; i <= playersRemainingNo; i++) {
-            cardRows[i] = cardRows[i + 1].copy();
-            cardRows[i].copyImageBelow(this, i);
+            cardRows.set(i, cardRows.get(i + 1).copy());
+            cardRows.get(i).copyImageBelow(this, i);
         }
 
         playerRowList.get(playersRemainingNo).setVisibility(View.GONE);
 
         if ((selected_card_position[0] > player_remove_number || selected_card_position[0] > playersRemainingNo) && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
             for (int i = selected_card_position[0] - 1; i >= 0; i--) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
+                if (cardRows.get(i) instanceof SpecificCardsRow) {
                     set_selected_card(i, selected_card_position[1]);
                     break;
                 }
@@ -319,7 +319,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     };
 
     public void setEmptyHandRow(int row) {
-        cardRows[row] = new SpecificCardsRow(cardsPerHand);
+        cardRows.set(row, new SpecificCardsRow(cardsPerHand));
         for (int i = 0; i < cardsPerHand; i++) {
             setCardImage(row, i, "");
         }
@@ -349,7 +349,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         } else {
             boolean foundNext = false;
             for (int i = selected_card_position[0] + 1; i < playersRemainingNo + 1; i++) {
-                if (cardRows[i] instanceof SpecificCardsRow) {
+                if (cardRows.get(i) instanceof SpecificCardsRow) {
                     set_selected_card(i, 0);
                     foundNext = true;
                     break;
@@ -386,7 +386,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void set_card_value(int row_idx, int card_idx, String cardStr) {
-        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows[row_idx];
+        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(row_idx);
         cardRow.cards[card_idx] = cardStr;
 
         setCardImage(row_idx, card_idx, cardStr);
@@ -401,7 +401,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void setInputCardVisible(int row_idx, int card_idx) {
-        String cardStr = ((SpecificCardsRow) cardRows[row_idx]).cards[card_idx];
+        String cardStr = ((SpecificCardsRow) cardRows.get(row_idx)).cards[card_idx];
 
         if (!Objects.equals(cardStr, "")) {
             ImageButton card = inputSuitRankMap.inverse().get(cardStr);

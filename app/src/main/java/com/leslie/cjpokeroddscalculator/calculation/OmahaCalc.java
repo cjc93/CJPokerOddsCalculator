@@ -5,20 +5,22 @@ import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
+import java.util.List;
+
 public class OmahaCalc extends Calculation{
     public OmahaOutputResult outputResultObj;
     public int totalSimulations;
 
-    public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) {
+    public void initialiseVariables(List<CardRow> cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) {
         super.initialiseVariables(cardRows, playersRemainingNo);
         this.outputResultObj = outputResultObj;
     }
 
-    public String[][] convertPlayerCardsToStr(CardRow[] cardRows, int playersRemainingNo) {
+    public String[][] convertPlayerCardsToStr(List<CardRow> cardRows, int playersRemainingNo) {
         String[][] playerCards = new String[playersRemainingNo][];
 
         for (int i = 1; i <= playersRemainingNo; i++) {
-            playerCards[i - 1] = ((SpecificCardsRow) cardRows[i]).convertOmahaCardsToStr();
+            playerCards[i - 1] = ((SpecificCardsRow) cardRows.get(i)).convertOmahaCardsToStr();
         }
 
         return playerCards;

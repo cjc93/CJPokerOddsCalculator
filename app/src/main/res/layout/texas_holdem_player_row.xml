@@ -354,6 +354,7 @@
         android:id="@+id/straight_flush_text"
         android:text="@string/straight_flush"
         app:layout_constraintTop_toBottomOf="@id/four_of_a_kind_text"
+        app:layout_constraintBottom_toTopOf="@id/straight_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_3"
         app:layout_constraintRight_toLeftOf="@id/straight_flush"
         style="@style/StatsName"/>

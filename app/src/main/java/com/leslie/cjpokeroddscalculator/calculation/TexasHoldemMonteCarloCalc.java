@@ -4,12 +4,14 @@ import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
+import java.util.List;
+
 public class TexasHoldemMonteCarloCalc extends TexasHoldemCalc {
 
-    public void calculate(CardRow[] cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) throws InterruptedException {
+    public void calculate(List<CardRow> cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) throws InterruptedException {
         initialiseVariables(cardRows, playersRemainingNo, outputResultObj);
 
-        String boardCards = convertBoardCardsToStr(((SpecificCardsRow) cardRows[0]).cards);
+        String boardCards = convertBoardCardsToStr(((SpecificCardsRow) cardRows.get(0)).cards);
 
         String[] playerCards = convertPlayerCardsToStr(cardRows, playersRemainingNo);
 

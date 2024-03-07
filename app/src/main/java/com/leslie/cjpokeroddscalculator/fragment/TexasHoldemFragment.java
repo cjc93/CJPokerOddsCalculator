@@ -179,13 +179,13 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         final MaterialButton rangeSwitchInput = (MaterialButton) v;
         int playerRangeSwitchNumber = rangeSwitchRowMap.get(rangeSwitchInput);
 
-        if (cardRows[playerRangeSwitchNumber] instanceof SpecificCardsRow) {
+        if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
             for (int i = 0; i < 2; i++) {
                 setInputCardVisible(playerRangeSwitchNumber, i);
             }
 
             twoCardsLayouts[playerRangeSwitchNumber - 1].setVisibility(View.GONE);
-            cardRows[playerRangeSwitchNumber] = new RangeRow();
+            cardRows.set(playerRangeSwitchNumber, new RangeRow());
             ImageButton b = this.rangePositionBiMap.get(playerRangeSwitchNumber);
             assert b != null;
             b.setImageBitmap(this.emptyRangeBitmap);
@@ -222,7 +222,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         selectedRangeButton = rangeSelectorInput;
         selectedRangePosition = rangePositionBiMap.inverse().get(rangeSelectorInput);
 
-        RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
+        RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
 
         rangeSelector.updateRangeSelector(rangeRow.matrix);
         
@@ -252,7 +252,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        RangeRow rangeRow = (RangeRow) this.cardRows[selectedRangePosition];
+        RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
 
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 
