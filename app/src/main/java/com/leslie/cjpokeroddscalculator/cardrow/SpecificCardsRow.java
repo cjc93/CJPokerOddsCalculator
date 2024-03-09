@@ -50,7 +50,7 @@ public class SpecificCardsRow extends CardRow {
         if (equityCalculatorFragment instanceof TexasHoldemFragment) {
             TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
             Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.GONE);
-            texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.VISIBLE);
+            texasHoldemFragment.twoCardsGroups.get(row_idx - 1).setVisibility(View.VISIBLE);
         }
     }
 

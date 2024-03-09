@@ -49,7 +49,7 @@ public class RangeRow extends CardRow {
 
     public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
-        texasHoldemFragment.twoCardsLayouts[row_idx - 1].setVisibility(View.GONE);
+        texasHoldemFragment.twoCardsGroups.get(row_idx - 1).setVisibility(View.GONE);
         Drawable d = Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx + 1)).getDrawable();
         Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setImageDrawable(d);
         Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.VISIBLE);

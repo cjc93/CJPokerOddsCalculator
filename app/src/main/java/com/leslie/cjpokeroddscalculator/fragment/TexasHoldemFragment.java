@@ -30,6 +30,7 @@ import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     private ImageButton selectedRangeButton;
     private int selectedRangePosition;
 
-    public Group[] twoCardsLayouts = new Group[10];
+    public List<Group> twoCardsGroups = new ArrayList<>();
 
     public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
 
@@ -153,7 +154,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             handStats[i][7] = bindingPlayerRow.fourOfAKind;
             handStats[i][8] = bindingPlayerRow.straightFlush;
             rangePositionBiMap.put(i + 1, bindingPlayerRow.range);
-            twoCardsLayouts[i] = bindingPlayerRow.twoCards;
+            twoCardsGroups.add(bindingPlayerRow.twoCards);
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
             removeRowMap.put(bindingPlayerRow.remove, i + 1);
@@ -184,7 +185,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 setInputCardVisible(playerRangeSwitchNumber, i);
             }
 
-            twoCardsLayouts[playerRangeSwitchNumber - 1].setVisibility(View.GONE);
+            twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
             cardRows.set(playerRangeSwitchNumber, new RangeRow());
             ImageButton b = this.rangePositionBiMap.get(playerRangeSwitchNumber);
             assert b != null;
@@ -214,7 +215,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void setEmptyHandRow(int row) {
         super.setEmptyHandRow(row);
         Objects.requireNonNull(rangePositionBiMap.get(row)).setVisibility(View.GONE);
-        twoCardsLayouts[row - 1].setVisibility(View.VISIBLE);
+        twoCardsGroups.get(row - 1).setVisibility(View.VISIBLE);
     }
 
     private final View.OnClickListener rangeSelectorListener = v -> {
