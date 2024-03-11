@@ -40,7 +40,7 @@ public class RangeRow extends CardRow {
             }
         }
 
-        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
+        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
     }
 
     public CardRow copy() {
@@ -50,9 +50,9 @@ public class RangeRow extends CardRow {
     public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
         texasHoldemFragment.twoCardsGroups.get(row_idx - 1).setVisibility(View.GONE);
-        Drawable d = Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx + 1)).getDrawable();
-        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setImageDrawable(d);
-        Objects.requireNonNull(texasHoldemFragment.rangePositionBiMap.get(row_idx)).setVisibility(View.VISIBLE);
+        Drawable d = texasHoldemFragment.rangeButtonList.get(row_idx).getDrawable();
+        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageDrawable(d);
+        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setVisibility(View.VISIBLE);
     }
 
     public boolean isKnownPlayer() {

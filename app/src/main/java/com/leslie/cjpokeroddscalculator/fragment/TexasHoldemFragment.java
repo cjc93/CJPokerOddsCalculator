@@ -18,7 +18,6 @@ import androidx.constraintlayout.widget.Group;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.common.collect.HashBiMap;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
@@ -44,7 +43,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     public List<Group> twoCardsGroups = new ArrayList<>();
 
-    public HashBiMap<Integer, ImageButton> rangePositionBiMap = HashBiMap.create();
+    public List<ImageButton> rangeButtonList = new ArrayList<>();
 
     Map<MaterialButton, Integer> rangeSwitchRowMap = new HashMap<>();
 
@@ -91,7 +90,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
-        for (ImageButton r : rangePositionBiMap.values()) {
+        for (ImageButton r : rangeButtonList) {
             r.setOnClickListener(rangeSelectorListener);
         }
 
@@ -158,7 +157,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 )
             );
 
-            rangePositionBiMap.put(i + 1, bindingPlayerRow.range);
+            rangeButtonList.add(bindingPlayerRow.range);
             twoCardsGroups.add(bindingPlayerRow.twoCards);
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
@@ -175,7 +174,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
 
-        for (ImageButton r : rangePositionBiMap.values()) {
+        for (ImageButton r : rangeButtonList) {
             r.setImageBitmap(emptyRangeBitmap);
             r.setMaxHeight(cardHeight);
         }
@@ -192,7 +191,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
             cardRows.set(playerRangeSwitchNumber, new RangeRow());
-            ImageButton b = this.rangePositionBiMap.get(playerRangeSwitchNumber);
+            ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
             assert b != null;
             b.setImageBitmap(this.emptyRangeBitmap);
             b.setVisibility(View.VISIBLE);
@@ -219,14 +218,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     public void setEmptyHandRow(int row) {
         super.setEmptyHandRow(row);
-        Objects.requireNonNull(rangePositionBiMap.get(row)).setVisibility(View.GONE);
+        rangeButtonList.get(row - 1).setVisibility(View.GONE);
         twoCardsGroups.get(row - 1).setVisibility(View.VISIBLE);
     }
 
     private final View.OnClickListener rangeSelectorListener = v -> {
         ImageButton rangeSelectorInput = (ImageButton) v;
         selectedRangeButton = rangeSelectorInput;
-        selectedRangePosition = rangePositionBiMap.inverse().get(rangeSelectorInput);
+        selectedRangePosition = rangeButtonList.indexOf(rangeSelectorInput) + 1;
 
         RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
 

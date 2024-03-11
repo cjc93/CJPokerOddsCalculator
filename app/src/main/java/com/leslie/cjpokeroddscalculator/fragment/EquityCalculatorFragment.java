@@ -54,13 +54,12 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public List<TextView> equityList = new ArrayList<>();
     public List<TextView> winList = new ArrayList<>();
     public List<TextView> tieList = new ArrayList<>();
-
-    public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
     List<MaterialButton> removeRowList = new ArrayList<>();
-    HashBiMap<ImageButton, String> inputSuitRankMap;
-
     List<CardRow> cardRows = new ArrayList<>();
 
+    public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
+    HashBiMap<ImageButton, String> inputSuitRankMap;
+    
     DisplayMetrics displayMetrics = new DisplayMetrics();
     int cardHeight;
 
