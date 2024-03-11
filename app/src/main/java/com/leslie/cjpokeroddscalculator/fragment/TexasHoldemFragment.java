@@ -46,11 +46,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     List<MaterialButton> handRangeSwitchList = new ArrayList<>();
 
-    public Bitmap emptyRangeBitmap;
+    public List<List<TextView>> handStats = new ArrayList<>();
 
     Map<MaterialButton, Group> statsButtonMap = new HashMap<>();
 
-    public List<List<TextView>> handStats = new ArrayList<>();
+    public Bitmap emptyRangeBitmap;
 
     public RangeSelector rangeSelector;
 
@@ -158,8 +158,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             rangeButtonList.add(bindingPlayerRow.range);
             twoCardsGroups.add(bindingPlayerRow.twoCards);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
+
+            cardListOfLists.add(
+                Arrays.asList(
+                    bindingPlayerRow.card1,
+                    bindingPlayerRow.card2
+                )
+            );
+
             removeRowList.add(bindingPlayerRow.remove);
             handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
             statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);

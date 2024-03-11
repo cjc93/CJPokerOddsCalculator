@@ -57,7 +57,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     List<MaterialButton> removeRowList = new ArrayList<>();
     List<CardRow> cardRows = new ArrayList<>();
 
-    public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
+    public List<List<ImageButton>> cardListOfLists = new ArrayList<>();
     HashBiMap<ImageButton, String> inputSuitRankMap;
     
     DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -86,8 +86,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         writeToDataStore(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("start_fragment"), fragmentName);
 
-        for (ImageButton card : cardPositionBiMap.values()) {
-            card.setMaxHeight(cardHeight);
+        for (List<ImageButton> row : cardListOfLists) {
+            for (ImageButton card : row) {
+                card.setMaxHeight(cardHeight);
+                card.setOnClickListener(selector_listener);
+            }
         }
 
         for (int i = 2; i < 10; i++) {
@@ -97,10 +100,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
         set_selected_card(1, 0);
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-
-        for (ImageButton b : cardPositionBiMap.values()) {
-            b.setOnClickListener(selector_listener);
-        }
 
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             if(playersRemainingNo < 10){
@@ -173,11 +172,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
 
                 if (hideCardSelectorFlag) {
-                    for (ImageButton card : cardPositionBiMap.values()) {
-                        card.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                            hideCardSelectorFlag = false;
-                            break;
+                    for (List<ImageButton> row : cardListOfLists) {
+                        for (ImageButton card : row) {
+                            card.getGlobalVisibleRect(outRect);
+                            if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                                hideCardSelectorFlag = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -222,11 +223,15 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         playersRemainingNo = 2;
 
-        cardPositionBiMap.put(Arrays.asList(0, 0), equityCalculatorBinding.flop1);
-        cardPositionBiMap.put(Arrays.asList(0, 1), equityCalculatorBinding.flop2);
-        cardPositionBiMap.put(Arrays.asList(0, 2), equityCalculatorBinding.flop3);
-        cardPositionBiMap.put(Arrays.asList(0, 3), equityCalculatorBinding.turn);
-        cardPositionBiMap.put(Arrays.asList(0, 4), equityCalculatorBinding.river);
+        cardListOfLists.add(
+            Arrays.asList(
+                equityCalculatorBinding.flop1,
+                equityCalculatorBinding.flop2,
+                equityCalculatorBinding.flop3,
+                equityCalculatorBinding.turn,
+                equityCalculatorBinding.river
+            )
+        );
     }
 
     public void generateMainLayout() {
@@ -322,9 +327,17 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     private final View.OnClickListener selector_listener = v -> {
-        List<Integer> position = cardPositionBiMap.inverse().get((ImageButton) v);
-        assert position != null;
-        set_selected_card(position.get(0), position.get(1));
+        int row_idx;
+        int card_idx = 0;
+
+        for (row_idx = 0; row_idx < cardListOfLists.size(); row_idx++) {
+            card_idx = cardListOfLists.get(row_idx).indexOf((ImageButton) v);
+            if (card_idx != -1) {
+                break;
+            }
+        }
+
+        set_selected_card(row_idx, card_idx);
         equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
         equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
     };
@@ -376,7 +389,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         selected_card_position[0] = row_idx;
         selected_card_position[1] = card_idx;
 
-        selected_card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
+        selected_card_button = cardListOfLists.get(row_idx).get(card_idx);
         assert selected_card_button != null;
         selected_card_button.setBackgroundResource(R.drawable.border_selector);
     }
@@ -407,7 +420,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void setCardImage(int row_idx, int card_idx, String cardStr) {
-        ImageButton card_button = cardPositionBiMap.get(Arrays.asList(row_idx, card_idx));
+        ImageButton card_button = cardListOfLists.get(row_idx).get(card_idx);
         assert card_button != null;
         card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(cardStr));
     }

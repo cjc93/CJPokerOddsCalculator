@@ -84,10 +84,16 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             equityList.add(bindingPlayerRow.equity);
             winList.add(bindingPlayerRow.win);
             tieList.add(bindingPlayerRow.tie);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 2), bindingPlayerRow.card3);
-            cardPositionBiMap.put(Arrays.asList(i + 1, 3), bindingPlayerRow.card4);
+
+            cardListOfLists.add(
+                Arrays.asList(
+                    bindingPlayerRow.card1,
+                    bindingPlayerRow.card2,
+                    bindingPlayerRow.card3,
+                    bindingPlayerRow.card4
+                )
+            );
+
             removeRowList.add(bindingPlayerRow.remove);
 
             bindingPlayerRow.playerText.setText(getString(R.string.player, i + 1));

@@ -43,8 +43,8 @@ public class SpecificCardsRow extends CardRow {
 
     public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         for (int i = 0; i < this.cards.length; i++) {
-            Drawable d = Objects.requireNonNull(equityCalculatorFragment.cardPositionBiMap.get(Arrays.asList(row_idx + 1, i))).getDrawable();
-            Objects.requireNonNull(equityCalculatorFragment.cardPositionBiMap.get(Arrays.asList(row_idx, i))).setImageDrawable(d);
+            Drawable d = Objects.requireNonNull(equityCalculatorFragment.cardListOfLists.get(row_idx + 1).get(i)).getDrawable();
+            Objects.requireNonNull(equityCalculatorFragment.cardListOfLists.get(row_idx).get(i)).setImageDrawable(d);
         }
 
         if (equityCalculatorFragment instanceof TexasHoldemFragment) {
