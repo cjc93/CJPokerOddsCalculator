@@ -52,7 +52,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     Map<MaterialButton, Group> statsButtonMap = new HashMap<>();
 
-    public TextView[][] handStats = new TextView[10][9];
+    public List<List<TextView>> handStats = new ArrayList<>();
 
     public RangeSelector rangeSelector;
 
@@ -78,15 +78,15 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             equityList.get(i).setText(getString(R.string.two_decimal_perc, 50.0));
             winList.get(i).setText(getString(R.string.two_decimal_perc, 47.97));
             tieList.get(i).setText(getString(R.string.two_decimal_perc, 2.03));
-            handStats[i][0].setText(getString(R.string.two_decimal_perc, 17.41));
-            handStats[i][1].setText(getString(R.string.two_decimal_perc, 43.82));
-            handStats[i][2].setText(getString(R.string.two_decimal_perc, 23.5));
-            handStats[i][3].setText(getString(R.string.two_decimal_perc, 4.83));
-            handStats[i][4].setText(getString(R.string.two_decimal_perc, 4.62));
-            handStats[i][5].setText(getString(R.string.two_decimal_perc, 3.03));
-            handStats[i][6].setText(getString(R.string.two_decimal_perc, 2.6));
-            handStats[i][7].setText(getString(R.string.two_decimal_perc, 0.17));
-            handStats[i][8].setText(getString(R.string.two_decimal_perc, 0.03));
+            handStats.get(i).get(0).setText(getString(R.string.two_decimal_perc, 17.41));
+            handStats.get(i).get(1).setText(getString(R.string.two_decimal_perc, 43.82));
+            handStats.get(i).get(2).setText(getString(R.string.two_decimal_perc, 23.5));
+            handStats.get(i).get(3).setText(getString(R.string.two_decimal_perc, 4.83));
+            handStats.get(i).get(4).setText(getString(R.string.two_decimal_perc, 4.62));
+            handStats.get(i).get(5).setText(getString(R.string.two_decimal_perc, 3.03));
+            handStats.get(i).get(6).setText(getString(R.string.two_decimal_perc, 2.6));
+            handStats.get(i).get(7).setText(getString(R.string.two_decimal_perc, 0.17));
+            handStats.get(i).get(8).setText(getString(R.string.two_decimal_perc, 0.03));
         }
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
@@ -144,15 +144,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             equityList.add(bindingPlayerRow.equity);
             winList.add(bindingPlayerRow.win);
             tieList.add(bindingPlayerRow.tie);
-            handStats[i][0] = bindingPlayerRow.highCard;
-            handStats[i][1] = bindingPlayerRow.onePair;
-            handStats[i][2] = bindingPlayerRow.twoPair;
-            handStats[i][3] = bindingPlayerRow.threeOfAKind;
-            handStats[i][4] = bindingPlayerRow.straight;
-            handStats[i][5] = bindingPlayerRow.flush;
-            handStats[i][6] = bindingPlayerRow.fullHouse;
-            handStats[i][7] = bindingPlayerRow.fourOfAKind;
-            handStats[i][8] = bindingPlayerRow.straightFlush;
+            handStats.add(
+                Arrays.asList(
+                    bindingPlayerRow.highCard,
+                    bindingPlayerRow.onePair,
+                    bindingPlayerRow.twoPair,
+                    bindingPlayerRow.threeOfAKind,
+                    bindingPlayerRow.straight,
+                    bindingPlayerRow.flush,
+                    bindingPlayerRow.fullHouse,
+                    bindingPlayerRow.fourOfAKind,
+                    bindingPlayerRow.straightFlush
+                )
+            );
+
             rangePositionBiMap.put(i + 1, bindingPlayerRow.range);
             twoCardsGroups.add(bindingPlayerRow.twoCards);
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
@@ -247,7 +252,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         super.clearNumbers();
         for(int i = 0; i < playersRemainingNo; i++) {
             for(int j = 0; j < 9; j++) {
-                handStats[i][j].setText("");
+                handStats.get(i).get(j).setText("");
             }
         }
     }

@@ -25,15 +25,15 @@ public abstract class TexasHoldemOutputResult extends OutputResult {
                 equityCalculatorFragment.winList.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, win[i] * 100));
                 equityCalculatorFragment.tieList.get(i).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, Math.abs(equity[i] - win[i]) * 100));
 
-                texasHoldemFragment.handStats[i][0].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, highCard[i] * 100));
-                texasHoldemFragment.handStats[i][1].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, onePair[i] * 100));
-                texasHoldemFragment.handStats[i][2].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, twoPair[i] * 100));
-                texasHoldemFragment.handStats[i][3].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, threeOfAKind[i] * 100));
-                texasHoldemFragment.handStats[i][4].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, straight[i] * 100));
-                texasHoldemFragment.handStats[i][5].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, flush[i] * 100));
-                texasHoldemFragment.handStats[i][6].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, fullHouse[i] * 100));
-                texasHoldemFragment.handStats[i][7].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, fourOfAKind[i] * 100));
-                texasHoldemFragment.handStats[i][8].setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, straightFlush[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(0).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, highCard[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(1).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, onePair[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(2).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, twoPair[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(3).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, threeOfAKind[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(4).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, straight[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(5).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, flush[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(6).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, fullHouse[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(7).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, fourOfAKind[i] * 100));
+                texasHoldemFragment.handStats.get(i).get(8).setText(equityCalculatorFragment.getString(R.string.two_decimal_perc, straightFlush[i] * 100));
             }
         }
     }
