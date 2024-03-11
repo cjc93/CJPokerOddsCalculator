@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +33,7 @@ import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBind
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 
@@ -59,7 +56,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public List<TextView> tieList = new ArrayList<>();
 
     public HashBiMap<List<Integer>, ImageButton> cardPositionBiMap = HashBiMap.create();
-    Map<MaterialButton, Integer> removeRowMap = new HashMap<>();
+    List<MaterialButton> removeRowList = new ArrayList<>();
     HashBiMap<ImageButton, String> inputSuitRankMap;
 
     List<CardRow> cardRows = new ArrayList<>();
@@ -187,7 +184,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
 
                 if (hideCardSelectorFlag) {
-                    for (Button b : removeRowMap.keySet()) {
+                    for (MaterialButton b : removeRowList) {
                         b.getGlobalVisibleRect(outRect);
                         if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                             hideCardSelectorFlag = false;
@@ -288,7 +285,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public final View.OnClickListener removePlayerListener = v -> {
         final MaterialButton remove_input = (MaterialButton) v;
-        int player_remove_number = removeRowMap.get(remove_input);
+        int player_remove_number = removeRowList.indexOf(remove_input) + 1;
 
         playersRemainingNo--;
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));

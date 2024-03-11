@@ -162,7 +162,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             twoCardsGroups.add(bindingPlayerRow.twoCards);
             cardPositionBiMap.put(Arrays.asList(i + 1, 0), bindingPlayerRow.card1);
             cardPositionBiMap.put(Arrays.asList(i + 1, 1), bindingPlayerRow.card2);
-            removeRowMap.put(bindingPlayerRow.remove, i + 1);
+            removeRowList.add(bindingPlayerRow.remove);
             rangeSwitchRowMap.put(bindingPlayerRow.handRangeButton, i + 1);
             statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);
 
