@@ -93,7 +93,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
         }
 
-        for (int i = 2; i < 10; i++) {
+        for (int i = 2; i < playerRowList.size(); i++) {
             playerRowList.get(i).setVisibility(View.GONE);
         }
 
@@ -117,7 +117,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         equityCalculatorBinding.clear.setOnClickListener(v -> {
-            for (int i = 0; i < 11; i++) {
+            for (int i = 0; i < cardRows.size(); i++) {
                 if (cardRows.get(i) instanceof SpecificCardsRow) {
                     SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(i);
                     for (int j = 0; j < cardRow.cards.length; j++) {
