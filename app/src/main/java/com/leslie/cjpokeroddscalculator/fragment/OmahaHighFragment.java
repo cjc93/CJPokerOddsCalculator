@@ -85,7 +85,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
             winList.add(bindingPlayerRow.win);
             tieList.add(bindingPlayerRow.tie);
 
-            cardListOfLists.add(
+            cardButtonListOfLists.add(
                 Arrays.asList(
                     bindingPlayerRow.card1,
                     bindingPlayerRow.card2,

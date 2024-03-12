@@ -159,7 +159,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             rangeButtonList.add(bindingPlayerRow.range);
             twoCardsGroups.add(bindingPlayerRow.twoCards);
 
-            cardListOfLists.add(
+            cardButtonListOfLists.add(
                 Arrays.asList(
                     bindingPlayerRow.card1,
                     bindingPlayerRow.card2
@@ -197,7 +197,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
             cardRows.set(playerRangeSwitchNumber, new RangeRow());
             ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
-            assert b != null;
             b.setImageBitmap(this.emptyRangeBitmap);
             b.setVisibility(View.VISIBLE);
         } else {
