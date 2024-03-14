@@ -1,11 +1,7 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
-import android.graphics.drawable.Drawable;
-import android.view.View;
-
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
-import com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,33 +20,11 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
-    public SpecificCardsRow(SpecificCardsRow other) {
-        this.cards = new String[other.cards.length];
-        System.arraycopy(other.cards, 0, this.cards, 0, other.cards.length);
-    }
-
     public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         Arrays.fill(this.cards, "");
 
         for (int i = 0; i < this.cards.length; i++) {
             equityCalculatorFragment.setCardImage(row_idx, i, "");
-        }
-    }
-
-    public CardRow copy() {
-        return new SpecificCardsRow(this);
-    }
-
-    public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
-        for (int i = 0; i < this.cards.length; i++) {
-            Drawable d = equityCalculatorFragment.cardButtonListOfLists.get(row_idx + 1).get(i).getDrawable();
-            equityCalculatorFragment.cardButtonListOfLists.get(row_idx).get(i).setImageDrawable(d);
-        }
-
-        if (equityCalculatorFragment instanceof TexasHoldemFragment) {
-            TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
-            texasHoldemFragment.rangeButtonList.get(row_idx - 1).setVisibility(View.GONE);
-            texasHoldemFragment.twoCardsGroups.get(row_idx - 1).setVisibility(View.VISIBLE);
         }
     }
 

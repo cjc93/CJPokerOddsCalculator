@@ -1,8 +1,5 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
-import android.graphics.drawable.Drawable;
-import android.view.View;
-
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment;
@@ -27,10 +24,6 @@ public class RangeRow extends CardRow {
         }
     }
 
-    public RangeRow(RangeRow other) {
-        this.matrix = GlobalStatic.copyMatrix(other.matrix);
-    }
-
     public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
         for (int i = 0; i < 13; i++) {
@@ -40,18 +33,6 @@ public class RangeRow extends CardRow {
         }
 
         texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
-    }
-
-    public CardRow copy() {
-        return new RangeRow(this);
-    }
-
-    public void copyImageBelow(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
-        TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
-        texasHoldemFragment.twoCardsGroups.get(row_idx - 1).setVisibility(View.GONE);
-        Drawable d = texasHoldemFragment.rangeButtonList.get(row_idx).getDrawable();
-        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageDrawable(d);
-        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setVisibility(View.VISIBLE);
     }
 
     public boolean isKnownPlayer() {
