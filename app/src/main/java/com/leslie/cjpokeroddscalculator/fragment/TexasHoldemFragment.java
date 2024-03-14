@@ -89,23 +89,19 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
-        for (ImageButton r : rangeButtonList) {
-            r.setOnClickListener(rangeSelectorListener);
-        }
-
         equityCalculatorBinding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
 
         monteCarloProc = () -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-                calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemLiveUpdate(this));
+                calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         };
 
         exactCalcProc = () -> {
             try {
                 TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-                calcObj.calculate(cardRows, playersRemainingNo, new TexasHoldemFinalUpdate(this));
+                calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         };
     }
@@ -134,55 +130,63 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void generateMainLayout() {
         super.generateMainLayout();
 
-        for (int i = 0; i < 10; i++) {
-            TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
-            ConstraintLayout playerRow = bindingPlayerRow.getRoot();
-            playerRow.setId(View.generateViewId());
-            playerRowList.add(playerRow);
-            equityList.add(bindingPlayerRow.equity);
-            winList.add(bindingPlayerRow.win);
-            tieList.add(bindingPlayerRow.tie);
-            handStats.add(
-                Arrays.asList(
-                    bindingPlayerRow.highCard,
-                    bindingPlayerRow.onePair,
-                    bindingPlayerRow.twoPair,
-                    bindingPlayerRow.threeOfAKind,
-                    bindingPlayerRow.straight,
-                    bindingPlayerRow.flush,
-                    bindingPlayerRow.fullHouse,
-                    bindingPlayerRow.fourOfAKind,
-                    bindingPlayerRow.straightFlush
-                )
-            );
-
-            rangeButtonList.add(bindingPlayerRow.range);
-            twoCardsGroups.add(bindingPlayerRow.twoCards);
-
-            cardButtonListOfLists.add(
-                Arrays.asList(
-                    bindingPlayerRow.card1,
-                    bindingPlayerRow.card2
-                )
-            );
-
-            removeRowList.add(bindingPlayerRow.remove);
-            handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
-            statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);
-
-            bindingPlayerRow.playerText.setText(getString(R.string.player, i + 1));
-            bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
-            bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
-            bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
-        }
-
         this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
 
-        for (ImageButton r : rangeButtonList) {
-            r.setImageBitmap(emptyRangeBitmap);
-            r.setMaxHeight(cardHeight);
+        for (int i = 0; i < 2; i++) {
+            addPlayerRow();
         }
+    }
+
+    public void addPlayerRow() {
+        TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
+        ConstraintLayout playerRow = bindingPlayerRow.getRoot();
+        playerRow.setId(View.generateViewId());
+        playerRowList.add(playerRow);
+        equityList.add(bindingPlayerRow.equity);
+        winList.add(bindingPlayerRow.win);
+        tieList.add(bindingPlayerRow.tie);
+        handStats.add(
+            Arrays.asList(
+                bindingPlayerRow.highCard,
+                bindingPlayerRow.onePair,
+                bindingPlayerRow.twoPair,
+                bindingPlayerRow.threeOfAKind,
+                bindingPlayerRow.straight,
+                bindingPlayerRow.flush,
+                bindingPlayerRow.fullHouse,
+                bindingPlayerRow.fourOfAKind,
+                bindingPlayerRow.straightFlush
+            )
+        );
+
+        ImageButton rangeButton = bindingPlayerRow.range;
+        rangeButton.setImageBitmap(emptyRangeBitmap);
+        rangeButton.setMaxHeight(cardHeight);
+        rangeButton.setOnClickListener(rangeSelectorListener);
+        rangeButtonList.add(rangeButton);
+
+        twoCardsGroups.add(bindingPlayerRow.twoCards);
+
+        List<ImageButton> cardList = Arrays.asList(
+            bindingPlayerRow.card1,
+            bindingPlayerRow.card2
+        );
+
+        initialiseCardButtons(cardList);
+        cardButtonListOfLists.add(cardList);
+
+        cardRows.add(new SpecificCardsRow(cardsPerHand));
+
+        removeRowList.add(bindingPlayerRow.remove);
+        handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
+        statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);
+
+        bindingPlayerRow.playerText.setText(getString(R.string.player, playerRowList.size()));
+
+        bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
+        bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
+        bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
     }
 
     private final View.OnClickListener rangeSwitchListener = v -> {
@@ -253,7 +257,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     public void clearNumbers() {
         super.clearNumbers();
-        for(int i = 0; i < playersRemainingNo; i++) {
+        for(int i = 0; i < handStats.size(); i++) {
             for(int j = 0; j < 9; j++) {
                 handStats.get(i).get(j).setText("");
             }
@@ -284,5 +288,16 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         matrixBitmap.recycle();
 
         calculate_odds();
+    }
+
+    public void removePlayerRow(int playerRemoveNumber) {
+        statsButtonMap.remove((MaterialButton) playerRowList.get(playerRemoveNumber - 1).findViewById(R.id.stats_button));
+
+        rangeButtonList.remove(playerRemoveNumber - 1);
+        twoCardsGroups.remove(playerRemoveNumber - 1);
+        handRangeSwitchList.remove(playerRemoveNumber - 1);
+        handStats.remove(playerRemoveNumber - 1);
+
+        super.removePlayerRow(playerRemoveNumber);
     }
 }

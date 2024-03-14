@@ -13,14 +13,14 @@ import java.util.List;
 
 public class OmahaExactCalc extends OmahaCalc {
 
-    public void calculate(List<CardRow> cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) throws InterruptedException {
-        initialiseVariables(cardRows, playersRemainingNo, outputResultObj);
+    public void calculate(List<CardRow> cardRows, OmahaOutputResult outputResultObj) throws InterruptedException {
+        initialiseVariables(cardRows, outputResultObj);
 
         OmahaPoker poker = new OmahaPoker(outputResultObj);
 
         String[] boardCards = ((SpecificCardsRow) cardRows.get(0)).convertOmahaCardsToStr();
 
-        String[][] playerCards = convertPlayerCardsToStr(cardRows, playersRemainingNo);
+        String[][] playerCards = convertPlayerCardsToStr(cardRows);
 
         String[] deck = Poker.remdeck(playerCards, boardCards);
 

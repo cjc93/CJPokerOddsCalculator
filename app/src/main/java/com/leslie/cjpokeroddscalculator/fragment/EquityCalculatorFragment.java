@@ -48,8 +48,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
 
-    public int playersRemainingNo;
-
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
     public List<TextView> equityList = new ArrayList<>();
     public List<TextView> winList = new ArrayList<>();
@@ -78,37 +76,20 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         initialiseVariables();
 
-        for (int i = 1; i <= 10; i++) {
-            cardRows.add(new SpecificCardsRow(cardsPerHand));
-        }
-
         generateMainLayout();
 
         writeToDataStore(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("start_fragment"), fragmentName);
 
-        for (List<ImageButton> row : cardButtonListOfLists) {
-            for (ImageButton card : row) {
-                card.setMaxHeight(cardHeight);
-                card.setOnClickListener(selector_listener);
-            }
-        }
-
-        for (int i = 2; i < playerRowList.size(); i++) {
-            playerRowList.get(i).setVisibility(View.GONE);
-        }
-
         set_selected_card(1, 0);
 
-        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
-            if(playersRemainingNo < 10){
-                playersRemainingNo++;
-                equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
+            if(playerRowList.size() < 10){
+                addPlayerRow();
 
-                setEmptyHandRow(playersRemainingNo);
+                equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
-                playerRowList.get(playersRemainingNo - 1).setVisibility(View.VISIBLE);
                 calculate_odds();
             }
             else{
@@ -129,7 +110,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
 
             if (equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
-                if (playersRemainingNo > 0 && cardRows.get(1) instanceof SpecificCardsRow) {
+                if (cardRows.size() > 1 && cardRows.get(1) instanceof SpecificCardsRow) {
                     set_selected_card(1, 0);
                 } else {
                     set_selected_card(0, 0);
@@ -142,6 +123,15 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(""));
+    }
+
+    public abstract void addPlayerRow();
+
+    public void initialiseCardButtons(List<ImageButton> cardButtons) {
+        for (ImageButton card : cardButtons) {
+            card.setMaxHeight(cardHeight);
+            card.setOnClickListener(selector_listener);
+        }
     }
 
     @Override
@@ -218,23 +208,22 @@ public abstract class EquityCalculatorFragment extends Fragment {
         // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         cardHeight = displayMetrics.heightPixels / 10;
-
-        cardRows.add(new SpecificCardsRow(5));
-
-        playersRemainingNo = 2;
-
-        cardButtonListOfLists.add(
-            Arrays.asList(
-                equityCalculatorBinding.flop1,
-                equityCalculatorBinding.flop2,
-                equityCalculatorBinding.flop3,
-                equityCalculatorBinding.turn,
-                equityCalculatorBinding.river
-            )
-        );
     }
 
     public void generateMainLayout() {
+        List<ImageButton> cardList = Arrays.asList(
+            equityCalculatorBinding.flop1,
+            equityCalculatorBinding.flop2,
+            equityCalculatorBinding.flop3,
+            equityCalculatorBinding.turn,
+            equityCalculatorBinding.river
+        );
+
+        initialiseCardButtons(cardList);
+        cardButtonListOfLists.add(cardList);
+
+        cardRows.add(new SpecificCardsRow(5));
+
         inputSuitRankMap = HashBiMap.create();
         for (String suit : suitStrings) {
             for (String rank : rankStrings) {
@@ -289,27 +278,21 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public final View.OnClickListener removePlayerListener = v -> {
         final MaterialButton remove_input = (MaterialButton) v;
-        int player_remove_number = removeRowList.indexOf(remove_input) + 1;
+        int playerRemoveNumber = removeRowList.indexOf(remove_input) + 1;
 
-        playersRemainingNo--;
-        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playersRemainingNo));
-
-        if (cardRows.get(player_remove_number) instanceof SpecificCardsRow) {
+        if (cardRows.get(playerRemoveNumber) instanceof SpecificCardsRow) {
             for (int i = 0; i < cardsPerHand; i++) {
-                setInputCardVisible(player_remove_number, i);
+                setInputCardVisible(playerRemoveNumber, i);
             }
         }
 
-        for (int i = player_remove_number; i <= playersRemainingNo; i++) {
-            cardRows.set(i, cardRows.get(i + 1).copy());
-            cardRows.get(i).copyImageBelow(this, i);
-        }
+        removePlayerRow(playerRemoveNumber);
 
-        playerRowList.get(playersRemainingNo).setVisibility(View.GONE);
+        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
-        if ((selected_card_position[0] > player_remove_number || selected_card_position[0] > playersRemainingNo) && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
-            for (int i = selected_card_position[0] - 1; i >= 0; i--) {
-                if (cardRows.get(i) instanceof SpecificCardsRow) {
+        if (selected_card_position[0] >= playerRemoveNumber && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
+            for (int i = selected_card_position[0]; i >= 0; i--) {
+                if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
                     set_selected_card(i, selected_card_position[1]);
                     break;
                 }
@@ -319,6 +302,26 @@ public abstract class EquityCalculatorFragment extends Fragment {
         calculate_odds();
     };
 
+    public void removePlayerRow(int playerRemoveNumber) {
+        equityCalculatorBinding.playerRows.removeView(playerRowList.get(playerRemoveNumber - 1));
+
+        playerRowList.remove(playerRemoveNumber - 1);
+
+        equityList.remove(playerRemoveNumber - 1);
+        winList.remove(playerRemoveNumber - 1);
+        tieList.remove(playerRemoveNumber - 1);
+
+        removeRowList.remove(playerRemoveNumber - 1);
+
+        cardButtonListOfLists.remove(playerRemoveNumber);
+
+        cardRows.remove(playerRemoveNumber);
+
+        for (int i = playerRemoveNumber - 1; i < playerRowList.size(); i++) {
+            ((TextView) playerRowList.get(i).findViewById(R.id.player_text)).setText(getString(R.string.player, i + 1));
+        }
+    }
+
     public void setEmptyHandRow(int row) {
         cardRows.set(row, new SpecificCardsRow(cardsPerHand));
         for (int i = 0; i < cardsPerHand; i++) {
@@ -326,7 +329,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    private final View.OnClickListener selector_listener = v -> {
+    public final View.OnClickListener selector_listener = v -> {
         int row_idx;
         int card_idx = 0;
 
@@ -353,11 +356,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
     private void set_next_selected_card() {
         if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] < (cardsPerHand - 1)) {
             set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
-        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playersRemainingNo) && selected_card_position[1] == (cardsPerHand - 1)) {
+        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playerRowList.size()) && selected_card_position[1] == (cardsPerHand - 1)) {
             set_selected_card(0, 0);
         } else {
             boolean foundNext = false;
-            for (int i = selected_card_position[0] + 1; i < playersRemainingNo + 1; i++) {
+            for (int i = selected_card_position[0] + 1; i < cardRows.size(); i++) {
                 if (cardRows.get(i) instanceof SpecificCardsRow) {
                     set_selected_card(i, 0);
                     foundNext = true;
@@ -444,7 +447,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void clearNumbers() {
-        for(int i = 0; i < playersRemainingNo; i++) {
+        for(int i = 0; i < equityList.size(); i++) {
             equityList.get(i).setText("");
             winList.get(i).setText("");
             tieList.get(i).setText("");

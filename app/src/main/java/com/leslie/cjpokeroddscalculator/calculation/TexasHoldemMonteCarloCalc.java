@@ -8,12 +8,12 @@ import java.util.List;
 
 public class TexasHoldemMonteCarloCalc extends TexasHoldemCalc {
 
-    public void calculate(List<CardRow> cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) throws InterruptedException {
-        initialiseVariables(cardRows, playersRemainingNo, outputResultObj);
+    public void calculate(List<CardRow> cardRows, TexasHoldemOutputResult outputResultObj) throws InterruptedException {
+        initialiseVariables(cardRows, outputResultObj);
 
         String boardCards = convertBoardCardsToStr(((SpecificCardsRow) cardRows.get(0)).cards);
 
-        String[] playerCards = convertPlayerCardsToStr(cardRows, playersRemainingNo);
+        String[] playerCards = convertPlayerCardsToStr(cardRows);
 
         nativeMonteCarloCalc(playerCards, boardCards);
     }

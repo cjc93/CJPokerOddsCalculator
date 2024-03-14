@@ -11,15 +11,15 @@ public class OmahaCalc extends Calculation{
     public OmahaOutputResult outputResultObj;
     public int totalSimulations;
 
-    public void initialiseVariables(List<CardRow> cardRows, int playersRemainingNo, OmahaOutputResult outputResultObj) {
-        super.initialiseVariables(cardRows, playersRemainingNo);
+    public void initialiseVariables(List<CardRow> cardRows, OmahaOutputResult outputResultObj) {
+        super.initialiseVariables(cardRows);
         this.outputResultObj = outputResultObj;
     }
 
-    public String[][] convertPlayerCardsToStr(List<CardRow> cardRows, int playersRemainingNo) {
-        String[][] playerCards = new String[playersRemainingNo][];
+    public String[][] convertPlayerCardsToStr(List<CardRow> cardRows) {
+        String[][] playerCards = new String[cardRows.size() - 1][];
 
-        for (int i = 1; i <= playersRemainingNo; i++) {
+        for (int i = 1; i < cardRows.size(); i++) {
             playerCards[i - 1] = ((SpecificCardsRow) cardRows.get(i)).convertOmahaCardsToStr();
         }
 
@@ -31,7 +31,7 @@ public class OmahaCalc extends Calculation{
         double unknown_players_win = 0;
         double unknown_players_tie = 0;
 
-        for(int i = 0; i < this.playersRemainingNo; i++) {
+        for(int i = 0; i < eqs.length; i++) {
             if(!this.known_players[i]) {
                 unknown_players_equity += eqs[i].total;
                 unknown_players_win += eqs[i].won;
@@ -39,14 +39,14 @@ public class OmahaCalc extends Calculation{
             }
         }
 
-        double[] equity = new double[playersRemainingNo];
-        double[] win = new double[playersRemainingNo];
-        double[] tie = new double[playersRemainingNo];
+        double[] equity = new double[eqs.length];
+        double[] win = new double[eqs.length];
+        double[] tie = new double[eqs.length];
 
         unknown_players_equity = unknown_players_equity / this.no_of_unknown_players;
         unknown_players_win = unknown_players_win / this.no_of_unknown_players;
         unknown_players_tie = unknown_players_tie / this.no_of_unknown_players;
-        for(int i = 0; i < playersRemainingNo; i++) {
+        for(int i = 0; i < eqs.length; i++) {
             if(known_players[i]) {
                 equity[i] = eqs[i].total;
                 win[i] = eqs[i].won;
