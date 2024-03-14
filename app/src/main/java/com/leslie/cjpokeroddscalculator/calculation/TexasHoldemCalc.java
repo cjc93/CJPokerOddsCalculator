@@ -3,6 +3,8 @@ package com.leslie.cjpokeroddscalculator.calculation;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 
+import java.util.List;
+
 public class TexasHoldemCalc extends Calculation{
     static {
         System.loadLibrary("cjpokeroddscalculator");
@@ -10,8 +12,8 @@ public class TexasHoldemCalc extends Calculation{
 
     public TexasHoldemOutputResult outputResultObj;
 
-    public void initialiseVariables(CardRow[] cardRows, int playersRemainingNo, TexasHoldemOutputResult outputResultObj) {
-        super.initialiseVariables(cardRows, playersRemainingNo);
+    public void initialiseVariables(List<CardRow> cardRows, TexasHoldemOutputResult outputResultObj) {
+        super.initialiseVariables(cardRows);
         this.outputResultObj = outputResultObj;
     }
 
@@ -23,11 +25,11 @@ public class TexasHoldemCalc extends Calculation{
         return String.valueOf(boardCards);
     }
 
-    public String[] convertPlayerCardsToStr(CardRow[] cardRows, int playersRemainingNo) {
-        String[] playerCards = new String[playersRemainingNo];
+    public String[] convertPlayerCardsToStr(List<CardRow> cardRows) {
+        String[] playerCards = new String[cardRows.size() - 1];
 
-        for (int i = 1; i <= playersRemainingNo; i++) {
-            playerCards[i - 1] = cardRows[i].convertTexasHoldemPlayerCardsToStr();
+        for (int i = 1; i < cardRows.size(); i++) {
+            playerCards[i - 1] = cardRows.get(i).convertTexasHoldemPlayerCardsToStr();
         }
 
         return playerCards;
@@ -47,8 +49,8 @@ public class TexasHoldemCalc extends Calculation{
         double unknownPlayersFourOfAKind = 0;
         double unknownPlayersStraightFlush = 0;
 
-        for(int i = 0; i < this.playersRemainingNo; i++) {
-            if(!this.known_players[i]) {
+        for(int i = 0; i < this.known_players.length; i++) {
+            if(!known_players[i]) {
                 unknownPlayersEquity += equity[i];
                 unknownPlayersWin += win[i];
 
@@ -77,7 +79,7 @@ public class TexasHoldemCalc extends Calculation{
         unknownPlayersFourOfAKind = unknownPlayersFourOfAKind / this.no_of_unknown_players;
         unknownPlayersStraightFlush = unknownPlayersStraightFlush / this.no_of_unknown_players;
 
-        for(int i = 0; i < this.playersRemainingNo; i++) {
+        for(int i = 0; i < known_players.length; i++) {
             if(!known_players[i]) {
                 equity[i] = unknownPlayersEquity;
                 win[i] = unknownPlayersWin;

@@ -103,6 +103,7 @@
         android:id="@+id/suit_selector_text"
         android:text="@string/select_a_hand_to_choose_suits"
         app:layout_constraintTop_toBottomOf="@id/preset_hand_range_divider"
+        app:layout_constraintBottom_toTopOf="@id/suits1"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -173,7 +174,7 @@
     <ImageButton
         android:id="@+id/suits8"
         style="@style/SuitSelectorButton"
-        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintTop_toBottomOf="@id/suits2"
         app:layout_constraintBottom_toTopOf="@id/done"
         app:layout_constraintLeft_toRightOf="@id/suits7"
         app:layout_constraintRight_toLeftOf="@id/suits9"
@@ -182,7 +183,7 @@
     <ImageButton
         android:id="@+id/suits9"
         style="@style/SuitSelectorButton"
-        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintTop_toBottomOf="@id/suits3"
         app:layout_constraintBottom_toTopOf="@id/done"
         app:layout_constraintLeft_toRightOf="@id/suits8"
         app:layout_constraintRight_toLeftOf="@id/suits10"
@@ -191,7 +192,7 @@
     <ImageButton
         android:id="@+id/suits10"
         style="@style/SuitSelectorButton"
-        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintTop_toBottomOf="@id/suits4"
         app:layout_constraintBottom_toTopOf="@id/done"
         app:layout_constraintLeft_toRightOf="@id/suits9"
         app:layout_constraintRight_toLeftOf="@id/suits11"
@@ -200,7 +201,7 @@
     <ImageButton
         android:id="@+id/suits11"
         style="@style/SuitSelectorButton"
-        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintTop_toBottomOf="@id/suits5"
         app:layout_constraintBottom_toTopOf="@id/done"
         app:layout_constraintLeft_toRightOf="@id/suits10"
         app:layout_constraintRight_toLeftOf="@id/suits12"
@@ -209,7 +210,7 @@
     <ImageButton
         android:id="@+id/suits12"
         style="@style/SuitSelectorButton"
-        app:layout_constraintTop_toBottomOf="@id/suits1"
+        app:layout_constraintTop_toBottomOf="@id/suits6"
         app:layout_constraintBottom_toTopOf="@id/done"
         app:layout_constraintLeft_toRightOf="@id/suits11"
         app:layout_constraintRight_toRightOf="parent"

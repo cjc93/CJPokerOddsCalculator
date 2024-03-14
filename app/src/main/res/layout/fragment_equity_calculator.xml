@@ -135,12 +135,13 @@
             app:layout_constraintTop_toBottomOf="@id/playersremaining"
             app:layout_constraintBottom_toTopOf="@id/res_desc">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/player_rows"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </ScrollView>
 
