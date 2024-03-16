@@ -58,6 +58,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -119,6 +120,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.rangeSelectorBinding = null;
     }
 
+    @Override
     public void initialiseVariables() {
         super.initialiseVariables();
 
@@ -126,6 +128,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         fragmentName = "TexasHoldem";
     }
 
+    @Override
     public void generateMainLayout() {
         super.generateMainLayout();
 
@@ -137,6 +140,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         }
     }
 
+    @Override
     public void addPlayerRow() {
         TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
         playerRowList.add(bindingPlayerRow.getRoot());
@@ -221,6 +225,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         }
     };
 
+    @Override
     public void setEmptyHandRow(int row) {
         super.setEmptyHandRow(row);
         rangeButtonList.get(row - 1).setVisibility(View.GONE);
@@ -240,6 +245,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
     };
 
+    @Override
     public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
         Rect outRect = new Rect();
         for (Button b : statsButtonMap.keySet()) {
@@ -252,6 +258,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         return true;
     }
 
+    @Override
     public void clearNumbers() {
         super.clearNumbers();
         for(int i = 0; i < handStats.size(); i++) {
@@ -287,6 +294,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         calculate_odds();
     }
 
+    @Override
     public void removePlayerRow(int playerRemoveNumber) {
         statsButtonMap.remove((MaterialButton) playerRowList.get(playerRemoveNumber - 1).findViewById(R.id.stats_button));
 

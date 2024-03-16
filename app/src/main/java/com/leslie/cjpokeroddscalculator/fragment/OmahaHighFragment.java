@@ -27,6 +27,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -94,6 +95,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         }
     }
 
+    @Override
     public void initialiseVariables() {
         super.initialiseVariables();
 
@@ -101,6 +103,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         fragmentName = "OmahaHigh";
     }
 
+    @Override
     public void generateMainLayout() {
         super.generateMainLayout();
 
