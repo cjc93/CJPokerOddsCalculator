@@ -24,6 +24,7 @@ public class RangeRow extends CardRow {
         }
     }
 
+    @Override
     public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
         for (int i = 0; i < 13; i++) {
@@ -35,6 +36,7 @@ public class RangeRow extends CardRow {
         texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
     }
 
+    @Override
     public boolean isKnownPlayer() {
         boolean isAllSuitsFirstElement = GlobalStatic.isAllSuits(this.matrix.get(0).get(0), 0, 0);
 
@@ -55,6 +57,7 @@ public class RangeRow extends CardRow {
         return false;
     }
 
+    @Override
     public String convertTexasHoldemPlayerCardsToStr() {
         StringJoiner sj = new StringJoiner(",");
         String firstRank, secondRank;

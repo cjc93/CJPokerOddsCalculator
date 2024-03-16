@@ -19,6 +19,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
         this.isStartingPeriod = true;
     }
 
+    @Override
     public void duringSimulations(Equity[] eqs, int count) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
@@ -40,6 +41,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
         }
     }
 
+    @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {

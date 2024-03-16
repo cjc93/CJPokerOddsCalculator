@@ -18,6 +18,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         this.lastUpdateTime = System.currentTimeMillis();
     }
 
+    @Override
     public void duringSimulations(Equity[] eqs, int count) throws InterruptedException {
         if (Thread.interrupted()) {
             throw new InterruptedException();
@@ -42,6 +43,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         }
     }
 
+    @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.exact_calc_thread.isAlive()) {

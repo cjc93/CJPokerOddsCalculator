@@ -9,6 +9,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
         super(equityCalculatorFragment);
     }
 
+    @Override
     public boolean duringSimulations(double[]... result) {
         if (this.currentThread.isInterrupted()) {
             return false;
@@ -19,6 +20,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
         return true;
     }
 
+    @Override
     public void afterAllSimulations(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush, boolean... isCancelled) {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {

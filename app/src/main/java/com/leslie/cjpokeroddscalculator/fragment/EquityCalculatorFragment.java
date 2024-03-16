@@ -71,6 +71,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         return equityCalculatorBinding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 

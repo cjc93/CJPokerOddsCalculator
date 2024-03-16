@@ -20,6 +20,7 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
+    @Override
     public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
         Arrays.fill(this.cards, "");
 
@@ -28,6 +29,7 @@ public class SpecificCardsRow extends CardRow {
         }
     }
 
+    @Override
     public boolean isKnownPlayer() {
         for (String card : this.cards) {
             if (!Objects.equals(card, "")) {
@@ -38,6 +40,7 @@ public class SpecificCardsRow extends CardRow {
         return false;
     }
 
+    @Override
     public String convertTexasHoldemPlayerCardsToStr() {
         StringBuilder temp = new StringBuilder();
 
