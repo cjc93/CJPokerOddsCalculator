@@ -5,6 +5,8 @@ import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStore
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
+import static java.lang.Math.min;
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -54,11 +56,11 @@ public class RangeSelector {
     Map<MaterialButton, String> offsuitButtonSuitsMap = new HashMap<>();
     Map<String, MaterialButton> presetHandRangeMap = new HashMap<>();
     Gson gson = new Gson();
-    int suitSelectorBorderWidth;
+    int suitSelectorBorderThickness;
 
     public RangeSelector(TexasHoldemFragment texasHoldemFragment) {
         this.texasHoldemFragment = texasHoldemFragment;
-        this.suitSelectorBorderWidth = 10;
+        this.suitSelectorBorderThickness = 10;
     }
 
     public void addBackPressedCallback() {
@@ -79,7 +81,7 @@ public class RangeSelector {
     }
 
     public void generateRangeSelector() {
-        int squareHeight = texasHoldemFragment.displayMetrics.widthPixels / 13;
+        int squareLength = min(texasHoldemFragment.displayMetrics.widthPixels - 12, texasHoldemFragment.displayMetrics.heightPixels / 2)  / 13;
         this.inputMatrixMap = HashBiMap.create();
 
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
@@ -87,10 +89,10 @@ public class RangeSelector {
                 MaterialButton b = new MaterialButton(texasHoldemFragment.requireActivity());
                 b.setId(View.generateViewId());
                 b.setPadding(0, 0, 0, 0);
-                b.setHeight(squareHeight);
-                b.setMinimumHeight(squareHeight);
-                b.setMinimumWidth(0);
-                b.setMinWidth(0);
+                b.setHeight(squareLength);
+                b.setMinimumHeight(squareLength);
+                b.setMinimumWidth(squareLength);
+                b.setMinWidth(squareLength);
                 b.setBackgroundColor(Color.LTGRAY);
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
@@ -118,9 +120,10 @@ public class RangeSelector {
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
                 ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.MATCH_CONSTRAINT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
                         ConstraintLayout.LayoutParams.WRAP_CONTENT
                 );
+                layoutParams.horizontalChainStyle = ConstraintLayout.LayoutParams.CHAIN_PACKED;
 
                 if (rowIdx == 0) {
                     layoutParams.topToTop = ConstraintSet.PARENT_ID;
@@ -164,7 +167,7 @@ public class RangeSelector {
         for (MaterialButton b : offsuitButtonSuitsMap.keySet()) {
             b.setOnClickListener(suitsListener);
             b.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#FFA500")));
-            b.setPadding(suitSelectorBorderWidth, suitSelectorBorderWidth, suitSelectorBorderWidth, suitSelectorBorderWidth);
+            b.setPadding(suitSelectorBorderThickness, suitSelectorBorderThickness, suitSelectorBorderThickness, suitSelectorBorderThickness);
         }
     }
 
@@ -272,7 +275,7 @@ public class RangeSelector {
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
-            suitsButton.setStrokeWidth(suitSelectorBorderWidth);
+            suitsButton.setStrokeWidth(suitSelectorBorderThickness);
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + 1);
         }
 
@@ -299,15 +302,15 @@ public class RangeSelector {
                 int buttonHeight = b.getHeight();
                 int buttonWidth = b.getWidth();
 
-                combinedDrawable.setLayerSize(0, buttonWidth / 2 - suitSelectorBorderWidth, buttonHeight - suitSelectorBorderWidth * 2);
-                combinedDrawable.setLayerInsetRight(0, buttonWidth / 2 - suitSelectorBorderWidth);
-                combinedDrawable.setLayerSize(1, buttonWidth / 2 - suitSelectorBorderWidth, buttonHeight- suitSelectorBorderWidth * 2);
+                combinedDrawable.setLayerSize(0, buttonWidth / 2 - suitSelectorBorderThickness, buttonHeight - suitSelectorBorderThickness * 2);
+                combinedDrawable.setLayerInsetRight(0, buttonWidth / 2 - suitSelectorBorderThickness);
+                combinedDrawable.setLayerSize(1, buttonWidth / 2 - suitSelectorBorderThickness, buttonHeight- suitSelectorBorderThickness * 2);
                 combinedDrawable.setLayerGravity(1, Gravity.END);
 
                 b.setIcon(combinedDrawable);
 
                 if (suits.contains(currentSuit)) {
-                    b.setStrokeWidth(suitSelectorBorderWidth);
+                    b.setStrokeWidth(suitSelectorBorderThickness);
                 } else {
                     b.setStrokeWidth(0);
                 }
