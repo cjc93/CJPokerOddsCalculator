@@ -3,6 +3,7 @@ package com.leslie.cjpokeroddscalculator.fragment;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.deleteKeyFromDataStore;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
 import static java.lang.Math.min;
@@ -294,8 +295,13 @@ public class RangeSelector {
             if (currentSuit == null) {
                 b.setVisibility(View.INVISIBLE);
             } else {
-                Drawable leftCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), GlobalStatic.suitRankDrawableMap.get(highRank + currentSuit.charAt(0)));
-                Drawable rightCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), GlobalStatic.suitRankDrawableMap.get(lowRank + currentSuit.charAt(1)));
+                Integer leftID = suitRankDrawableMap.get(highRank + currentSuit.charAt(0));
+                assert leftID != null;
+                Drawable leftCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), leftID);
+
+                Integer rightID = suitRankDrawableMap.get(lowRank + currentSuit.charAt(1));
+                assert rightID != null;
+                Drawable rightCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), rightID);
 
                 LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
 

@@ -1,6 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
@@ -25,7 +26,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
@@ -42,8 +42,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
     public long startClickTime;
 
-    public ImageButton selected_card_button = null;
-    public final int[] selected_card_position = new int[2];
+    int selectedRowIdx;
+    int selectedCardIdx;
 
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
@@ -59,7 +59,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     HashBiMap<ImageButton, String> inputSuitRankMap;
     
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    int cardHeight;
+    int cardSize;
 
     int cardsPerHand;
 
@@ -130,7 +130,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void initialiseCardButtons(List<ImageButton> cardButtons) {
         for (ImageButton card : cardButtons) {
-            card.setMaxHeight(cardHeight);
+            card.setMaxHeight(cardSize);
             card.setOnClickListener(selector_listener);
         }
     }
@@ -202,13 +202,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void hideCardSelector() {
         equityCalculatorBinding.inputCards.setVisibility(View.GONE);
         equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
-        selected_card_button.setBackgroundResource(0);
+        cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
     }
 
     public void initialiseVariables() {
         // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        cardHeight = (int) (displayMetrics.heightPixels * 0.12);
+        cardSize = (int) (displayMetrics.heightPixels * 0.12);
     }
 
     public void generateMainLayout() {
@@ -231,7 +231,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 ImageButton b = new ImageButton(requireActivity());
                 b.setId(View.generateViewId());
                 b.setBackgroundResource(0);
-                b.setImageResource(GlobalStatic.suitRankDrawableMap.get(rank + suit));
+                Integer id = suitRankDrawableMap.get(rank + suit);
+                assert id != null;
+                b.setImageResource(id);
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
                 b.setOnClickListener(input_card_listener);
@@ -291,10 +293,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
-        if (selected_card_position[0] >= playerRemoveNumber && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
-            for (int i = selected_card_position[0]; i >= 0; i--) {
+        if (selectedRowIdx >= playerRemoveNumber && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
+            for (int i = selectedRowIdx; i >= 0; i--) {
                 if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
-                    set_selected_card(i, selected_card_position[1]);
+                    set_selected_card(i, selectedCardIdx);
                     break;
                 }
             }
@@ -355,13 +357,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
     };
 
     private void set_next_selected_card() {
-        if ((selected_card_position[0] == 0 && selected_card_position[1] < 4) || selected_card_position[1] < (cardsPerHand - 1)) {
-            set_selected_card(selected_card_position[0], selected_card_position[1] + 1);
-        } else if ((selected_card_position[0] == 1 || selected_card_position[0] == playerRowList.size()) && selected_card_position[1] == (cardsPerHand - 1)) {
+        if ((selectedRowIdx == 0 && selectedCardIdx < 4) || selectedCardIdx < (cardsPerHand - 1)) {
+            set_selected_card(selectedRowIdx, selectedCardIdx + 1);
+        } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (cardsPerHand - 1)) {
             set_selected_card(0, 0);
         } else {
             boolean foundNext = false;
-            for (int i = selected_card_position[0] + 1; i < cardRows.size(); i++) {
+            for (int i = selectedRowIdx + 1; i < cardRows.size(); i++) {
                 if (cardRows.get(i) instanceof SpecificCardsRow) {
                     set_selected_card(i, 0);
                     foundNext = true;
@@ -375,26 +377,26 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
 
         Rect rect = new Rect();
-        if(!selected_card_button.getGlobalVisibleRect(rect) || selected_card_button.getHeight() != rect.height() ) {
+        ImageButton selectedCardButton = cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx);
+        if(!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height() ) {
             equityCalculatorBinding.scrollView.post(
                 () -> equityCalculatorBinding.scrollView.smoothScrollTo(
                     0,
-                    playerRowList.get(selected_card_position[0] - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
+                    playerRowList.get(selectedRowIdx - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
                 )
             );
         }
     }
 
     private void set_selected_card(int row_idx, int card_idx) {
-        if (selected_card_button != null) {
-            selected_card_button.setBackgroundResource(0);
+        if (selectedRowIdx < cardButtonListOfLists.size()) {
+            cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
         }
 
-        selected_card_position[0] = row_idx;
-        selected_card_position[1] = card_idx;
+        selectedRowIdx = row_idx;
+        selectedCardIdx = card_idx;
 
-        selected_card_button = cardButtonListOfLists.get(row_idx).get(card_idx);
-        selected_card_button.setBackgroundResource(R.drawable.border_selector);
+        cardButtonListOfLists.get(row_idx).get(card_idx).setBackgroundResource(R.drawable.border_selector);
     }
 
     public void set_card_value(int row_idx, int card_idx, String cardStr) {
@@ -405,9 +407,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void set_value_to_selected_card(String cardStr) {
-        setInputCardVisible(selected_card_position[0], selected_card_position[1]);
+        setInputCardVisible(selectedRowIdx, selectedCardIdx);
 
-        set_card_value(selected_card_position[0], selected_card_position[1], cardStr);
+        set_card_value(selectedRowIdx, selectedCardIdx, cardStr);
         set_next_selected_card();
         calculate_odds();
     }
@@ -424,7 +426,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void setCardImage(int row_idx, int card_idx, String cardStr) {
         ImageButton card_button = cardButtonListOfLists.get(row_idx).get(card_idx);
-        card_button.setImageResource(GlobalStatic.suitRankDrawableMap.get(cardStr));
+        Integer id = suitRankDrawableMap.get(cardStr);
+        assert id != null;
+        card_button.setImageResource(id);
     }
 
     public void calculate_odds() {
