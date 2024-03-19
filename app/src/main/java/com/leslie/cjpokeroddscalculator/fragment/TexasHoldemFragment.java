@@ -204,8 +204,10 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
             b.setImageBitmap(this.emptyRangeBitmap);
             b.setVisibility(View.VISIBLE);
+            rangeSwitchInput.setText(R.string.hand);
         } else {
             setEmptyHandRow(playerRangeSwitchNumber);
+            rangeSwitchInput.setText(R.string.range);
         }
 
         hideCardSelector();
