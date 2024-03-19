@@ -187,7 +187,7 @@
         android:id="@+id/hand_range_button"
         android:layout_width="50dp"
         android:layout_height="0dp"
-        android:text="@string/hand_range"
+        android:text="@string/range"
         android:textSize="11sp"
         android:padding="0dp"
         app:cornerRadius="5dp"
