@@ -204,12 +204,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             b.setImageBitmap(this.emptyRangeBitmap);
             b.setVisibility(View.VISIBLE);
             rangeSwitchInput.setText(R.string.hand);
+            showRangeSelector(playerRangeSwitchNumber);
+            hideCardSelector();
         } else {
             setEmptyHandRow(playerRangeSwitchNumber);
             rangeSwitchInput.setText(R.string.range);
+            setSelectedCard(playerRangeSwitchNumber, 0);
+            showCardSelector();
         }
-
-        hideCardSelector();
 
         calculate_odds();
     };
@@ -233,16 +235,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         twoCardsGroups.get(row - 1).setVisibility(View.VISIBLE);
     }
 
-    private final View.OnClickListener rangeSelectorListener = v -> {
-        ImageButton rangeSelectorInput = (ImageButton) v;
-        selectedRangePosition = rangeButtonList.indexOf(rangeSelectorInput) + 1;
+    private void showRangeSelector(int row) {
+        selectedRangePosition = row;
 
         RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
 
         rangeSelector.updateRangeSelector(rangeRow.matrix);
-        
+
         equityCalculatorBinding.mainUi.setVisibility(View.GONE);
         rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+    }
+
+    private final View.OnClickListener rangeSelectorListener = v -> {
+        ImageButton rangeSelectorInput = (ImageButton) v;
+        showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
     };
 
     @Override
