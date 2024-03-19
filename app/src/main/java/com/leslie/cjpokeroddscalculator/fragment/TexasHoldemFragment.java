@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    private ImageButton selectedRangeButton;
     private int selectedRangePosition;
 
     public List<Group> twoCardsGroups = new ArrayList<>();
@@ -132,7 +131,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void generateMainLayout() {
         super.generateMainLayout();
 
-        this.emptyRangeBitmap = Bitmap.createBitmap(cardHeight, cardHeight, Bitmap.Config.ARGB_8888);
+        this.emptyRangeBitmap = Bitmap.createBitmap(cardSize, cardSize, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
 
         for (int i = 0; i < 2; i++) {
@@ -163,7 +162,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         ImageButton rangeButton = bindingPlayerRow.range;
         rangeButton.setImageBitmap(emptyRangeBitmap);
-        rangeButton.setMaxHeight(cardHeight);
+        rangeButton.setMaxHeight(cardSize);
         rangeButton.setOnClickListener(rangeSelectorListener);
         rangeButtonList.add(rangeButton);
 
@@ -236,7 +235,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     private final View.OnClickListener rangeSelectorListener = v -> {
         ImageButton rangeSelectorInput = (ImageButton) v;
-        selectedRangeButton = rangeSelectorInput;
         selectedRangePosition = rangeButtonList.indexOf(rangeSelectorInput) + 1;
 
         RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
@@ -290,7 +288,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             }
         }
 
-        selectedRangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardHeight, cardHeight, false));
+        rangeButtonList.get(selectedRangePosition - 1).setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardSize, cardSize, false));
         matrixBitmap.recycle();
 
         calculate_odds();
