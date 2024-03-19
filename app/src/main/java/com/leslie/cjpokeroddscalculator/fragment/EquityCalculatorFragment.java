@@ -81,7 +81,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         writeToDataStore(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("start_fragment"), fragmentName);
 
-        set_selected_card(1, 0);
+        setSelectedCard(1, 0);
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
@@ -112,9 +112,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
             if (equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
                 if (cardRows.size() > 1 && cardRows.get(1) instanceof SpecificCardsRow) {
-                    set_selected_card(1, 0);
+                    setSelectedCard(1, 0);
                 } else {
-                    set_selected_card(0, 0);
+                    setSelectedCard(0, 0);
                 }
             }
 
@@ -197,6 +197,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
         return true;
+    }
+
+    public void showCardSelector() {
+        equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
+        equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
     }
 
     public void hideCardSelector() {
@@ -296,7 +301,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         if (selectedRowIdx >= playerRemoveNumber && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
             for (int i = selectedRowIdx; i >= 0; i--) {
                 if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
-                    set_selected_card(i, selectedCardIdx);
+                    setSelectedCard(i, selectedCardIdx);
                     break;
                 }
             }
@@ -343,9 +348,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
         }
 
-        set_selected_card(row_idx, card_idx);
-        equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
-        equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
+        setSelectedCard(row_idx, card_idx);
+        showCardSelector();
     };
 
     private final View.OnClickListener input_card_listener = v -> {
@@ -358,21 +362,21 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     private void set_next_selected_card() {
         if ((selectedRowIdx == 0 && selectedCardIdx < 4) || selectedCardIdx < (cardsPerHand - 1)) {
-            set_selected_card(selectedRowIdx, selectedCardIdx + 1);
+            setSelectedCard(selectedRowIdx, selectedCardIdx + 1);
         } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (cardsPerHand - 1)) {
-            set_selected_card(0, 0);
+            setSelectedCard(0, 0);
         } else {
             boolean foundNext = false;
             for (int i = selectedRowIdx + 1; i < cardRows.size(); i++) {
                 if (cardRows.get(i) instanceof SpecificCardsRow) {
-                    set_selected_card(i, 0);
+                    setSelectedCard(i, 0);
                     foundNext = true;
                     break;
                 }
             }
 
             if (!foundNext) {
-                set_selected_card(0, 0);
+                setSelectedCard(0, 0);
             }
         }
 
@@ -388,7 +392,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    private void set_selected_card(int row_idx, int card_idx) {
+    public void setSelectedCard(int row_idx, int card_idx) {
         if (selectedRowIdx < cardButtonListOfLists.size()) {
             cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
         }
