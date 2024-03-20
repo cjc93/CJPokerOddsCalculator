@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -52,16 +53,14 @@ public class RangeSelector {
     private final int[] selectedMatrixPosition = new int[2];
     HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
     List<List<Set<String>>> matrixInput;
-    Map<MaterialButton, String> pairButtonSuitsMap = new HashMap<>();
-    Map<MaterialButton, String> suitedButtonSuitsMap = new HashMap<>();
-    Map<MaterialButton, String> offsuitButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
+    Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
     Map<String, MaterialButton> presetHandRangeMap = new HashMap<>();
     Gson gson = new Gson();
-    int suitSelectorBorderThickness;
 
     public RangeSelector(TexasHoldemFragment texasHoldemFragment) {
         this.texasHoldemFragment = texasHoldemFragment;
-        this.suitSelectorBorderThickness = 10;
     }
 
     public void addBackPressedCallback() {
@@ -165,10 +164,8 @@ public class RangeSelector {
             }
         }
 
-        for (MaterialButton b : offsuitButtonSuitsMap.keySet()) {
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             b.setOnClickListener(suitsListener);
-            b.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#FFA500")));
-            b.setPadding(suitSelectorBorderThickness, suitSelectorBorderThickness, suitSelectorBorderThickness, suitSelectorBorderThickness);
         }
     }
 
@@ -254,7 +251,7 @@ public class RangeSelector {
     }
 
     private final View.OnClickListener suitsListener = v -> {
-        MaterialButton suitsButton = (MaterialButton) v;
+        ImageButton suitsButton = (ImageButton) v;
 
         int row = selectedMatrixPosition[0];
         int col = selectedMatrixPosition[1];
@@ -272,11 +269,11 @@ public class RangeSelector {
         assert currentSuit != null;
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
-            suitsButton.setStrokeWidth(0);
+            suitsButton.setBackgroundResource(0);
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
-            suitsButton.setStrokeWidth(suitSelectorBorderThickness);
+            suitsButton.setBackgroundResource(R.drawable.border_selector);
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + 1);
         }
 
@@ -289,8 +286,8 @@ public class RangeSelector {
         }
     };
 
-    private void setSuitSelectorUI(Map<MaterialButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
-        for (MaterialButton b : offsuitButtonSuitsMap.keySet()) {
+    private void setSuitSelectorUI(Map<ImageButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             String currentSuit = buttonSuitsMap.get(b);
             if (currentSuit == null) {
                 b.setVisibility(View.INVISIBLE);
@@ -305,20 +302,16 @@ public class RangeSelector {
 
                 LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
 
-                int buttonHeight = b.getHeight();
-                int buttonWidth = b.getWidth();
-
-                combinedDrawable.setLayerSize(0, buttonWidth / 2 - suitSelectorBorderThickness, buttonHeight - suitSelectorBorderThickness * 2);
-                combinedDrawable.setLayerInsetRight(0, buttonWidth / 2 - suitSelectorBorderThickness);
-                combinedDrawable.setLayerSize(1, buttonWidth / 2 - suitSelectorBorderThickness, buttonHeight- suitSelectorBorderThickness * 2);
+                assert rightCard != null;
+                combinedDrawable.setLayerInsetRight(0, rightCard.getIntrinsicWidth());
                 combinedDrawable.setLayerGravity(1, Gravity.END);
 
-                b.setIcon(combinedDrawable);
+                b.setImageDrawable(combinedDrawable);
 
                 if (suits.contains(currentSuit)) {
-                    b.setStrokeWidth(suitSelectorBorderThickness);
+                    b.setBackgroundResource(R.drawable.border_selector);
                 } else {
-                    b.setStrokeWidth(0);
+                    b.setBackgroundResource(0);
                 }
 
                 b.setVisibility(View.VISIBLE);
@@ -356,7 +349,7 @@ public class RangeSelector {
             selectedMatrixButton.setStrokeWidth(0);
         }
 
-        for (MaterialButton b : offsuitButtonSuitsMap.keySet()) {
+        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             b.setVisibility(View.INVISIBLE);
         }
 
