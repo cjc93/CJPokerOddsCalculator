@@ -59,7 +59,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     HashBiMap<ImageButton, String> inputSuitRankMap;
     
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    int cardSize;
+    int cardMaxHeight;
+    int cardMaxWidth;
 
     int cardsPerHand;
 
@@ -130,7 +131,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void initialiseCardButtons(List<ImageButton> cardButtons) {
         for (ImageButton card : cardButtons) {
-            card.setMaxHeight(cardSize);
+            card.setMaxHeight(cardMaxHeight);
+            card.setMaxWidth(cardMaxWidth);
             card.setOnClickListener(selector_listener);
         }
     }
@@ -213,7 +215,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void initialiseVariables() {
         // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        cardSize = (int) (displayMetrics.heightPixels * 0.12);
+        cardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
+        cardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
     }
 
     public void generateMainLayout() {
