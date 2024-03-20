@@ -52,6 +52,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     public RangeSelector rangeSelector;
 
+    int rangeCardApproxSize;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -125,13 +127,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         cardsPerHand = 2;
         fragmentName = "TexasHoldem";
+        rangeCardApproxSize = Math.min(cardMaxHeight, cardMaxWidth * 350 / 250);
     }
 
     @Override
     public void generateMainLayout() {
         super.generateMainLayout();
 
-        this.emptyRangeBitmap = Bitmap.createBitmap(cardSize, cardSize, Bitmap.Config.ARGB_8888);
+        this.emptyRangeBitmap = Bitmap.createBitmap(rangeCardApproxSize, rangeCardApproxSize, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
 
         for (int i = 0; i < 2; i++) {
@@ -160,12 +163,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             )
         );
 
-        ImageButton rangeButton = bindingPlayerRow.range;
-        rangeButton.setImageBitmap(emptyRangeBitmap);
-        rangeButton.setMaxHeight(cardSize);
-        rangeButton.setOnClickListener(rangeSelectorListener);
-        rangeButtonList.add(rangeButton);
-
         twoCardsGroups.add(bindingPlayerRow.twoCards);
 
         List<ImageButton> cardList = Arrays.asList(
@@ -177,6 +174,10 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         cardButtonListOfLists.add(cardList);
 
         cardRows.add(new SpecificCardsRow(cardsPerHand));
+
+        ImageButton rangeButton = bindingPlayerRow.range;
+        rangeButton.setOnClickListener(rangeSelectorListener);
+        rangeButtonList.add(rangeButton);
 
         removeRowList.add(bindingPlayerRow.remove);
         handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
@@ -201,6 +202,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
             cardRows.set(playerRangeSwitchNumber, new RangeRow());
             ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
+            b.setMaxHeight(cardButtonListOfLists.get(playerRangeSwitchNumber).get(0).getHeight());
             b.setImageBitmap(this.emptyRangeBitmap);
             b.setVisibility(View.VISIBLE);
             rangeSwitchInput.setText(R.string.hand);
@@ -294,7 +296,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             }
         }
 
-        rangeButtonList.get(selectedRangePosition - 1).setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, cardSize, cardSize, false));
+        ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
+        int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
+        rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
         matrixBitmap.recycle();
 
         calculate_odds();
