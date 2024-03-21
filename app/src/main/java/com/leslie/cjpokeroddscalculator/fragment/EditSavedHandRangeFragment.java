@@ -11,9 +11,9 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 
-public class EditPresetHandRangeFragment extends DialogFragment {
-    static EditPresetHandRangeFragment newInstance(String currentRangeName, ArrayList<String> rangeNames) {
-        EditPresetHandRangeFragment f = new EditPresetHandRangeFragment();
+public class EditSavedHandRangeFragment extends DialogFragment {
+    static EditSavedHandRangeFragment newInstance(String currentRangeName, ArrayList<String> rangeNames) {
+        EditSavedHandRangeFragment f = new EditSavedHandRangeFragment();
 
         Bundle args = new Bundle();
         args.putString("CurrentRangeName", currentRangeName);
@@ -34,14 +34,14 @@ public class EditPresetHandRangeFragment extends DialogFragment {
         editTextField.setText(currentRangeName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Rename or delete this preset hand range")
+        builder.setMessage("Rename or delete this saved hand range")
             .setView(editTextField)
             .setPositiveButton("Rename", null)
             .setNegativeButton("Cancel", null)
             .setNeutralButton("Delete", (dialog, id) -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("range_name", currentRangeName);
-                requireActivity().getSupportFragmentManager().setFragmentResult("delete_preset_hand_range", bundle);
+                requireActivity().getSupportFragmentManager().setFragmentResult("delete_saved_hand_range", bundle);
             });
 
         AlertDialog dialog = builder.create();
@@ -57,7 +57,7 @@ public class EditPresetHandRangeFragment extends DialogFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("old_range_name", currentRangeName);
                     bundle.putString("new_range_name", newRangeName);
-                    requireActivity().getSupportFragmentManager().setFragmentResult("rename_preset_hand_range", bundle);
+                    requireActivity().getSupportFragmentManager().setFragmentResult("rename_saved_hand_range", bundle);
                     dialog.dismiss();
                 }
             });

@@ -53,7 +53,7 @@ public class RangeSelector {
     Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
-    Map<String, MaterialButton> presetHandRangeMap = new HashMap<>();
+    Map<String, MaterialButton> savedHandRangeMap = new HashMap<>();
     Gson gson = new Gson();
 
     public RangeSelector(TexasHoldemFragment texasHoldemFragment) {
@@ -157,7 +157,7 @@ public class RangeSelector {
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
 
             for (String rangeName : rangeNameList) {
-                appendPresetRangeButton(rangeName);
+                appendSavedRangeButton(rangeName);
             }
         }
 
@@ -214,7 +214,7 @@ public class RangeSelector {
         rangeSelectorBinding.suitSelectorText.setText(R.string.choose_suits);
     };
 
-    public void appendPresetRangeButton(String rangeName) {
+    public void appendSavedRangeButton(String rangeName) {
         MaterialButton b = new MaterialButton(texasHoldemFragment.requireActivity());
         b.setId(View.generateViewId());
         b.setText(rangeName);
@@ -239,16 +239,16 @@ public class RangeSelector {
         });
 
         b.setOnLongClickListener(v -> {
-            EditPresetHandRangeFragment dialog = EditPresetHandRangeFragment.newInstance((String) b.getText(), new ArrayList<>(presetHandRangeMap.keySet()));
-            dialog.show(texasHoldemFragment.getParentFragmentManager(), "EDIT_PRESET_HAND_RANGE_DIALOG");
+            EditSavedHandRangeFragment dialog = EditSavedHandRangeFragment.newInstance((String) b.getText(), new ArrayList<>(savedHandRangeMap.keySet()));
+            dialog.show(texasHoldemFragment.getParentFragmentManager(), "EDIT_SAVED_HAND_RANGE_DIALOG");
             return true;
         });
 
-        presetHandRangeMap.put(rangeName, b);
+        savedHandRangeMap.put(rangeName, b);
 
-        rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.GONE);
-        rangeSelectorBinding.presetHandRangeLayout.addView(b);
-        rangeSelectorBinding.presetHandRangeFlow.addView(b);
+        rangeSelectorBinding.savedHandRangeInitialText.setVisibility(View.GONE);
+        rangeSelectorBinding.savedHandRangeLayout.addView(b);
+        rangeSelectorBinding.savedHandRangeFlow.addView(b);
     }
 
     private final View.OnClickListener suitsListener = v -> {
@@ -401,8 +401,8 @@ public class RangeSelector {
         });
 
         rangeSelectorBinding.addRangeButton.setOnClickListener(v -> {
-            AddPresetHandRangeFragment dialog = AddPresetHandRangeFragment.newInstance(new ArrayList<>(presetHandRangeMap.keySet()));
-            dialog.show(texasHoldemFragment.getParentFragmentManager(), "ADD_PRESET_HAND_RANGE_DIALOG");
+            AddSavedHandRangeFragment dialog = AddSavedHandRangeFragment.newInstance(new ArrayList<>(savedHandRangeMap.keySet()));
+            dialog.show(texasHoldemFragment.getParentFragmentManager(), "ADD_SAVED_HAND_RANGE_DIALOG");
         });
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
@@ -413,7 +413,7 @@ public class RangeSelector {
     }
 
     public void setFragmentResultListeners() {
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("add_preset_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("add_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
             writeToDataStore(
@@ -438,10 +438,10 @@ public class RangeSelector {
                 writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
-            appendPresetRangeButton(rangeName);
+            appendSavedRangeButton(rangeName);
         });
 
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("rename_preset_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("rename_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String oldRangeName = (String) result.get("old_range_name");
             String newRangeName = (String) result.get("new_range_name");
 
@@ -473,15 +473,15 @@ public class RangeSelector {
                 writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
-            MaterialButton presetHandRangeButton = presetHandRangeMap.get(oldRangeName);
-            assert presetHandRangeButton != null;
-            presetHandRangeButton.setText(newRangeName);
+            MaterialButton savedHandRangeButton = savedHandRangeMap.get(oldRangeName);
+            assert savedHandRangeButton != null;
+            savedHandRangeButton.setText(newRangeName);
 
-            presetHandRangeMap.remove(oldRangeName);
-            presetHandRangeMap.put(newRangeName, presetHandRangeButton);
+            savedHandRangeMap.remove(oldRangeName);
+            savedHandRangeMap.put(newRangeName, savedHandRangeButton);
         });
 
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_preset_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
             deleteKeyFromDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, PreferencesKeys.stringKey("thec_" + rangeName));
@@ -496,14 +496,14 @@ public class RangeSelector {
                 writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
-            MaterialButton presetHandRangeButton = presetHandRangeMap.get(rangeName);
-            rangeSelectorBinding.presetHandRangeFlow.removeView(presetHandRangeButton);
-            rangeSelectorBinding.presetHandRangeLayout.removeView(presetHandRangeButton);
+            MaterialButton savedHandRangeButton = savedHandRangeMap.get(rangeName);
+            rangeSelectorBinding.savedHandRangeFlow.removeView(savedHandRangeButton);
+            rangeSelectorBinding.savedHandRangeLayout.removeView(savedHandRangeButton);
 
-            presetHandRangeMap.remove(rangeName);
+            savedHandRangeMap.remove(rangeName);
 
-            if (presetHandRangeMap.isEmpty()) {
-                rangeSelectorBinding.presetHandRangeInitialText.setVisibility(View.VISIBLE);
+            if (savedHandRangeMap.isEmpty()) {
+                rangeSelectorBinding.savedHandRangeInitialText.setVisibility(View.VISIBLE);
             }
         });
     }
