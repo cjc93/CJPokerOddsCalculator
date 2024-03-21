@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
-import androidx.datastore.preferences.core.MutablePreferences;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
 
@@ -43,8 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
-import io.reactivex.rxjava3.core.Single;
 
 public class RangeSelector {
     private final TexasHoldemFragment texasHoldemFragment;
@@ -231,7 +228,11 @@ public class RangeSelector {
 
         b.setOnClickListener(v -> {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
-            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.data().map(prefs -> prefs.get(RANGE_NAME_KEY)).blockingFirst();
+            String matrixJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, RANGE_NAME_KEY);
+
+            // TOOD: Fix bug if app crashes here
+            assert matrixJson != null;
+
             List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
 
             updateRangeSelector(savedMatrix);
@@ -266,7 +267,6 @@ public class RangeSelector {
             currentSuit = offsuitButtonSuitsMap.get(suitsButton);
         }
 
-        assert currentSuit != null;
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
             suitsButton.setBackgroundResource(0);
@@ -448,7 +448,10 @@ public class RangeSelector {
             Preferences.Key<String> OLD_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + oldRangeName);
             Preferences.Key<String> NEW_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + newRangeName);
 
-            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.data().map(prefs -> prefs.get(OLD_RANGE_NAME_KEY)).blockingFirst();
+            String matrixJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, OLD_RANGE_NAME_KEY);
+
+            // TOOD: Fix bug if app crashes here
+            assert matrixJson != null;
 
             deleteKeyFromDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, OLD_RANGE_NAME_KEY);
 
@@ -460,10 +463,12 @@ public class RangeSelector {
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.data().map(prefs -> prefs.get(ALL_NAMES_KEY)).blockingFirst();
+            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY);
+
+            // TOOD: Fix bug if app crashes here
+            assert rangeNamesJson != null;
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
-            assert rangeNameList != null;
             if (Collections.replaceAll(rangeNameList, oldRangeName, newRangeName)) {
                 writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
@@ -479,24 +484,21 @@ public class RangeSelector {
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_preset_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
-            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.updateDataAsync(prefsIn -> {
-                MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-                mutablePreferences.remove(PreferencesKeys.stringKey("thec_" + rangeName));
-                return Single.just(mutablePreferences);
-            });
+            deleteKeyFromDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, PreferencesKeys.stringKey("thec_" + rangeName));
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.data().map(prefs -> prefs.get(ALL_NAMES_KEY)).blockingFirst();
+            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY);
 
-            List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
-            assert rangeNameList != null;
-            rangeNameList.remove(rangeName);
-            writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+            if (rangeNamesJson != null) {
+                List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
+                rangeNameList.remove(rangeName);
+                writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+            }
 
             MaterialButton presetHandRangeButton = presetHandRangeMap.get(rangeName);
-            rangeSelectorBinding.presetHandRangeLayout.removeView(presetHandRangeButton);
             rangeSelectorBinding.presetHandRangeFlow.removeView(presetHandRangeButton);
+            rangeSelectorBinding.presetHandRangeLayout.removeView(presetHandRangeButton);
 
             presetHandRangeMap.remove(rangeName);
 
