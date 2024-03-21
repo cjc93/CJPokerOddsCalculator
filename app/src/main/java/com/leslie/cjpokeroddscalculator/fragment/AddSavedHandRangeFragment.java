@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-public class AddPresetHandRangeFragment extends DialogFragment {
-    static AddPresetHandRangeFragment newInstance(ArrayList<String> rangeNames) {
-        AddPresetHandRangeFragment f = new AddPresetHandRangeFragment();
+public class AddSavedHandRangeFragment extends DialogFragment {
+    static AddSavedHandRangeFragment newInstance(ArrayList<String> rangeNames) {
+        AddSavedHandRangeFragment f = new AddSavedHandRangeFragment();
 
         Bundle args = new Bundle();
         args.putStringArrayList("rangeNames", rangeNames);
@@ -36,7 +36,7 @@ public class AddPresetHandRangeFragment extends DialogFragment {
         editTextField.requestFocus();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Enter new range name to save this preset hand range")
+        builder.setMessage("Enter new range name to save this hand range")
             .setView(editTextField)
             .setPositiveButton("Save", null)
             .setNegativeButton("Cancel", null);
@@ -53,7 +53,7 @@ public class AddPresetHandRangeFragment extends DialogFragment {
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putString("range_name", rangeName);
-                    requireActivity().getSupportFragmentManager().setFragmentResult("add_preset_hand_range", bundle);
+                    requireActivity().getSupportFragmentManager().setFragmentResult("add_saved_hand_range", bundle);
                     dialog.dismiss();
                 }
             });
