@@ -420,11 +420,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void set_value_to_selected_card(String cardStr) {
-        setInputCardVisible(selectedRowIdx, selectedCardIdx);
+        if (selectedRowIdx != null) {
+            setInputCardVisible(selectedRowIdx, selectedCardIdx);
 
-        set_card_value(selectedRowIdx, selectedCardIdx, cardStr);
-        set_next_selected_card();
-        calculate_odds();
+            set_card_value(selectedRowIdx, selectedCardIdx, cardStr);
+            set_next_selected_card();
+            calculate_odds();
+        }
     }
 
     public void setInputCardVisible(int row_idx, int card_idx) {
