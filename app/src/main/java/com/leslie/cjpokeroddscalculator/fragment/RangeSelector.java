@@ -273,7 +273,7 @@ public class RangeSelector {
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
-            suitsButton.setBackgroundResource(R.drawable.border_selector);
+            suitsButton.setBackgroundResource(R.drawable.selected_border);
             rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + 1);
         }
 
@@ -309,7 +309,7 @@ public class RangeSelector {
                 b.setImageDrawable(combinedDrawable);
 
                 if (suits.contains(currentSuit)) {
-                    b.setBackgroundResource(R.drawable.border_selector);
+                    b.setBackgroundResource(R.drawable.selected_border);
                 } else {
                     b.setBackgroundResource(0);
                 }
