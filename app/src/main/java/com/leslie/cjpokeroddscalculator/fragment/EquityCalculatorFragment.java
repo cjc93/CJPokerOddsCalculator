@@ -409,7 +409,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         selectedRowIdx = row_idx;
         selectedCardIdx = card_idx;
 
-        cardButtonListOfLists.get(row_idx).get(card_idx).setBackgroundResource(R.drawable.border_selector);
+        cardButtonListOfLists.get(row_idx).get(card_idx).setBackgroundResource(R.drawable.selected_border);
     }
 
     public void set_card_value(int row_idx, int card_idx, String cardStr) {
