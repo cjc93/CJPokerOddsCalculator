@@ -189,17 +189,19 @@
             app:layout_constraintTop_toBottomOf="@id/res_desc"
             app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/button_unknown"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/unknown_card"
-            android:textSize="20sp"
+            android:layout_height="0dp"
+            android:src="@drawable/unknown_button"
+            android:scaleType="fitCenter"
+            android:padding="1dp"
+            android:background="@null"
             app:layout_constraintLeft_toRightOf="@id/clear"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/res_desc"
-            app:layout_constraintBottom_toTopOf="@id/input_cards" />
+            app:layout_constraintBottom_toTopOf="@id/input_cards"
+            android:contentDescription="@string/unknown" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/input_cards"

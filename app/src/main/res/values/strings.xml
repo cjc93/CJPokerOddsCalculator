@@ -55,4 +55,5 @@
     <string name="saved_hand_range">Saved Hand-Range</string>
     <string name="save">Save</string>
     <string name="click_save_button_to_save_current_hand_range">Click \"Add\" button to save current Hand-Range for future use</string>
+    <string name="unknown">Unknown</string>
 </resources>
