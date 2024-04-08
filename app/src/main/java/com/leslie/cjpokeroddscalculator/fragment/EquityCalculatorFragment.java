@@ -42,8 +42,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
     public long startClickTime;
 
-    int selectedRowIdx;
-    int selectedCardIdx;
+    Integer selectedRowIdx;
+    Integer selectedCardIdx;
 
     public Thread monte_carlo_thread = null;
     public Thread exact_calc_thread = null;
@@ -209,7 +209,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void hideCardSelector() {
         equityCalculatorBinding.inputCards.setVisibility(View.GONE);
         equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
-        cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
+
+        if (selectedRowIdx != null && selectedRowIdx < cardButtonListOfLists.size()) {
+            cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
+        }
+
+        selectedRowIdx = null;
+        selectedCardIdx = null;
     }
 
     public void initialiseVariables() {
@@ -301,7 +307,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
-        if (selectedRowIdx >= playerRemoveNumber && equityCalculatorBinding.inputCards.getVisibility() == View.VISIBLE) {
+        if (selectedRowIdx != null && selectedRowIdx >= playerRemoveNumber) {
             for (int i = selectedRowIdx; i >= 0; i--) {
                 if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
                     setSelectedCard(i, selectedCardIdx);
@@ -396,7 +402,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void setSelectedCard(int row_idx, int card_idx) {
-        if (selectedRowIdx < cardButtonListOfLists.size()) {
+        if (selectedRowIdx != null && selectedRowIdx < cardButtonListOfLists.size()) {
             cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
         }
 
