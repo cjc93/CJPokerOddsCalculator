@@ -23,11 +23,11 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
     @Override
     public void afterAllSimulations(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {
+            if (equityCalculatorFragment.monteCarloThread.isAlive()) {
                 if (isCancelled[0]) {
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
                 } else {
-                    equityCalculatorFragment.monte_carlo_thread.interrupt();
+                    equityCalculatorFragment.monteCarloThread.interrupt();
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                         updateWinResults(equity, win, highCard, onePair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);

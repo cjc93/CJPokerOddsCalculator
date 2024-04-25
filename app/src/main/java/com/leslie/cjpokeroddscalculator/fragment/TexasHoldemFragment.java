@@ -111,12 +111,12 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (monte_carlo_thread != null) {
-            monte_carlo_thread.interrupt();
+        if (monteCarloThread != null) {
+            monteCarloThread.interrupt();
         }
 
-        if (exact_calc_thread != null) {
-            exact_calc_thread.interrupt();
+        if (exactCalcThread != null) {
+            exactCalcThread.interrupt();
         }
 
         rangeSelector.rangeSelectorBinding = null;
@@ -216,7 +216,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             showCardSelector();
         }
 
-        calculate_odds();
+        calculateOdds();
     };
 
     private final View.OnClickListener statsButtonListener = v -> {
@@ -305,7 +305,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
             matrixBitmap.recycle();
 
-            calculate_odds();
+            calculateOdds();
         }
 
         selectedRangePosition = null;

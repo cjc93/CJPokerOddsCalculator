@@ -27,15 +27,15 @@ public class OmahaCalc extends Calculation{
     }
 
     public double[][] averageUnknownStats(Equity[] eqs) {
-        double unknown_players_equity = 0;
-        double unknown_players_win = 0;
-        double unknown_players_tie = 0;
+        double unknownPlayersEquity = 0;
+        double unknownPlayersWin = 0;
+        double unknownPlayersTie = 0;
 
         for(int i = 0; i < eqs.length; i++) {
-            if(!this.known_players[i]) {
-                unknown_players_equity += eqs[i].total;
-                unknown_players_win += eqs[i].won;
-                unknown_players_tie += eqs[i].tied;
+            if(!this.knownPlayers[i]) {
+                unknownPlayersEquity += eqs[i].total;
+                unknownPlayersWin += eqs[i].won;
+                unknownPlayersTie += eqs[i].tied;
             }
         }
 
@@ -43,18 +43,18 @@ public class OmahaCalc extends Calculation{
         double[] win = new double[eqs.length];
         double[] tie = new double[eqs.length];
 
-        unknown_players_equity = unknown_players_equity / this.no_of_unknown_players;
-        unknown_players_win = unknown_players_win / this.no_of_unknown_players;
-        unknown_players_tie = unknown_players_tie / this.no_of_unknown_players;
+        unknownPlayersEquity = unknownPlayersEquity / this.numOfUnknownPlayers;
+        unknownPlayersWin = unknownPlayersWin / this.numOfUnknownPlayers;
+        unknownPlayersTie = unknownPlayersTie / this.numOfUnknownPlayers;
         for(int i = 0; i < eqs.length; i++) {
-            if(known_players[i]) {
+            if(knownPlayers[i]) {
                 equity[i] = eqs[i].total;
                 win[i] = eqs[i].won;
                 tie[i] = eqs[i].tied;
             } else {
-                equity[i] = unknown_players_equity;
-                win[i] = unknown_players_win;
-                tie[i] = unknown_players_tie;
+                equity[i] = unknownPlayersEquity;
+                win[i] = unknownPlayersWin;
+                tie[i] = unknownPlayersTie;
             }
         }
 

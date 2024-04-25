@@ -49,8 +49,8 @@ public class TexasHoldemCalc extends Calculation{
         double unknownPlayersFourOfAKind = 0;
         double unknownPlayersStraightFlush = 0;
 
-        for(int i = 0; i < this.known_players.length; i++) {
-            if(!known_players[i]) {
+        for(int i = 0; i < this.knownPlayers.length; i++) {
+            if(!knownPlayers[i]) {
                 unknownPlayersEquity += equity[i];
                 unknownPlayersWin += win[i];
 
@@ -66,21 +66,21 @@ public class TexasHoldemCalc extends Calculation{
             }
         }
 
-        unknownPlayersEquity = unknownPlayersEquity / this.no_of_unknown_players;
-        unknownPlayersWin = unknownPlayersWin / this.no_of_unknown_players;
+        unknownPlayersEquity = unknownPlayersEquity / this.numOfUnknownPlayers;
+        unknownPlayersWin = unknownPlayersWin / this.numOfUnknownPlayers;
 
-        unknownPlayersHighCard = unknownPlayersHighCard / this.no_of_unknown_players;
-        unknownPlayersOnePair = unknownPlayersOnePair / this.no_of_unknown_players;
-        unknownPlayersTwoPair = unknownPlayersTwoPair / this.no_of_unknown_players;
-        unknownPlayersThreeOfAKind = unknownPlayersThreeOfAKind / this.no_of_unknown_players;
-        unknownPlayersStraight = unknownPlayersStraight / this.no_of_unknown_players;
-        unknownPlayersFlush = unknownPlayersFlush / this.no_of_unknown_players;
-        unknownPlayersFullHouse = unknownPlayersFullHouse / this.no_of_unknown_players;
-        unknownPlayersFourOfAKind = unknownPlayersFourOfAKind / this.no_of_unknown_players;
-        unknownPlayersStraightFlush = unknownPlayersStraightFlush / this.no_of_unknown_players;
+        unknownPlayersHighCard = unknownPlayersHighCard / this.numOfUnknownPlayers;
+        unknownPlayersOnePair = unknownPlayersOnePair / this.numOfUnknownPlayers;
+        unknownPlayersTwoPair = unknownPlayersTwoPair / this.numOfUnknownPlayers;
+        unknownPlayersThreeOfAKind = unknownPlayersThreeOfAKind / this.numOfUnknownPlayers;
+        unknownPlayersStraight = unknownPlayersStraight / this.numOfUnknownPlayers;
+        unknownPlayersFlush = unknownPlayersFlush / this.numOfUnknownPlayers;
+        unknownPlayersFullHouse = unknownPlayersFullHouse / this.numOfUnknownPlayers;
+        unknownPlayersFourOfAKind = unknownPlayersFourOfAKind / this.numOfUnknownPlayers;
+        unknownPlayersStraightFlush = unknownPlayersStraightFlush / this.numOfUnknownPlayers;
 
-        for(int i = 0; i < known_players.length; i++) {
-            if(!known_players[i]) {
+        for(int i = 0; i < knownPlayers.length; i++) {
+            if(!knownPlayers[i]) {
                 equity[i] = unknownPlayersEquity;
                 win[i] = unknownPlayersWin;
 

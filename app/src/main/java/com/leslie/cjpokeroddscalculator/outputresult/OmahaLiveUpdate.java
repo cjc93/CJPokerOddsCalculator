@@ -27,7 +27,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         if (System.currentTimeMillis() - lastUpdateTime > 300) {
             EquityUtil.summariseEquities(eqs, count);
 
-            if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
+            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                     updateWinResults(eqs);
                     updateResDesc(R.string.checking_combinations);
@@ -46,7 +46,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
     @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
+            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
             } else {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {

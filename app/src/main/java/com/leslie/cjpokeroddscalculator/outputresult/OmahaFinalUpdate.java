@@ -31,7 +31,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
                 isStartingPeriod = false;
 
                 if ((double) (current_time - startTime) / (double) count > 4000000 / (double) omahaCalc.totalSimulations) {
-                    if (!equityCalculatorFragment.monte_carlo_thread.isAlive()) {
+                    if (!equityCalculatorFragment.monteCarloThread.isAlive()) {
                         equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
                     }
 
@@ -44,8 +44,8 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
     @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.monte_carlo_thread.isAlive()) {
-                equityCalculatorFragment.monte_carlo_thread.interrupt();
+            if (equityCalculatorFragment.monteCarloThread.isAlive()) {
+                equityCalculatorFragment.monteCarloThread.interrupt();
             }
 
             equityCalculatorFragment.requireActivity().runOnUiThread(() -> {

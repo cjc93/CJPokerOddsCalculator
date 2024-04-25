@@ -15,9 +15,9 @@ public class RangeRow extends CardRow {
 
     public RangeRow() {
         this.matrix = new ArrayList<>(13);
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
+        for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             List<Set<String>> row = new ArrayList<>(13);
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
+            for (int colIdx = 0; colIdx < 13; colIdx++) {
                 row.add(new HashSet<>());
             }
             this.matrix.add(row);
@@ -25,7 +25,7 @@ public class RangeRow extends CardRow {
     }
 
     @Override
-    public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
+    public void clear(EquityCalculatorFragment equityCalculatorFragment, int rowIdx) {
         TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 13; j++) {
@@ -33,7 +33,7 @@ public class RangeRow extends CardRow {
             }
         }
 
-        texasHoldemFragment.rangeButtonList.get(row_idx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
+        texasHoldemFragment.rangeButtonList.get(rowIdx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
     }
 
     @Override
@@ -62,20 +62,20 @@ public class RangeRow extends CardRow {
         StringJoiner sj = new StringJoiner(",");
         String firstRank, secondRank;
 
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
-                if (row_idx == col_idx) {
-                    firstRank = GlobalStatic.rankStrings[row_idx];
-                    secondRank = GlobalStatic.rankStrings[row_idx];
-                } else if (col_idx > row_idx) {
-                    firstRank = GlobalStatic.rankStrings[row_idx];
-                    secondRank = GlobalStatic.rankStrings[col_idx];
+        for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
+            for (int colIdx = 0; colIdx < 13; colIdx++) {
+                if (rowIdx == colIdx) {
+                    firstRank = GlobalStatic.rankStrings[rowIdx];
+                    secondRank = GlobalStatic.rankStrings[rowIdx];
+                } else if (colIdx > rowIdx) {
+                    firstRank = GlobalStatic.rankStrings[rowIdx];
+                    secondRank = GlobalStatic.rankStrings[colIdx];
                 } else {
-                    firstRank = GlobalStatic.rankStrings[col_idx];
-                    secondRank = GlobalStatic.rankStrings[row_idx];
+                    firstRank = GlobalStatic.rankStrings[colIdx];
+                    secondRank = GlobalStatic.rankStrings[rowIdx];
                 }
 
-                for (String s : this.matrix.get(row_idx).get(col_idx)) {
+                for (String s : this.matrix.get(rowIdx).get(colIdx)) {
                     sj.add(firstRank + s.charAt(0) + secondRank + s.charAt(1));
                 }
             }

@@ -86,12 +86,12 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (monte_carlo_thread != null) {
-            monte_carlo_thread.interrupt();
+        if (monteCarloThread != null) {
+            monteCarloThread.interrupt();
         }
 
-        if (exact_calc_thread != null) {
-            exact_calc_thread.interrupt();
+        if (exactCalcThread != null) {
+            exactCalcThread.interrupt();
         }
     }
 

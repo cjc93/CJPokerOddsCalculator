@@ -22,7 +22,7 @@ public class TexasHoldemLiveUpdate extends TexasHoldemOutputResult {
     @Override
     public void afterAllSimulations(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exact_calc_thread.isAlive()) {
+            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(equity, win, highCard, onePair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush));
             } else {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
