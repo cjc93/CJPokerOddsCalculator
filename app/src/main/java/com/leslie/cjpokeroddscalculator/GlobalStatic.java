@@ -26,7 +26,7 @@ public class GlobalStatic {
     public static Set<String> pairSuits = Sets.newHashSet("hs", "cs", "ds", "ch", "dh", "dc");
     public static Set<String> offSuits = Sets.newHashSet("sh", "sc", "sd", "hs", "hc", "hd", "cs", "ch", "cd", "ds", "dh", "dc");
 
-    public static String[] all_possible_cards = new String[] {
+    public static String[] allPossibleCards = new String[] {
             "2d","3d","4d","5d","6d","7d","8d","9d","Td","Jd","Qd","Kd","Ad",
             "2c","3c","4c","5c","6c","7c","8c","9c","Tc","Jc","Qc","Kc","Ac",
             "2h","3h","4h","5h","6h","7h","8h","9h","Th","Jh","Qh","Kh","Ah",
@@ -38,10 +38,10 @@ public class GlobalStatic {
 
     public static List<List<Set<String>>> copyMatrix(List<List<Set<String>>> original) {
         List<List<Set<String>>> copy = new ArrayList<>(13);
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
+        for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             List<Set<String>> row = new ArrayList<>(13);
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
-                row.add(new HashSet<>(original.get(row_idx).get(col_idx)));
+            for (int colIdx = 0; colIdx < 13; colIdx++) {
+                row.add(new HashSet<>(original.get(rowIdx).get(colIdx)));
             }
             copy.add(row);
         }

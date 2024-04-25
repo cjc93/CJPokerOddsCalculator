@@ -21,11 +21,11 @@ public class SpecificCardsRow extends CardRow {
     }
 
     @Override
-    public void clear(EquityCalculatorFragment equityCalculatorFragment, int row_idx) {
+    public void clear(EquityCalculatorFragment equityCalculatorFragment, int rowIdx) {
         Arrays.fill(this.cards, "");
 
         for (int i = 0; i < this.cards.length; i++) {
-            equityCalculatorFragment.setCardImage(row_idx, i, "");
+            equityCalculatorFragment.setCardImage(rowIdx, i, "");
         }
     }
 
@@ -50,7 +50,7 @@ public class SpecificCardsRow extends CardRow {
             return "random";
         } else if (temp.length() == 2) {
             StringJoiner sj = new StringJoiner(",");
-            for (String card : GlobalStatic.all_possible_cards) {
+            for (String card : GlobalStatic.allPossibleCards) {
                 if (!card.equals(String.valueOf(temp))) {
                     sj.add(temp + card);
                 }

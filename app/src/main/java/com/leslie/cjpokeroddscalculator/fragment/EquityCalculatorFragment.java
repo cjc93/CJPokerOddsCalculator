@@ -45,8 +45,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     Integer selectedRowIdx;
     Integer selectedCardIdx;
 
-    public Thread monte_carlo_thread = null;
-    public Thread exact_calc_thread = null;
+    public Thread monteCarloThread = null;
+    public Thread exactCalcThread = null;
 
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
     public List<TextView> equityList = new ArrayList<>();
@@ -92,7 +92,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
                 equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
 
-                calculate_odds();
+                calculateOdds();
             }
             else{
                 Toast.makeText(requireActivity(), "Max number of players is 10", Toast.LENGTH_SHORT).show();
@@ -121,10 +121,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
             equityCalculatorBinding.scrollView.post(() -> equityCalculatorBinding.scrollView.smoothScrollTo(0, 0));
 
-            calculate_odds();
+            calculateOdds();
         });
 
-        equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> set_value_to_selected_card(""));
+        equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
     }
 
     public abstract void addPlayerRow();
@@ -133,19 +133,19 @@ public abstract class EquityCalculatorFragment extends Fragment {
         for (ImageButton card : cardButtons) {
             card.setMaxHeight(cardMaxHeight);
             card.setMaxWidth(cardMaxWidth);
-            card.setOnClickListener(selector_listener);
+            card.setOnClickListener(selectorListener);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (monte_carlo_thread != null) {
-            monte_carlo_thread.interrupt();
+        if (monteCarloThread != null) {
+            monteCarloThread.interrupt();
         }
 
-        if (exact_calc_thread != null) {
-            exact_calc_thread.interrupt();
+        if (exactCalcThread != null) {
+            exactCalcThread.interrupt();
         }
 
         equityCalculatorBinding = null;
@@ -250,7 +250,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 b.setImageResource(id);
                 b.setScaleType(ImageButton.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
-                b.setOnClickListener(input_card_listener);
+                b.setOnClickListener(inputCardListener);
                 inputSuitRankMap.put(b, rank + suit);
 
                 equityCalculatorBinding.inputCards.addView(b);
@@ -294,8 +294,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public final View.OnClickListener removePlayerListener = v -> {
-        final MaterialButton remove_input = (MaterialButton) v;
-        int playerRemoveNumber = removeRowList.indexOf(remove_input) + 1;
+        final MaterialButton removeInput = (MaterialButton) v;
+        int playerRemoveNumber = removeRowList.indexOf(removeInput) + 1;
 
         if (cardRows.get(playerRemoveNumber) instanceof SpecificCardsRow) {
             for (int i = 0; i < cardsPerHand; i++) {
@@ -316,7 +316,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
         }
 
-        calculate_odds();
+        calculateOdds();
     };
 
     public void removePlayerRow(int playerRemoveNumber) {
@@ -346,30 +346,30 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    public final View.OnClickListener selector_listener = v -> {
-        int row_idx;
-        int card_idx = 0;
+    public final View.OnClickListener selectorListener = v -> {
+        int rowIdx;
+        int cardIdx = 0;
 
-        for (row_idx = 0; row_idx < cardButtonListOfLists.size(); row_idx++) {
-            card_idx = cardButtonListOfLists.get(row_idx).indexOf((ImageButton) v);
-            if (card_idx != -1) {
+        for (rowIdx = 0; rowIdx < cardButtonListOfLists.size(); rowIdx++) {
+            cardIdx = cardButtonListOfLists.get(rowIdx).indexOf((ImageButton) v);
+            if (cardIdx != -1) {
                 break;
             }
         }
 
-        setSelectedCard(row_idx, card_idx);
+        setSelectedCard(rowIdx, cardIdx);
         showCardSelector();
     };
 
-    private final View.OnClickListener input_card_listener = v -> {
-        ImageButton card_input = (ImageButton) v;
-        card_input.setVisibility(View.INVISIBLE);
+    private final View.OnClickListener inputCardListener = v -> {
+        ImageButton cardInput = (ImageButton) v;
+        cardInput.setVisibility(View.INVISIBLE);
 
-        String cardStr = inputSuitRankMap.get(card_input);
-        set_value_to_selected_card(cardStr);
+        String cardStr = inputSuitRankMap.get(cardInput);
+        setValueToSelectedCard(cardStr);
     };
 
-    private void set_next_selected_card() {
+    private void setNextSelectedCard() {
         if ((selectedRowIdx == 0 && selectedCardIdx < 4) || selectedCardIdx < (cardsPerHand - 1)) {
             setSelectedCard(selectedRowIdx, selectedCardIdx + 1);
         } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (cardsPerHand - 1)) {
@@ -401,36 +401,36 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    public void setSelectedCard(int row_idx, int card_idx) {
+    public void setSelectedCard(int rowIdx, int cardIdx) {
         if (selectedRowIdx != null && selectedRowIdx < cardButtonListOfLists.size()) {
             cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx).setBackgroundResource(0);
         }
 
-        selectedRowIdx = row_idx;
-        selectedCardIdx = card_idx;
+        selectedRowIdx = rowIdx;
+        selectedCardIdx = cardIdx;
 
-        cardButtonListOfLists.get(row_idx).get(card_idx).setBackgroundResource(R.drawable.selected_border);
+        cardButtonListOfLists.get(rowIdx).get(cardIdx).setBackgroundResource(R.drawable.selected_border);
     }
 
-    public void set_card_value(int row_idx, int card_idx, String cardStr) {
-        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(row_idx);
-        cardRow.cards[card_idx] = cardStr;
+    public void setCardValue(int rowIdx, int cardIdx, String cardStr) {
+        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(rowIdx);
+        cardRow.cards[cardIdx] = cardStr;
 
-        setCardImage(row_idx, card_idx, cardStr);
+        setCardImage(rowIdx, cardIdx, cardStr);
     }
 
-    public void set_value_to_selected_card(String cardStr) {
+    public void setValueToSelectedCard(String cardStr) {
         if (selectedRowIdx != null) {
             setInputCardVisible(selectedRowIdx, selectedCardIdx);
 
-            set_card_value(selectedRowIdx, selectedCardIdx, cardStr);
-            set_next_selected_card();
-            calculate_odds();
+            setCardValue(selectedRowIdx, selectedCardIdx, cardStr);
+            setNextSelectedCard();
+            calculateOdds();
         }
     }
 
-    public void setInputCardVisible(int row_idx, int card_idx) {
-        String cardStr = ((SpecificCardsRow) cardRows.get(row_idx)).cards[card_idx];
+    public void setInputCardVisible(int rowIdx, int cardIdx) {
+        String cardStr = ((SpecificCardsRow) cardRows.get(rowIdx)).cards[cardIdx];
 
         if (!Objects.equals(cardStr, "")) {
             ImageButton card = inputSuitRankMap.inverse().get(cardStr);
@@ -439,31 +439,31 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    public void setCardImage(int row_idx, int card_idx, String cardStr) {
-        ImageButton card_button = cardButtonListOfLists.get(row_idx).get(card_idx);
+    public void setCardImage(int rowIdx, int cardIdx, String cardStr) {
+        ImageButton cardButton = cardButtonListOfLists.get(rowIdx).get(cardIdx);
         Integer id = suitRankDrawableMap.get(cardStr);
         assert id != null;
-        card_button.setImageResource(id);
+        cardButton.setImageResource(id);
     }
 
-    public void calculate_odds() {
-        if (monte_carlo_thread != null) {
-            monte_carlo_thread.interrupt();
+    public void calculateOdds() {
+        if (monteCarloThread != null) {
+            monteCarloThread.interrupt();
         }
 
-        if (exact_calc_thread != null) {
-            exact_calc_thread.interrupt();
+        if (exactCalcThread != null) {
+            exactCalcThread.interrupt();
         }
 
         clearNumbers();
 
         equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
 
-        monte_carlo_thread = new Thread(null, monteCarloProc);
-        exact_calc_thread = new Thread(null, exactCalcProc);
+        monteCarloThread = new Thread(null, monteCarloProc);
+        exactCalcThread = new Thread(null, exactCalcProc);
 
-        monte_carlo_thread.start();
-        exact_calc_thread.start();
+        monteCarloThread.start();
+        exactCalcThread.start();
     }
 
     public void clearNumbers() {
