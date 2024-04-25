@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
@@ -36,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    private int selectedRangePosition;
+    private Integer selectedRangePosition;
 
     public List<Group> twoCardsGroups = new ArrayList<>();
 
@@ -277,31 +278,37 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
+        CardRow cardRow = this.cardRows.get(selectedRangePosition);
 
-        rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
+        if (cardRow instanceof RangeRow) {
+            RangeRow rangeRow = (RangeRow) cardRow;
 
-        Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+            rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 
-        for (int i = 0; i < 13; i++)  {
-            for (int j = 0; j < 13; j++)  {
-                Set<String> suits = rangeRow.matrix.get(i).get(j);
-                if (GlobalStatic.isAllSuits(suits, i, j)) {
-                    matrixBitmap.setPixel(j, i, Color.YELLOW);
-                } else if (suits.isEmpty()) {
-                    matrixBitmap.setPixel(j, i, Color.LTGRAY);
-                } else {
-                    matrixBitmap.setPixel(j, i, Color.CYAN);
+            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+
+            for (int i = 0; i < 13; i++)  {
+                for (int j = 0; j < 13; j++)  {
+                    Set<String> suits = rangeRow.matrix.get(i).get(j);
+                    if (GlobalStatic.isAllSuits(suits, i, j)) {
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                    } else if (suits.isEmpty()) {
+                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                    } else {
+                        matrixBitmap.setPixel(j, i, Color.CYAN);
+                    }
                 }
             }
+
+            ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
+            int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
+            rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
+            matrixBitmap.recycle();
+
+            calculate_odds();
         }
 
-        ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
-        int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
-        rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
-        matrixBitmap.recycle();
-
-        calculate_odds();
+        selectedRangePosition = null;
     }
 
     @Override
