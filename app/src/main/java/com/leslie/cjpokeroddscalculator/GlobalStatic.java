@@ -1,9 +1,5 @@
 package com.leslie.cjpokeroddscalculator;
 
-import androidx.datastore.preferences.core.MutablePreferences;
-import androidx.datastore.preferences.core.Preferences;
-import androidx.datastore.rxjava3.RxDataStore;
-
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -15,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import io.reactivex.rxjava3.core.Single;
 
 public class GlobalStatic {
 
@@ -67,30 +61,6 @@ public class GlobalStatic {
         } else {
             suits.addAll(offSuits);
         }
-    }
-    
-    public static void writeToDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<String> key, String value) {
-        dataStore.updateDataAsync(prefsIn -> {
-            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-            mutablePreferences.set(key, value);
-            return Single.just(mutablePreferences);
-        });
-    }
-
-    public static String getDataFromDataStoreIfExist(RxDataStore<Preferences> dataStore, Preferences.Key<String> key) {
-        if (dataStore.data().map(prefs -> prefs.contains(key)).blockingFirst()) {
-            return dataStore.data().map(prefs -> prefs.get(key)).blockingFirst();
-        } else {
-            return null;
-        }
-    }
-
-    public static void deleteKeyFromDataStore(RxDataStore<Preferences> dataStore, Preferences.Key<String> key) {
-        dataStore.updateDataAsync(prefsIn -> {
-            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
-            mutablePreferences.remove(key);
-            return Single.just(mutablePreferences);
-        });
     }
 
     public static Map<String, Integer> suitRankDrawableMap = new HashMap<>();
