@@ -3,7 +3,6 @@ package com.leslie.cjpokeroddscalculator.fragment;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -80,7 +79,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         generateMainLayout();
 
-        writeToDataStore(((MainActivity) requireActivity()).dataStore, PreferencesKeys.stringKey("start_fragment"), fragmentName);
+        ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
 
         setSelectedCard(1, 0);
 

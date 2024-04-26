@@ -1,10 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.deleteKeyFromDataStore;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.writeToDataStore;
 
 import static java.lang.Math.min;
 
@@ -150,7 +147,7 @@ public class RangeSelector {
         layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(12, 0))).getId();
         rangeSelectorBinding.rangeSlider.setLayoutParams(layoutParams);
 
-        String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
+        String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
 
         if (rangeNamesJson != null) {
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
@@ -227,7 +224,7 @@ public class RangeSelector {
 
         b.setOnClickListener(v -> {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
-            String matrixJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, RANGE_NAME_KEY);
+            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(RANGE_NAME_KEY);
 
             // TOOD: Fix bug if app crashes here
             assert matrixJson != null;
@@ -420,26 +417,24 @@ public class RangeSelector {
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("add_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
-            writeToDataStore(
-                    ((MainActivity) texasHoldemFragment.requireActivity()).dataStore,
-                    PreferencesKeys.stringKey("thec_" + rangeName),
-                    gson.toJson(this.matrixInput)
+            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+                PreferencesKeys.stringKey("thec_" + rangeName),
+                gson.toJson(this.matrixInput)
             );
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             if (rangeNamesJson == null) {
-                writeToDataStore(
-                        ((MainActivity) texasHoldemFragment.requireActivity()).dataStore,
-                        ALL_NAMES_KEY,
-                        gson.toJson(Collections.singletonList(rangeName))
+                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+                    ALL_NAMES_KEY,
+                    gson.toJson(Collections.singletonList(rangeName))
                 );
             } else {
                 List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
                 rangeNameList.add(rangeName);
-                writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             appendSavedRangeButton(rangeName);
@@ -452,29 +447,28 @@ public class RangeSelector {
             Preferences.Key<String> OLD_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + oldRangeName);
             Preferences.Key<String> NEW_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + newRangeName);
 
-            String matrixJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, OLD_RANGE_NAME_KEY);
+            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(OLD_RANGE_NAME_KEY);
 
             // TOOD: Fix bug if app crashes here
             assert matrixJson != null;
 
-            deleteKeyFromDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, OLD_RANGE_NAME_KEY);
+            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(OLD_RANGE_NAME_KEY);
 
-            writeToDataStore(
-                    ((MainActivity) texasHoldemFragment.requireActivity()).dataStore,
-                    NEW_RANGE_NAME_KEY,
-                    matrixJson
+            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+                NEW_RANGE_NAME_KEY,
+                matrixJson
             );
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             // TOOD: Fix bug if app crashes here
             assert rangeNamesJson != null;
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
             if (Collections.replaceAll(rangeNameList, oldRangeName, newRangeName)) {
-                writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             MaterialButton savedHandRangeButton = savedHandRangeMap.get(oldRangeName);
@@ -488,16 +482,16 @@ public class RangeSelector {
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = (String) result.get("range_name");
 
-            deleteKeyFromDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, PreferencesKeys.stringKey("thec_" + rangeName));
+            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(PreferencesKeys.stringKey("thec_" + rangeName));
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = getDataFromDataStoreIfExist(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             if (rangeNamesJson != null) {
                 List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
                 rangeNameList.remove(rangeName);
-                writeToDataStore(((MainActivity) texasHoldemFragment.requireActivity()).dataStore, ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             MaterialButton savedHandRangeButton = savedHandRangeMap.get(rangeName);

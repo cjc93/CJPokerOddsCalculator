@@ -1,5 +1,4 @@
 package com.leslie.cjpokeroddscalculator;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.getDataFromDataStoreIfExist;
 
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -7,8 +6,6 @@ import android.view.MotionEvent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
-import androidx.datastore.preferences.rxjava3.RxPreferenceDataStoreBuilder;
-import androidx.datastore.rxjava3.RxDataStore;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
@@ -20,7 +17,7 @@ import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    public RxDataStore<Preferences> dataStore = new RxPreferenceDataStoreBuilder(this, "general").build();
+    public DataStoreSingleton dataStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
         com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        dataStore = DataStoreSingleton.getInstance(this);
+
         Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
 
-        String startFragmentStr = getDataFromDataStoreIfExist(dataStore, START_FRAGMENT_KEY);
+        String startFragmentStr = dataStore.getDataFromDataStoreIfExist(START_FRAGMENT_KEY);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         assert navHostFragment != null;
@@ -59,12 +58,5 @@ public class MainActivity extends AppCompatActivity {
             equityCalculatorFragment.checkClickToHideCardSelector(ev);
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        dataStore.dispose();
     }
 }
