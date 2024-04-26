@@ -65,8 +65,7 @@ public class RangeSelector {
             @Override
             public void handleOnBackPressed() {
                 if (rangeSelectorBinding.rangeSelector.getVisibility() == View.VISIBLE) {
-                    rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
-                    texasHoldemFragment.equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
+                    hideRangeSelector();
                 } else {
                     setEnabled(false);
                     texasHoldemFragment.requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -407,9 +406,14 @@ public class RangeSelector {
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
             texasHoldemFragment.updateRange(this.matrixInput);
-            rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
-            texasHoldemFragment.equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
+            hideRangeSelector();
         });
+    }
+
+    private void hideRangeSelector() {
+        rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
+        texasHoldemFragment.equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
+        texasHoldemFragment.selectedRangePosition = null;
     }
 
     public void setFragmentResultListeners() {

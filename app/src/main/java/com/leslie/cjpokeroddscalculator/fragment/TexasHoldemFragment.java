@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    private Integer selectedRangePosition;
+    public Integer selectedRangePosition;
 
     public List<Group> twoCardsGroups = new ArrayList<>();
 
@@ -307,8 +307,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             calculateOdds();
         }
-
-        selectedRangePosition = null;
     }
 
     @Override
