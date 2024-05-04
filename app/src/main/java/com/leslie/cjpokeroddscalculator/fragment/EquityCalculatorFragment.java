@@ -1,5 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.navControllerNavigate;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
@@ -64,6 +65,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     int cardsPerHand;
 
     public String fragmentName;
+    public int fragmentId;
+    public int homeButtonActionId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,6 +87,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
         setSelectedCard(1, 0);
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
+
+        equityCalculatorBinding.homeButton.setOnClickListener(v -> navControllerNavigate(this, fragmentId, homeButtonActionId));
 
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             if(playerRowList.size() < 10){

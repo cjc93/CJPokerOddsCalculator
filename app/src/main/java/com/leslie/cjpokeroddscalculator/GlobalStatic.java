@@ -1,5 +1,9 @@
 package com.leslie.cjpokeroddscalculator;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
@@ -8,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -60,6 +65,13 @@ public class GlobalStatic {
             suits.addAll(suitedSuits);
         } else {
             suits.addAll(offSuits);
+        }
+    }
+
+    public static void navControllerNavigate(Fragment fragment, int currentFragmentId, int actionId) {
+        NavController navController = NavHostFragment.findNavController(fragment);
+        if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
+            navController.navigate(actionId);
         }
     }
 
