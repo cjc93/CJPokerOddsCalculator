@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.GlobalStatic.navControllerNavigate;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentHomeBinding;
@@ -28,12 +29,12 @@ public class HomeFragment extends Fragment {
 
         binding.texasHoldemButton.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_TexasHoldemFragment);
+            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_TexasHoldemFragment);
         });
 
         binding.omahaHighButton.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_HomeFragment_to_OmahaHighFragment);
+            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment);
         });
     }
 

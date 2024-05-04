@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
@@ -39,8 +38,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         tieList.get(1).setText(getString(R.string.two_decimal_perc, 1.33));
 
         equityCalculatorBinding.title.setText(getString(R.string.omaha_high_equity_calculator));
-
-        equityCalculatorBinding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_OmahaHighFragment_to_HomeFragment));
 
         monteCarloProc = () -> {
             try {
@@ -101,6 +98,8 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
 
         cardsPerHand = 4;
         fragmentName = "OmahaHigh";
+        fragmentId = R.id.OmahaHighFragment;
+        homeButtonActionId = R.id.action_OmahaHighFragment_to_HomeFragment;
     }
 
     @Override

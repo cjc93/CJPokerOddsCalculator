@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
@@ -91,8 +90,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
 
-        equityCalculatorBinding.homeButton.setOnClickListener(view1 -> NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_HomeFragment));
-
         monteCarloProc = () -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
@@ -128,6 +125,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         cardsPerHand = 2;
         fragmentName = "TexasHoldem";
+        fragmentId = R.id.TexasHoldemFragment;
+        homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
         rangeCardApproxSize = Math.min(cardMaxHeight, cardMaxWidth * 350 / 250);
     }
 
