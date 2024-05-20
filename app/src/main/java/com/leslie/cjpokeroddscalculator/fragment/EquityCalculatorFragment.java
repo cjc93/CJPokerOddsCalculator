@@ -395,7 +395,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         Rect rect = new Rect();
         ImageButton selectedCardButton = cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx);
-        if(!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height() ) {
+        if(selectedRowIdx > 0 && (!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height())) {
             equityCalculatorBinding.scrollView.post(
                 () -> equityCalculatorBinding.scrollView.smoothScrollTo(
                     0,
