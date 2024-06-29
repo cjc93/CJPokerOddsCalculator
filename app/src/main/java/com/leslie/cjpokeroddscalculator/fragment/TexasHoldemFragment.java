@@ -277,34 +277,36 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        CardRow cardRow = this.cardRows.get(selectedRangePosition);
+        if (selectedRangePosition != null) {
+            CardRow cardRow = this.cardRows.get(selectedRangePosition);
 
-        if (cardRow instanceof RangeRow) {
-            RangeRow rangeRow = (RangeRow) cardRow;
+            if (cardRow instanceof RangeRow) {
+                RangeRow rangeRow = (RangeRow) cardRow;
 
-            rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
+                rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 
-            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+                Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
 
-            for (int i = 0; i < 13; i++)  {
-                for (int j = 0; j < 13; j++)  {
-                    Set<String> suits = rangeRow.matrix.get(i).get(j);
-                    if (GlobalStatic.isAllSuits(suits, i, j)) {
-                        matrixBitmap.setPixel(j, i, Color.YELLOW);
-                    } else if (suits.isEmpty()) {
-                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
-                    } else {
-                        matrixBitmap.setPixel(j, i, Color.CYAN);
+                for (int i = 0; i < 13; i++)  {
+                    for (int j = 0; j < 13; j++)  {
+                        Set<String> suits = rangeRow.matrix.get(i).get(j);
+                        if (GlobalStatic.isAllSuits(suits, i, j)) {
+                            matrixBitmap.setPixel(j, i, Color.YELLOW);
+                        } else if (suits.isEmpty()) {
+                            matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                        } else {
+                            matrixBitmap.setPixel(j, i, Color.CYAN);
+                        }
                     }
                 }
+
+                ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
+                int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
+                rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
+                matrixBitmap.recycle();
+
+                calculateOdds();
             }
-
-            ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
-            int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
-            rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
-            matrixBitmap.recycle();
-
-            calculateOdds();
         }
     }
 
