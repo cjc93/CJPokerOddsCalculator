@@ -36,6 +36,10 @@ public class GlobalStatic {
     public static String[] suitStrings = {"s", "h", "c", "d"};
 
     public static List<List<Set<String>>> copyMatrix(List<List<Set<String>>> original) {
+        if (original == null) {
+            return null;
+        }
+
         List<List<Set<String>>> copy = new ArrayList<>(13);
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             List<Set<String>> row = new ArrayList<>(13);
