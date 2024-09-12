@@ -226,7 +226,7 @@ public class RangeSelector {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
             String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(RANGE_NAME_KEY);
 
-            // TOOD: Fix bug if app crashes here
+            // TODO: Fix bug if app crashes here
             assert matrixJson != null;
 
             List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
@@ -316,26 +316,30 @@ public class RangeSelector {
     }
 
     public void updateRangeSelector(List<List<Set<String>>> matrix) {
-        this.matrixInput = GlobalStatic.copyMatrix(matrix);
+        List<List<Set<String>>> copiedMatrix = GlobalStatic.copyMatrix(matrix);
 
-        int handCount = 0;
+        if (copiedMatrix != null) {
+            this.matrixInput = copiedMatrix;
 
-        for (int row_idx = 0; row_idx < 13; row_idx++) {
-            for (int col_idx = 0; col_idx < 13; col_idx++) {
-                Set<String> suits = this.matrixInput.get(row_idx).get(col_idx);
-                if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
-                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
-                } else if (suits.isEmpty()) {
-                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
-                } else {
-                    Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
+            int handCount = 0;
+
+            for (int row_idx = 0; row_idx < 13; row_idx++) {
+                for (int col_idx = 0; col_idx < 13; col_idx++) {
+                    Set<String> suits = this.matrixInput.get(row_idx).get(col_idx);
+                    if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
+                    } else if (suits.isEmpty()) {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                    } else {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
+                    }
+
+                    handCount += suits.size();
                 }
-
-                handCount += suits.size();
             }
-        }
 
-        rangeSelectorBinding.rangeSlider.setValue(handCount);
+            rangeSelectorBinding.rangeSlider.setValue(handCount);
+        }
 
         clearSuitSelectorUI();
     }
@@ -449,7 +453,7 @@ public class RangeSelector {
 
             String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(OLD_RANGE_NAME_KEY);
 
-            // TOOD: Fix bug if app crashes here
+            // TODO: Fix bug if app crashes here
             assert matrixJson != null;
 
             ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(OLD_RANGE_NAME_KEY);
@@ -463,7 +467,7 @@ public class RangeSelector {
 
             String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
-            // TOOD: Fix bug if app crashes here
+            // TODO: Fix bug if app crashes here
             assert rangeNamesJson != null;
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
