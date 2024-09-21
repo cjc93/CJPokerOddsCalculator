@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CJ Poker Odds Calculator</string>
+    <string name="app_name">Poker Calculator</string>
     <!-- Strings used for fragments for navigation -->
 
     <string name="players_remaining">Players remaining: %d</string>
