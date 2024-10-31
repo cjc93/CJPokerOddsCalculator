@@ -81,7 +81,7 @@ public class RangeRow extends CardRow {
             }
         }
 
-        if (sj.toString().equals("")) {
+        if (sj.toString().isEmpty()) {
             return "random";
         } else {
             return sj.toString();

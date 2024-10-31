@@ -46,7 +46,7 @@ public class SpecificCardsRow extends CardRow {
 
         temp.append(this.cards[0]);
         temp.append(this.cards[1]);
-        if (String.valueOf(temp).equals("")) {
+        if (String.valueOf(temp).isEmpty()) {
             return "random";
         } else if (temp.length() == 2) {
             StringJoiner sj = new StringJoiner(",");
@@ -64,7 +64,7 @@ public class SpecificCardsRow extends CardRow {
     public String[] convertOmahaCardsToStr() {
         List<String> omahaCards = new ArrayList<>();
         for (String card : cards) {
-            if (!card.equals("")) {
+            if (!card.isEmpty()) {
                 omahaCards.add(card);
             }
         }

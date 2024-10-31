@@ -4,7 +4,6 @@
 
     <string name="players_remaining">Players remaining: %d</string>
     <string name="two_decimal_perc">%.2f%%</string>
-    <string name="one_decimal_perc">%.1f%%</string>
     <string name="hands_perc">%.1f%%</string>
     <string name="flop">Flop</string>
     <string name="flop1">Flop1</string>
@@ -18,7 +17,6 @@
 
     <string name="add_player">+ Player</string>
     <string name="clear">Clear</string>
-    <string name="unknown_card">\?</string>
     <string name="card1">Card1</string>
     <string name="card2">Card2</string>
     <string name="all_combinations_checked_result_is_exact">All combinations checked, result is exact.</string>
@@ -36,7 +34,6 @@
     <string name="tie">Tie</string>
     <string name="texas_hold_em_equity_calculator">Texas Hold\'em Equity Calculator</string>
     <string name="home">Home</string>
-    <string name="hand_range">Hand/Range</string>
     <string name="omaha_high_equity_calculator">Omaha High Equity Calculator</string>
     <string name="card3">Card3</string>
     <string name="card4">Card4</string>
