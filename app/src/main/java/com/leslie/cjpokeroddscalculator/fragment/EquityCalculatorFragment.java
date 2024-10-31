@@ -367,7 +367,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     private final View.OnClickListener inputCardListener = v -> {
         ImageButton cardInput = (ImageButton) v;
-        cardInput.setVisibility(View.INVISIBLE);
+        if (selectedRowIdx != null) {
+            cardInput.setVisibility(View.INVISIBLE);
+        }
 
         String cardStr = inputSuitRankMap.get(cardInput);
         setValueToSelectedCard(cardStr);
@@ -397,10 +399,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
         ImageButton selectedCardButton = cardButtonListOfLists.get(selectedRowIdx).get(selectedCardIdx);
         if(selectedRowIdx > 0 && (!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height())) {
             equityCalculatorBinding.scrollView.post(
-                () -> equityCalculatorBinding.scrollView.smoothScrollTo(
-                    0,
-                    playerRowList.get(selectedRowIdx - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
-                )
+                () -> {
+                    if (selectedRowIdx != null) {
+                        equityCalculatorBinding.scrollView.smoothScrollTo(
+                            0,
+                            playerRowList.get(selectedRowIdx - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
+                        );
+                    }
+                }
             );
         }
     }
