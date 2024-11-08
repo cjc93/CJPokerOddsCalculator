@@ -123,7 +123,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
             }
 
-            equityCalculatorBinding.scrollView.post(() -> equityCalculatorBinding.scrollView.smoothScrollTo(0, 0));
+            equityCalculatorBinding.scrollView.post(
+                () -> {
+                    if (equityCalculatorBinding != null) {
+                        equityCalculatorBinding.scrollView.smoothScrollTo(0, 0);
+                    }
+                }
+            );
 
             calculateOdds();
         });
