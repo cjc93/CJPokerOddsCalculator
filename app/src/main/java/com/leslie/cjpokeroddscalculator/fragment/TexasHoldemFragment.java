@@ -2,15 +2,11 @@ package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.Group;
@@ -30,9 +26,7 @@ import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
@@ -43,10 +37,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public List<ImageButton> rangeButtonList = new ArrayList<>();
 
     List<MaterialButton> handRangeSwitchList = new ArrayList<>();
-
-    public List<List<TextView>> handStats = new ArrayList<>();
-
-    Map<MaterialButton, Group> statsButtonMap = new HashMap<>();
 
     public Bitmap emptyRangeBitmap;
 
@@ -145,21 +135,22 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     @Override
     public void addPlayerRow() {
         TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
+
         playerRowList.add(bindingPlayerRow.getRoot());
         equityList.add(bindingPlayerRow.equity);
         winList.add(bindingPlayerRow.win);
         tieList.add(bindingPlayerRow.tie);
         handStats.add(
             Arrays.asList(
-                bindingPlayerRow.highCard,
-                bindingPlayerRow.onePair,
-                bindingPlayerRow.twoPair,
-                bindingPlayerRow.threeOfAKind,
-                bindingPlayerRow.straight,
-                bindingPlayerRow.flush,
-                bindingPlayerRow.fullHouse,
-                bindingPlayerRow.fourOfAKind,
-                bindingPlayerRow.straightFlush
+                bindingPlayerRow.statsView.highCard,
+                bindingPlayerRow.statsView.onePair,
+                bindingPlayerRow.statsView.twoPair,
+                bindingPlayerRow.statsView.threeOfAKind,
+                bindingPlayerRow.statsView.straight,
+                bindingPlayerRow.statsView.flush,
+                bindingPlayerRow.statsView.fullHouse,
+                bindingPlayerRow.statsView.fourOfAKind,
+                bindingPlayerRow.statsView.straightFlush
             )
         );
 
@@ -181,7 +172,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         removeRowList.add(bindingPlayerRow.remove);
         handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
-        statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView);
+        statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView.getRoot());
 
         bindingPlayerRow.playerText.setText(getString(R.string.player, playerRowList.size()));
 
@@ -218,18 +209,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         calculateOdds();
     };
 
-    private final View.OnClickListener statsButtonListener = v -> {
-        final MaterialButton statsButtonInput = (MaterialButton) v;
-        Group statsView = statsButtonMap.get(statsButtonInput);
-
-        assert statsView != null;
-        if (statsView.getVisibility() == View.VISIBLE) {
-            statsView.setVisibility(View.GONE);
-        } else {
-            statsView.setVisibility(View.VISIBLE);
-        }
-    };
-
     @Override
     public void setEmptyHandRow(int row) {
         super.setEmptyHandRow(row);
@@ -252,29 +231,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         ImageButton rangeSelectorInput = (ImageButton) v;
         showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
     };
-
-    @Override
-    public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
-        Rect outRect = new Rect();
-        for (Button b : statsButtonMap.keySet()) {
-            b.getGlobalVisibleRect(outRect);
-            if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public void clearNumbers() {
-        super.clearNumbers();
-        for(int i = 0; i < handStats.size(); i++) {
-            for(int j = 0; j < 9; j++) {
-                handStats.get(i).get(j).setText("");
-            }
-        }
-    }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
         if (selectedRangePosition != null) {
@@ -312,12 +268,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     @Override
     public void removePlayerRow(int playerRemoveNumber) {
-        statsButtonMap.remove((MaterialButton) playerRowList.get(playerRemoveNumber - 1).findViewById(R.id.stats_button));
-
         rangeButtonList.remove(playerRemoveNumber - 1);
         twoCardsGroups.remove(playerRemoveNumber - 1);
         handRangeSwitchList.remove(playerRemoveNumber - 1);
-        handStats.remove(playerRemoveNumber - 1);
 
         super.removePlayerRow(playerRemoveNumber);
     }

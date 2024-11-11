@@ -33,7 +33,9 @@ import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBind
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -67,6 +69,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public String fragmentName;
     public int fragmentId;
     public int homeButtonActionId;
+
+    public List<List<TextView>> handStats = new ArrayList<>();
+
+    Map<MaterialButton, ConstraintLayout> statsButtonMap = new HashMap<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -197,7 +203,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
 
                 if (hideCardSelectorFlag) {
-                    hideCardSelectorFlag = checkAdditionalButtonsToHideCardSelector(event);
+                    for (MaterialButton b : statsButtonMap.keySet()) {
+                        b.getGlobalVisibleRect(outRect);
+                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            hideCardSelectorFlag = false;
+                            break;
+                        }
+                    }
                 }
 
                 if (hideCardSelectorFlag) {
@@ -205,10 +217,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
             }
         }
-    }
-
-    public boolean checkAdditionalButtonsToHideCardSelector(MotionEvent event) {
-        return true;
     }
 
     public void showCardSelector() {
@@ -330,6 +338,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     };
 
     public void removePlayerRow(int playerRemoveNumber) {
+        statsButtonMap.remove((MaterialButton) playerRowList.get(playerRemoveNumber - 1).findViewById(R.id.stats_button));
+        handStats.remove(playerRemoveNumber - 1);
+
         equityCalculatorBinding.playerRows.removeView(playerRowList.get(playerRemoveNumber - 1));
 
         playerRowList.remove(playerRemoveNumber - 1);
@@ -487,8 +498,23 @@ public abstract class EquityCalculatorFragment extends Fragment {
             equityList.get(i).setText("");
             winList.get(i).setText("");
             tieList.get(i).setText("");
+            for(int j = 0; j < 9; j++) {
+                handStats.get(i).get(j).setText("");
+            }
         }
     }
+
+    public final View.OnClickListener statsButtonListener = v -> {
+        final MaterialButton statsButtonInput = (MaterialButton) v;
+        ConstraintLayout statsView = statsButtonMap.get(statsButtonInput);
+
+        assert statsView != null;
+        if (statsView.getVisibility() == View.VISIBLE) {
+            statsView.setVisibility(View.GONE);
+        } else {
+            statsView.setVisibility(View.VISIBLE);
+        }
+    };
 
     public Runnable monteCarloProc;
 

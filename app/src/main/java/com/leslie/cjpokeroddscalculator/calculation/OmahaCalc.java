@@ -31,33 +31,53 @@ public class OmahaCalc extends Calculation{
         double unknownPlayersWin = 0;
         double unknownPlayersTie = 0;
 
+        double[] unknownPlayersRanks = new double[9];
+
         for(int i = 0; i < eqs.length; i++) {
             if(!this.knownPlayers[i]) {
                 unknownPlayersEquity += eqs[i].total;
                 unknownPlayersWin += eqs[i].won;
                 unknownPlayersTie += eqs[i].tied;
+
+                for (int n = 0; n < unknownPlayersRanks.length; n++) {
+                    unknownPlayersRanks[n] += eqs[i].rankpercent[n];
+                }
             }
         }
 
         double[] equity = new double[eqs.length];
         double[] win = new double[eqs.length];
         double[] tie = new double[eqs.length];
+        double[][] rankPercents = new double[unknownPlayersRanks.length][eqs.length];
 
         unknownPlayersEquity = unknownPlayersEquity / this.numOfUnknownPlayers;
         unknownPlayersWin = unknownPlayersWin / this.numOfUnknownPlayers;
         unknownPlayersTie = unknownPlayersTie / this.numOfUnknownPlayers;
+
+        for (int n = 0; n < unknownPlayersRanks.length; n++) {
+            unknownPlayersRanks[n] = unknownPlayersRanks[n] / this.numOfUnknownPlayers;
+        }
+
         for(int i = 0; i < eqs.length; i++) {
             if(knownPlayers[i]) {
                 equity[i] = eqs[i].total;
                 win[i] = eqs[i].won;
                 tie[i] = eqs[i].tied;
+
+                for (int n = 0; n < eqs[i].rankpercent.length; n++) {
+                    rankPercents[n][i] = eqs[i].rankpercent[n];
+                }
             } else {
                 equity[i] = unknownPlayersEquity;
                 win[i] = unknownPlayersWin;
                 tie[i] = unknownPlayersTie;
+
+                for (int n = 0; n < unknownPlayersRanks.length; n++) {
+                    rankPercents[n][i] = unknownPlayersRanks[n];
+                }
             }
         }
 
-        return new double[][] {equity, win, tie};
+        return new double[][] {equity, win, tie, rankPercents[0], rankPercents[1], rankPercents[2], rankPercents[3], rankPercents[4], rankPercents[5], rankPercents[6], rankPercents[7], rankPercents[8]};
     }
 }

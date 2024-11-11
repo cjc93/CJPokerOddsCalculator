@@ -21,6 +21,9 @@ public class Equity {
 
 	public double tiedequity;
 
+	final int[] rankcount = new int[9];
+	public final double[] rankpercent = new double[9];
+
 	/**
 	 * update percentage won, tied and by rank
 	 */
@@ -29,5 +32,9 @@ public class Equity {
 		tied = (double) tiedcount / hands;
 
 		total = (woncount + tiedequity) / hands;
+
+		for (int n = 0; n < rankcount.length; n++) {
+			rankpercent[n] = (double) rankcount[n] / hands;
+		}
 	}
 }
