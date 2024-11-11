@@ -17,14 +17,9 @@ public class EquityUtil {
 		return eqs;
 	}
 
-	/**
-	 * Update equities win, tie and win rank with given hand values for the
-	 * given cards.
-	 * Return index of single winner (scoop), if any, or -1
-	 */
 	public static void updateEquities(Equity[] eqs, int[] vals) {
 		// find highest hand and number of times it occurs
-		int max = 0, maxcount = 0;
+		int max = 0, maxcount = 0, rank;
         for (int v : vals) {
             if (v > max) {
                 max = v;
@@ -35,9 +30,12 @@ public class EquityUtil {
         }
 
         for (int i = 0; i < vals.length; i++) {
+			Equity e = eqs[i];
+
+			rank = (vals[i] & 0x00f00000) >> 20;
+			e.rankcount[rank]++;
+
 			if (vals[i] == max) {
-				// update the win/tied/rank count
-				Equity e = eqs[i];
 				if (maxcount == 1) {
                     e.woncount++;
 				} else {
@@ -46,7 +44,6 @@ public class EquityUtil {
 				}
 			}
 		}
-
 	}
 	
 	/**
