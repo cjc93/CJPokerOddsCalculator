@@ -10,8 +10,8 @@ android {
         applicationId = "com.leslie.cjpokeroddscalculator"
         minSdk = 26
         targetSdk = 34
-        versionCode = 27
-        versionName = "2.13"
+        versionCode = 28
+        versionName = "2.14"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
