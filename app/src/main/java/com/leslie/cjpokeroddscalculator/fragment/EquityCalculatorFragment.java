@@ -173,10 +173,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
             if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
                 Rect outRect = new Rect();
+
+                int event_x = (int) event.getRawX();
+                int event_y = (int) event.getRawY();
+
                 boolean hideCardSelectorFlag = true;
 
                 equityCalculatorBinding.addplayer.getGlobalVisibleRect(outRect);
-                if (outRect.top < (int) event.getRawY()) {
+                if (outRect.top < event_y) {
                     hideCardSelectorFlag = false;
                 }
 
@@ -184,7 +188,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                     for (List<ImageButton> row : cardButtonListOfLists) {
                         for (ImageButton card : row) {
                             card.getGlobalVisibleRect(outRect);
-                            if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                            if (outRect.contains(event_x, event_y)) {
                                 hideCardSelectorFlag = false;
                                 break;
                             }
@@ -195,7 +199,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 if (hideCardSelectorFlag) {
                     for (MaterialButton b : removeRowList) {
                         b.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                        if (outRect.contains(event_x, event_y)) {
                             hideCardSelectorFlag = false;
                             break;
                         }
@@ -205,7 +209,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 if (hideCardSelectorFlag) {
                     for (MaterialButton b : statsButtonMap.keySet()) {
                         b.getGlobalVisibleRect(outRect);
-                        if (outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
+                        if (outRect.contains(event_x, event_y)) {
                             hideCardSelectorFlag = false;
                             break;
                         }
