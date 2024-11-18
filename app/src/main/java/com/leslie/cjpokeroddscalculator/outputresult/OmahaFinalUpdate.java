@@ -1,5 +1,6 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
+import com.leslie.cjpokeroddscalculator.calculation.pet.EquityUtil;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
@@ -49,7 +50,9 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
             }
 
             equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                updateWinResults(eqs);
+                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                results = omahaCalc.averageUnknownStats(results);
+                updateWinResults(results);
                 updateResDesc(R.string.all_combinations_checked_result_is_exact);
             });
         }

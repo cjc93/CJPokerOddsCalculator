@@ -1,19 +1,20 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
+import com.leslie.cjpokeroddscalculator.calculation.pet.Cards;
+import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
+import com.leslie.cjpokeroddscalculator.calculation.pet.Poker;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
 import java.util.List;
 
-public class OmahaCalc extends Calculation{
-    public OmahaOutputResult outputResultObj;
+public abstract class OmahaCalc extends Calculation{
     public int totalSimulations;
+    public OmahaPoker omahaPokerObj;
 
-    public void initialiseVariables(List<CardRow> cardRows, OmahaOutputResult outputResultObj) {
-        super.initialiseVariables(cardRows);
-        this.outputResultObj = outputResultObj;
+    public void setOmahaPokerObj(OmahaPoker omahaPokerObj) {
+        this.omahaPokerObj = omahaPokerObj;
     }
 
     public String[][] convertPlayerCardsToStr(List<CardRow> cardRows) {
@@ -26,58 +27,23 @@ public class OmahaCalc extends Calculation{
         return playerCards;
     }
 
-    public double[][] averageUnknownStats(Equity[] eqs) {
-        double unknownPlayersEquity = 0;
-        double unknownPlayersWin = 0;
-        double unknownPlayersTie = 0;
+    public void calculate(List<CardRow> cardRows) throws InterruptedException {
+        initialiseVariables(cardRows);
 
-        double[] unknownPlayersRanks = new double[9];
+        String[] boardCards = ((SpecificCardsRow) cardRows.get(0)).convertOmahaCardsToStr();
 
-        for(int i = 0; i < eqs.length; i++) {
-            if(!this.knownPlayers[i]) {
-                unknownPlayersEquity += eqs[i].total;
-                unknownPlayersWin += eqs[i].won;
-                unknownPlayersTie += eqs[i].tied;
+        String[][] playerCards = convertPlayerCardsToStr(cardRows);
 
-                for (int n = 0; n < unknownPlayersRanks.length; n++) {
-                    unknownPlayersRanks[n] += eqs[i].rankpercent[n];
-                }
-            }
-        }
+        String[] deck = Poker.remdeck(playerCards, boardCards);
 
-        double[] equity = new double[eqs.length];
-        double[] win = new double[eqs.length];
-        double[] tie = new double[eqs.length];
-        double[][] rankPercents = new double[unknownPlayersRanks.length][eqs.length];
+        Cards cards = createCards(deck, boardCards, playerCards);
 
-        unknownPlayersEquity = unknownPlayersEquity / this.numOfUnknownPlayers;
-        unknownPlayersWin = unknownPlayersWin / this.numOfUnknownPlayers;
-        unknownPlayersTie = unknownPlayersTie / this.numOfUnknownPlayers;
+        this.omahaPokerObj.omahaOutputResult.beforeAllSimulations();
 
-        for (int n = 0; n < unknownPlayersRanks.length; n++) {
-            unknownPlayersRanks[n] = unknownPlayersRanks[n] / this.numOfUnknownPlayers;
-        }
+        Equity[] eqs = this.omahaPokerObj.equityImpl(cards);
 
-        for(int i = 0; i < eqs.length; i++) {
-            if(knownPlayers[i]) {
-                equity[i] = eqs[i].total;
-                win[i] = eqs[i].won;
-                tie[i] = eqs[i].tied;
-
-                for (int n = 0; n < eqs[i].rankpercent.length; n++) {
-                    rankPercents[n][i] = eqs[i].rankpercent[n];
-                }
-            } else {
-                equity[i] = unknownPlayersEquity;
-                win[i] = unknownPlayersWin;
-                tie[i] = unknownPlayersTie;
-
-                for (int n = 0; n < unknownPlayersRanks.length; n++) {
-                    rankPercents[n][i] = unknownPlayersRanks[n];
-                }
-            }
-        }
-
-        return new double[][] {equity, win, tie, rankPercents[0], rankPercents[1], rankPercents[2], rankPercents[3], rankPercents[4], rankPercents[5], rankPercents[6], rankPercents[7], rankPercents[8]};
+        this.omahaPokerObj.omahaOutputResult.afterAllSimulations(eqs);
     }
+
+    public abstract Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) throws InterruptedException;
 }

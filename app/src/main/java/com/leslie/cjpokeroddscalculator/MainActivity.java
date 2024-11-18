@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             navGraph.setStartDestination(R.id.TexasHoldemFragment);
         } else if (Objects.equals(startFragmentStr, "OmahaHigh")) {
             navGraph.setStartDestination(R.id.OmahaHighFragment);
+        } else if (Objects.equals(startFragmentStr, "OmahaHiLo")) {
+            navGraph.setStartDestination(R.id.OmahaHiLoFragment);
         } else {
             navGraph.setStartDestination(R.id.HomeFragment);
         }

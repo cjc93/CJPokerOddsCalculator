@@ -10,7 +10,7 @@ public class OmahaPoker extends Poker {
 	public OmahaOutputResult omahaOutputResult;
 
 	public OmahaPoker(OmahaOutputResult omahaOutputResult) {
-		this.omahaOutputResult = omahaOutputResult;
+        this.omahaOutputResult = omahaOutputResult;
 	}
 
 
@@ -28,7 +28,7 @@ public class OmahaPoker extends Poker {
 			cards.next();
 
 			for (int i = 0; i < cards.currentCards.length - 1; i++) {
-				vals[i] = heValue(cards.cards[0], cards.cards[i + 1], temp);
+				vals[i] = calcHighValue(cards.cards[0], cards.cards[i + 1], temp);
 			}
 
 			EquityUtil.updateEquities(eqs, vals);
@@ -43,10 +43,9 @@ public class OmahaPoker extends Poker {
 	
 
 	/**
-	 * Calculate value of omaha hand (using at least min cards from hand).
-	 * Board can be 3-5 cards.
+	 * Calculate value of omaha hand (using 2 cards from hand).
 	 */
-	private int heValue(final String[] board, final String[] hole, final String[] temp) {
+	public int calcHighValue(final String[] board, final String[] hole, final String[] temp) {
 		int hv = 0;
 		final int nh = MathsUtil.binomialCoefficientFast(hole.length, 2);
 		final int nb = MathsUtil.binomialCoefficientFast(board.length, 3);

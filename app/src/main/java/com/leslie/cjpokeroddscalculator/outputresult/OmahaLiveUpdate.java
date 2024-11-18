@@ -29,12 +29,16 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
 
             if (equityCalculatorFragment.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    updateWinResults(eqs);
+                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                    results = omahaCalc.averageUnknownStats(results);
+                    updateWinResults(results);
                     updateResDesc(R.string.checking_combinations);
                 });
             } else {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    updateWinResults(eqs);
+                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                    results = omahaCalc.averageUnknownStats(results);
+                    updateWinResults(results);
                     updateResDesc(R.string.checking_random_subset);
                 });
             }
@@ -47,10 +51,16 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.exactCalcThread.isAlive()) {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(eqs));
+                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
+                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                    results = omahaCalc.averageUnknownStats(results);
+                    updateWinResults(results);
+                });
             } else {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    updateWinResults(eqs);
+                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                    results = omahaCalc.averageUnknownStats(results);
+                    updateWinResults(results);
                     updateResDesc(R.string.finished_checking_random_subset);
                 });
             }

@@ -53,4 +53,7 @@
     <string name="save">Save</string>
     <string name="click_save_button_to_save_current_hand_range">Click \"Save\" button to save current Hand-Range for future use</string>
     <string name="unknown">Unknown</string>
+    <string name="high">High</string>
+    <string name="low">Low</string>
+    <string name="omaha_high_low_equity_calculator">Omaha High Low Equity Calculator</string>
 </resources>

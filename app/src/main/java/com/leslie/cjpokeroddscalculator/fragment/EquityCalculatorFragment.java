@@ -51,9 +51,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public Thread exactCalcThread = null;
 
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
-    public List<TextView> equityList = new ArrayList<>();
-    public List<TextView> winList = new ArrayList<>();
-    public List<TextView> tieList = new ArrayList<>();
     List<MaterialButton> removeRowList = new ArrayList<>();
     List<CardRow> cardRows = new ArrayList<>();
 
@@ -70,7 +67,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public int fragmentId;
     public int homeButtonActionId;
 
-    public List<List<TextView>> handStats = new ArrayList<>();
+    public List<List<TextView>> statsMatrix = new ArrayList<>();
 
     Map<MaterialButton, ConstraintLayout> statsButtonMap = new HashMap<>();
 
@@ -241,7 +238,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void initialiseVariables() {
-        // getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
+        // TODO: getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         cardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
         cardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
@@ -313,6 +310,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 button.setLayoutParams(layoutParams);
             }
         }
+
+        for (int i = 0; i < 2; i++) {
+            addPlayerRow();
+        }
     }
 
     public final View.OnClickListener removePlayerListener = v -> {
@@ -343,15 +344,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void removePlayerRow(int playerRemoveNumber) {
         statsButtonMap.remove((MaterialButton) playerRowList.get(playerRemoveNumber - 1).findViewById(R.id.stats_button));
-        handStats.remove(playerRemoveNumber - 1);
+        statsMatrix.remove(playerRemoveNumber - 1);
 
         equityCalculatorBinding.playerRows.removeView(playerRowList.get(playerRemoveNumber - 1));
 
         playerRowList.remove(playerRemoveNumber - 1);
-
-        equityList.remove(playerRemoveNumber - 1);
-        winList.remove(playerRemoveNumber - 1);
-        tieList.remove(playerRemoveNumber - 1);
 
         removeRowList.remove(playerRemoveNumber - 1);
 
@@ -498,12 +495,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void clearNumbers() {
-        for(int i = 0; i < equityList.size(); i++) {
-            equityList.get(i).setText("");
-            winList.get(i).setText("");
-            tieList.get(i).setText("");
-            for(int j = 0; j < 9; j++) {
-                handStats.get(i).get(j).setText("");
+        for(int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
+            for(int statsIdx = 0; statsIdx < statsMatrix.get(playerIdx).size(); statsIdx++) {
+                statsMatrix.get(playerIdx).get(statsIdx).setText("");
             }
         }
     }

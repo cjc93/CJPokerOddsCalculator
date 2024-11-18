@@ -36,6 +36,11 @@ public class HomeFragment extends Fragment {
             binding.progressBar.setVisibility(View.VISIBLE);
             navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment);
         });
+
+        binding.omahaHiLoButton.setOnClickListener(v -> {
+            binding.progressBar.setVisibility(View.VISIBLE);
+            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLoFragment);
+        });
     }
 
     @Override

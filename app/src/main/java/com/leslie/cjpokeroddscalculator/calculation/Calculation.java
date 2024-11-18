@@ -21,4 +21,30 @@ public class Calculation {
             }
         }
     }
+
+    public double[][] averageUnknownStats(double[][] results) {
+        double[] unknownPlayersStats = new double[results.length];
+
+        for(int playerIdx = 0; playerIdx < this.knownPlayers.length; playerIdx++) {
+            if(!knownPlayers[playerIdx]) {
+                for(int statIdx = 0; statIdx < unknownPlayersStats.length; statIdx++) {
+                    unknownPlayersStats[statIdx] += results[statIdx][playerIdx];
+                }
+            }
+        }
+
+        for(int statIdx = 0; statIdx < unknownPlayersStats.length; statIdx++) {
+            unknownPlayersStats[statIdx] /= this.numOfUnknownPlayers;
+        }
+
+        for(int playerIdx = 0; playerIdx < knownPlayers.length; playerIdx++) {
+            if(!knownPlayers[playerIdx]) {
+                for(int statIdx = 0; statIdx < unknownPlayersStats.length; statIdx++) {
+                    results[statIdx][playerIdx] = unknownPlayersStats[statIdx];
+                }
+            }
+        }
+
+        return results;
+    }
 }
