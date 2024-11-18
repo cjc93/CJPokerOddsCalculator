@@ -113,8 +113,8 @@ public class RangeSelector {
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
                 ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
                 );
                 layoutParams.horizontalChainStyle = ConstraintLayout.LayoutParams.CHAIN_PACKED;
 

@@ -24,8 +24,8 @@ public class TexasHoldemExactCalc extends TexasHoldemCalc {
         return outputResultObj.duringSimulations();
     }
 
-    public void afterAllSimulations(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush, boolean isCancelled) {
-        double[][] result = averageUnknownStats(equity, win, highCard, onePair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush);
-        outputResultObj.afterAllSimulations(result[0], result[1],  result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], isCancelled);
+    public void afterAllSimulations(double[][] results, boolean isCancelled) {
+        results = averageUnknownStats(results);
+        outputResultObj.afterAllSimulations(results, isCancelled);
     }
 }

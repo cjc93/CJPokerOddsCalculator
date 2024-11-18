@@ -8,33 +8,44 @@ public class Equity {
 	/**
 	 * percentage of hands won but not tied.
 	 */
-	public double won;
+	public double winPercent;
 	/** percentage of hands tied but not won */
-	public double tied;
+	public double tiePercent;
 	/** total equity percentage */
-	public double total;
+	public double equity;
 
 	/** number of samples won */
-	int woncount;
+	int winCount;
 	/** number of samples tied */
-	int tiedcount;
+	int tieCount;
 
-	public double tiedequity;
+	public double tieEquity;
 
-	final int[] rankcount = new int[9];
-	public final double[] rankpercent = new double[9];
+	final int[] rankCount = new int[9];
+	public final double[] rankPercent = new double[9];
 
 	/**
-	 * update percentage won, tied and by rank
+	 * update percentage won, tied and rank
 	 */
 	void summariseEquity(int hands) {
-		won = (double) woncount / hands;
-		tied = (double) tiedcount / hands;
+		equity = (winCount + tieEquity) / hands;
+		winPercent = (double) winCount / hands;
+		tiePercent = (double) tieCount / hands;
 
-		total = (woncount + tiedequity) / hands;
-
-		for (int n = 0; n < rankcount.length; n++) {
-			rankpercent[n] = (double) rankcount[n] / hands;
+		for (int n = 0; n < rankCount.length; n++) {
+			rankPercent[n] = (double) rankCount[n] / hands;
 		}
+	}
+
+	double[] toArray() {
+		double[] arr = new double[3 + rankPercent.length];
+
+		arr[0] = equity;
+		arr[1] = winPercent;
+		arr[2] = tiePercent;
+
+		System.arraycopy(rankPercent, 0, arr, 3, rankCount.length);
+
+		return arr;
 	}
 }

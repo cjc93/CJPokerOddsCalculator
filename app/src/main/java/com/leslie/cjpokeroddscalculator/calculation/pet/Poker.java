@@ -18,6 +18,9 @@ public abstract class Poker {
 	 * 1 = least significant card
 	 */
 
+	/** rank mask (allowing 20 bits for hand value, i.e. 4 bits per card) */
+	protected static final int RANK = 0x00f00000;
+
 	/** high card bit mask (always zero) */
 	protected static final int H_RANK = 0;
 	/** pair rank bit mask */
@@ -36,6 +39,9 @@ public abstract class Poker {
 	protected static final int FK_RANK = 0x700000;
 	/** straight flush rank mask */
 	protected static final int SF_RANK = 0x800000;
+
+	/** impossible rank higher than straight flush for low hand value purposes */
+	protected static final int MAX_RANK = 0x900000;
 
 	/** complete deck in face then suit order, lowest first */
 	private static final String[] deckArr = { 
@@ -57,10 +63,39 @@ public abstract class Poker {
 	}
 
 	/**
+	 * count low cards
+	 */
+	protected static int lowCount(String[] hand) {
+		int count = 0;
+		for (String s : hand) {
+            if (faceValue(s, false) <= 8) {
+                count++;
+            }
+        }
+		return count;
+	}
+
+	/**
+	 * get 8 or better qualified ace to five low value of hand.
+	 * returns 0 if no low.
+	 */
+	static int afLow8Value(String[] hand) {
+		if (lowCount(hand) == 5) {
+			int p = isPair(hand, false);
+			if (p < P_RANK) {
+				// no pairs
+				// invert value
+                return MAX_RANK - p;
+			}
+		}
+		return 0;
+	}
+
+	/**
 	 * Get value of 5 card hand
 	 */
-	public static int value (String[] hand) {
-		int p = isPair(hand);
+	public static int value(String[] hand) {
+		int p = isPair(hand, true);
 		if (p < P_RANK) {
 			boolean f = isFlush(hand);
 			int s = isStraight(hand);
@@ -100,7 +135,7 @@ public abstract class Poker {
 		int str = 5;
 		for (String s : hand) {
             // sub 1 so bottom bit equals ace low
-            int v = faceValue(s) - 1;
+            int v = faceValueAH(s) - 1;
             x |= (1 << v);
             if (v == 13) {
                 // add ace low as well as ace high
@@ -122,11 +157,11 @@ public abstract class Poker {
 	 * Return pair value or high cards without type mask.
 	 * Does not require sorted hand
 	 */
-	private static int isPair(String[] hand) {
+	private static int isPair(String[] hand, boolean acehigh) {
 		// count card face frequencies (3 bits each) -- 0, 1, 2, 3, 4
 		long v = 0;
         for (String s : hand) {
-            v += (1L << ((14 - faceValue(s)) * 3));
+            v += (1L << ((14 - faceValue(s, acehigh)) * 3));
         }
 		// get the card faces for each frequency
 		int fk = 0, tk = 0, pa = 0, hc = 0;
@@ -160,8 +195,25 @@ public abstract class Poker {
 		}
 	}
 
+	/**
+	 * Return integer value of card face, ace high or low (from A = 14 to 2 = 2 or K = 13 to A = 1)
+	 */
+	static int faceValue(String card, boolean acehigh) {
+		if (acehigh) {
+			return faceValueAH(card);
+		} else {
+			return faceValueAL(card);
+		}
+	}
+
+	/** face value, ace low (A = 1, K = 13) */
+	static int faceValueAL (String card) {
+		int i = "A23456789TJQK".indexOf(face(card));
+		return i + 1;
+	}
+
 	/** face value, ace high (2 = 2, A = 14) */
-	static int faceValue (String card) {
+	static int faceValueAH (String card) {
 		int i = "23456789TJQKA".indexOf(face(card));
 		return i + 2;
 	}

@@ -39,14 +39,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/high_card"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/high_card"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/high_card_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/flush_text"
@@ -54,14 +54,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/guideline_3"
         app:layout_constraintRight_toLeftOf="@id/flush"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/flush"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/flush_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/one_pair_text"
@@ -69,14 +69,14 @@
         app:layout_constraintTop_toBottomOf="@id/high_card_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/one_pair"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/one_pair"
         app:layout_constraintTop_toBottomOf="@id/high_card"
         app:layout_constraintLeft_toRightOf="@id/one_pair_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/full_house_text"
@@ -84,14 +84,14 @@
         app:layout_constraintTop_toBottomOf="@id/flush_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_3"
         app:layout_constraintRight_toLeftOf="@id/full_house"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/full_house"
         app:layout_constraintTop_toBottomOf="@id/flush"
         app:layout_constraintLeft_toRightOf="@id/full_house_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/two_pair_text"
@@ -99,14 +99,14 @@
         app:layout_constraintTop_toBottomOf="@id/one_pair_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/two_pair"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/two_pair"
         app:layout_constraintTop_toBottomOf="@id/one_pair"
         app:layout_constraintLeft_toRightOf="@id/two_pair_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/four_of_a_kind_text"
@@ -114,14 +114,14 @@
         app:layout_constraintTop_toBottomOf="@id/full_house_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_3"
         app:layout_constraintRight_toLeftOf="@id/four_of_a_kind"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/four_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/full_house"
         app:layout_constraintLeft_toRightOf="@id/four_of_a_kind_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/three_of_a_kind_text"
@@ -129,14 +129,14 @@
         app:layout_constraintTop_toBottomOf="@id/two_pair_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/three_of_a_kind"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/three_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/two_pair"
         app:layout_constraintLeft_toRightOf="@id/three_of_a_kind_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/straight_flush_text"
@@ -145,14 +145,14 @@
         app:layout_constraintBottom_toTopOf="@id/straight_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_3"
         app:layout_constraintRight_toLeftOf="@id/straight_flush"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/straight_flush"
         app:layout_constraintTop_toBottomOf="@id/four_of_a_kind"
         app:layout_constraintLeft_toRightOf="@id/straight_flush_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/straight_text"
@@ -160,13 +160,13 @@
         app:layout_constraintTop_toBottomOf="@id/three_of_a_kind_text"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/straight"
-        style="@style/StatsName"/>
+        style="@style/StatsText"/>
 
     <TextView
         android:id="@+id/straight"
         app:layout_constraintTop_toBottomOf="@id/three_of_a_kind"
         app:layout_constraintLeft_toRightOf="@id/straight_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        style="@style/StatsValue"/>
+        style="@style/StatsText"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

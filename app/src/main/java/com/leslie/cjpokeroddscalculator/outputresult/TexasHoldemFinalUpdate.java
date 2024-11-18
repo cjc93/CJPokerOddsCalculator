@@ -21,7 +21,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
     }
 
     @Override
-    public void afterAllSimulations(double[] equity, double[] win, double[] highCard, double[] onePair, double[] twoPair, double[] threeOfAKind, double[] straight, double[] flush, double[] fullHouse, double[] fourOfAKind, double[] straightFlush, boolean... isCancelled) {
+    public void afterAllSimulations(double[][] results, boolean... isCancelled) {
         if (!Thread.interrupted()) {
             if (equityCalculatorFragment.monteCarloThread.isAlive()) {
                 if (isCancelled[0]) {
@@ -29,7 +29,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
                 } else {
                     equityCalculatorFragment.monteCarloThread.interrupt();
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                        updateWinResults(equity, win, highCard, onePair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush);
+                        updateWinResults(results);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });
                 }
@@ -38,7 +38,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
                 } else {
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                        updateWinResults(equity, win, highCard, onePair, twoPair, threeOfAKind, straight, flush, fullHouse, fourOfAKind, straightFlush);
+                        updateWinResults(results);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);
                     });
                 }

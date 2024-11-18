@@ -64,18 +64,18 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.setFragmentResultListeners();
 
         for (int i = 0; i < 2; i++) {
-            equityList.get(i).setText(getString(R.string.two_decimal_perc, 50.0));
-            winList.get(i).setText(getString(R.string.two_decimal_perc, 47.97));
-            tieList.get(i).setText(getString(R.string.two_decimal_perc, 2.03));
-            handStats.get(i).get(0).setText(getString(R.string.two_decimal_perc, 17.41));
-            handStats.get(i).get(1).setText(getString(R.string.two_decimal_perc, 43.82));
-            handStats.get(i).get(2).setText(getString(R.string.two_decimal_perc, 23.5));
-            handStats.get(i).get(3).setText(getString(R.string.two_decimal_perc, 4.83));
-            handStats.get(i).get(4).setText(getString(R.string.two_decimal_perc, 4.62));
-            handStats.get(i).get(5).setText(getString(R.string.two_decimal_perc, 3.03));
-            handStats.get(i).get(6).setText(getString(R.string.two_decimal_perc, 2.6));
-            handStats.get(i).get(7).setText(getString(R.string.two_decimal_perc, 0.17));
-            handStats.get(i).get(8).setText(getString(R.string.two_decimal_perc, 0.03));
+            statsMatrix.get(i).get(0).setText(getString(R.string.two_decimal_perc, 50.0));
+            statsMatrix.get(i).get(1).setText(getString(R.string.two_decimal_perc, 47.97));
+            statsMatrix.get(i).get(2).setText(getString(R.string.two_decimal_perc, 2.03));
+            statsMatrix.get(i).get(3).setText(getString(R.string.two_decimal_perc, 17.41));
+            statsMatrix.get(i).get(4).setText(getString(R.string.two_decimal_perc, 43.82));
+            statsMatrix.get(i).get(5).setText(getString(R.string.two_decimal_perc, 23.5));
+            statsMatrix.get(i).get(6).setText(getString(R.string.two_decimal_perc, 4.83));
+            statsMatrix.get(i).get(7).setText(getString(R.string.two_decimal_perc, 4.62));
+            statsMatrix.get(i).get(8).setText(getString(R.string.two_decimal_perc, 3.03));
+            statsMatrix.get(i).get(9).setText(getString(R.string.two_decimal_perc, 2.6));
+            statsMatrix.get(i).get(10).setText(getString(R.string.two_decimal_perc, 0.17));
+            statsMatrix.get(i).get(11).setText(getString(R.string.two_decimal_perc, 0.03));
         }
 
         equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
@@ -98,14 +98,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (monteCarloThread != null) {
-            monteCarloThread.interrupt();
-        }
-
-        if (exactCalcThread != null) {
-            exactCalcThread.interrupt();
-        }
-
         rangeSelector.rangeSelectorBinding = null;
     }
 
@@ -126,10 +118,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         this.emptyRangeBitmap = Bitmap.createBitmap(rangeCardApproxSize, rangeCardApproxSize, Bitmap.Config.ARGB_8888);
         this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
-
-        for (int i = 0; i < 2; i++) {
-            addPlayerRow();
-        }
     }
 
     @Override
@@ -137,11 +125,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
 
         playerRowList.add(bindingPlayerRow.getRoot());
-        equityList.add(bindingPlayerRow.equity);
-        winList.add(bindingPlayerRow.win);
-        tieList.add(bindingPlayerRow.tie);
-        handStats.add(
+        statsMatrix.add(
             Arrays.asList(
+                bindingPlayerRow.equity,
+                bindingPlayerRow.win,
+                bindingPlayerRow.tie,
                 bindingPlayerRow.statsView.highCard,
                 bindingPlayerRow.statsView.onePair,
                 bindingPlayerRow.statsView.twoPair,
