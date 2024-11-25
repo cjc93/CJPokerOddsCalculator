@@ -19,8 +19,8 @@ public class CardsExact extends Cards {
 	private final List<List<String>> remainingDecks;
 
 
-	public CardsExact(String[] deck, String[] currentBoard, String[][] currentHoleCards) {
-		super(deck, currentBoard, currentHoleCards);
+	public CardsExact(String[] deck, String[] currentBoard, String[][] currentHoleCards, int cardsPerHand) {
+		super(deck, currentBoard, currentHoleCards, cardsPerHand);
 
 		pArray = new int[currentHoleCards.length + 1];
 		remainingDecks = new ArrayList<>(currentHoleCards.length + 1);

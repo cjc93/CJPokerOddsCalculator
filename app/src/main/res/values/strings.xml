@@ -35,8 +35,6 @@
     <string name="texas_hold_em_equity_calculator">Texas Hold\'em Equity Calculator</string>
     <string name="home">Home</string>
     <string name="omaha_high_equity_calculator">Omaha High Equity Calculator</string>
-    <string name="card3">Card3</string>
-    <string name="card4">Card4</string>
     <string name="high_card">High Card</string>
     <string name="flush">Flush</string>
     <string name="one_pair">One Pair</string>
@@ -55,5 +53,10 @@
     <string name="unknown">Unknown</string>
     <string name="high">High</string>
     <string name="low">Low</string>
-    <string name="omaha_high_low_equity_calculator">Omaha High Low Equity Calculator</string>
+    <string name="omaha_high_low_equity_calculator">Omaha Hi/Lo Equity Calculator</string>
+    <string name="omaha_high_low_5_equity_calculator">Omaha Hi/Lo 5 Card Equity Calculator</string>
+    <string name="omaha_high_5_card_equity_calculator">Omaha High 5 Card Equity Calculator</string>
+    <string name="card_turn">CardTurn</string>
+    <string name="card_river">CardRiver</string>
+    <string name="player_rows">PlayerRows</string>
 </resources>

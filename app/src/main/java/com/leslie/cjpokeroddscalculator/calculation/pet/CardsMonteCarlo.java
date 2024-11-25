@@ -10,8 +10,8 @@ public class CardsMonteCarlo extends Cards {
 	private final int count;
 	private final Random r = new Random();
 	
-	public CardsMonteCarlo(String[] deck, String[] currentBoard, String[][] currentHoleCards, int count) {
-		super(deck, currentBoard, currentHoleCards);
+	public CardsMonteCarlo(String[] deck, String[] currentBoard, String[][] currentHoleCards, int count, int cardsPerHand) {
+		super(deck, currentBoard, currentHoleCards, cardsPerHand);
 		this.count = count;
 	}
 	

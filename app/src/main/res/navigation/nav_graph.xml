@@ -21,6 +21,14 @@
             android:id="@+id/action_HomeFragment_to_OmahaHiLoFragment"
             app:destination="@id/OmahaHiLoFragment" />
 
+        <action
+            android:id="@+id/action_HomeFragment_to_OmahaHigh5Fragment"
+            app:destination="@id/OmahaHigh5Fragment" />
+
+        <action
+            android:id="@+id/action_HomeFragment_to_OmahaHiLo5Fragment"
+            app:destination="@id/OmahaHiLo5Fragment" />
+
     </fragment>
 
     <fragment
@@ -52,6 +60,28 @@
 
         <action
             android:id="@+id/action_OmahaHiLoFragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/OmahaHigh5Fragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.OmahaHigh5Fragment"
+        tools:layout="@layout/fragment_equity_calculator">
+
+        <action
+            android:id="@+id/action_OmahaHigh5Fragment_to_HomeFragment"
+            app:destination="@id/HomeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/OmahaHiLo5Fragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.OmahaHiLo5Fragment"
+        tools:layout="@layout/fragment_equity_calculator">
+
+        <action
+            android:id="@+id/action_OmahaHiLo5Fragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
 
     </fragment>

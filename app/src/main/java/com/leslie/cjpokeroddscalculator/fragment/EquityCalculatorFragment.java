@@ -58,8 +58,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
     HashBiMap<ImageButton, String> inputSuitRankMap;
     
     DisplayMetrics displayMetrics = new DisplayMetrics();
-    int cardMaxHeight;
-    int cardMaxWidth;
+    int boardCardMaxHeight;
+    int boardCardMaxWidth;
 
     int cardsPerHand;
 
@@ -70,6 +70,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public List<List<TextView>> statsMatrix = new ArrayList<>();
 
     Map<MaterialButton, ConstraintLayout> statsButtonMap = new HashMap<>();
+
+    int maxPlayers;
+    double[] initialStats;
+
+    int titleTextId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,16 +90,16 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         generateMainLayout();
 
+        setButtonListeners();
+
         ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
+    }
 
-        setSelectedCard(1, 0);
-
-        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
-
+    private void setButtonListeners () {
         equityCalculatorBinding.homeButton.setOnClickListener(v -> navControllerNavigate(this, fragmentId, homeButtonActionId));
 
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
-            if(playerRowList.size() < 10){
+            if(playerRowList.size() < this.maxPlayers){
                 addPlayerRow();
 
                 equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
@@ -102,7 +107,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 calculateOdds();
             }
             else{
-                Toast.makeText(requireActivity(), "Max number of players is 10", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "Max number of players is " + this.maxPlayers, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -140,11 +145,19 @@ public abstract class EquityCalculatorFragment extends Fragment {
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
     }
 
+    private void setInitialStats() {
+        for (int playerIdx = 0; playerIdx < 2; playerIdx++) {
+            for (int statIdx = 0; statIdx < initialStats.length; statIdx++) {
+                statsMatrix.get(playerIdx).get(statIdx).setText(getString(R.string.two_decimal_perc, initialStats[statIdx]));
+            }
+        }
+    }
+
     public abstract void addPlayerRow();
 
-    public void initialiseCardButtons(List<ImageButton> cardButtons) {
+    public void initialiseCardButtons(List<ImageButton> cardButtons, int cardMaxWidth) {
         for (ImageButton card : cardButtons) {
-            card.setMaxHeight(cardMaxHeight);
+            card.setMaxHeight(boardCardMaxHeight);
             card.setMaxWidth(cardMaxWidth);
             card.setOnClickListener(selectorListener);
         }
@@ -240,11 +253,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void initialiseVariables() {
         // TODO: getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        cardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
-        cardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
+        boardCardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
+        boardCardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
     }
 
     public void generateMainLayout() {
+        equityCalculatorBinding.title.setText(this.titleTextId);
+
         List<ImageButton> cardList = Arrays.asList(
             equityCalculatorBinding.flop1,
             equityCalculatorBinding.flop2,
@@ -253,7 +268,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             equityCalculatorBinding.river
         );
 
-        initialiseCardButtons(cardList);
+        initialiseCardButtons(cardList, boardCardMaxWidth);
         cardButtonListOfLists.add(cardList);
 
         cardRows.add(new SpecificCardsRow(5));
@@ -314,6 +329,12 @@ public abstract class EquityCalculatorFragment extends Fragment {
         for (int i = 0; i < 2; i++) {
             addPlayerRow();
         }
+
+        equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
+
+        setSelectedCard(1, 0);
+
+        setInitialStats();
     }
 
     public final View.OnClickListener removePlayerListener = v -> {
@@ -487,8 +508,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
 
-        monteCarloThread = new Thread(null, monteCarloProc);
-        exactCalcThread = new Thread(null, exactCalcProc);
+        monteCarloThread = new Thread(null, this::monteCarloProc);
+        exactCalcThread = new Thread(null, this::exactCalcProc);
 
         monteCarloThread.start();
         exactCalcThread.start();
@@ -514,7 +535,44 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     };
 
-    public Runnable monteCarloProc;
+    public void addToStatsMatrix(
+        TextView equity, TextView win, TextView tie, TextView highCard, TextView onePair, TextView twoPair, TextView threeOfAKind,
+        TextView straight, TextView flush, TextView fullHouse, TextView fourOfAKind, TextView straightFlush
+    ) {
+        this.statsMatrix.add(
+            Arrays.asList(
+                equity,
+                win,
+                tie,
+                highCard,
+                onePair,
+                twoPair,
+                threeOfAKind,
+                straight,
+                flush,
+                fullHouse,
+                fourOfAKind,
+                straightFlush
+            )
+        );
+    }
 
-    public Runnable exactCalcProc;
+    public void setRowViews(ConstraintLayout playerRow, TextView playerText, List<ImageButton> cardList, int cardMaxWidth, MaterialButton remove, MaterialButton statsButton, ConstraintLayout statsView) {
+        playerRowList.add(playerRow);
+        playerText.setText(getString(R.string.player, playerRowList.size()));
+
+        initialiseCardButtons(cardList, cardMaxWidth);
+        cardButtonListOfLists.add(cardList);
+
+        cardRows.add(new SpecificCardsRow(cardsPerHand));
+
+        removeRowList.add(remove);
+        remove.setOnClickListener(removePlayerListener);
+
+        statsButtonMap.put(statsButton, statsView);
+        statsButton.setOnClickListener(statsButtonListener);
+    }
+
+    public abstract void monteCarloProc();
+    public abstract void exactCalcProc();
 }

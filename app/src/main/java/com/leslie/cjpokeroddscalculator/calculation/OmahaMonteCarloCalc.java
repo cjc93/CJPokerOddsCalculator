@@ -5,10 +5,11 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.CardsMonteCarlo;
 
 public class OmahaMonteCarloCalc extends OmahaCalc {
 
-    public Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) {
-        Cards cards = new CardsMonteCarlo(deck, boardCards, playerCards, 2000000000);
-        this.totalSimulations = cards.count();
+    public OmahaMonteCarloCalc(int cardsPerHand) {
+        super(cardsPerHand);
+    }
 
-        return cards;
+    public Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) {
+        return new CardsMonteCarlo(deck, boardCards, playerCards, 2000000000, this.cardsPerHand);
     }
 }
