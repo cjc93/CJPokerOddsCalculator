@@ -10,8 +10,13 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import java.util.List;
 
 public abstract class OmahaCalc extends Calculation{
+    public final int cardsPerHand;
     public int totalSimulations;
     public OmahaPoker omahaPokerObj;
+
+    public OmahaCalc(int cardsPerHand) {
+        this.cardsPerHand = cardsPerHand;
+    }
 
     public void setOmahaPokerObj(OmahaPoker omahaPokerObj) {
         this.omahaPokerObj = omahaPokerObj;
@@ -38,6 +43,12 @@ public abstract class OmahaCalc extends Calculation{
 
         Cards cards = createCards(deck, boardCards, playerCards);
 
+        try {
+            this.totalSimulations = cards.count();
+        } catch (ArithmeticException e) {
+            throw new InterruptedException();
+        }
+
         this.omahaPokerObj.omahaOutputResult.beforeAllSimulations();
 
         Equity[] eqs = this.omahaPokerObj.equityImpl(cards);
@@ -45,5 +56,5 @@ public abstract class OmahaCalc extends Calculation{
         this.omahaPokerObj.omahaOutputResult.afterAllSimulations(eqs);
     }
 
-    public abstract Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) throws InterruptedException;
+    public abstract Cards createCards(String[] deck, String[] boardCards, String[][] playerCards);
 }

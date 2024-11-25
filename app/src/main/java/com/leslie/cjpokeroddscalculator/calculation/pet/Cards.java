@@ -14,7 +14,7 @@ public abstract class Cards {
 
 	String[][] cards;
 
-	public Cards(String[] deck, String[] currentBoard, String[][] currentHoleCards) {
+	public Cards(String[] deck, String[] currentBoard, String[][] currentHoleCards, int cardsPerHand) {
 		this.deck = deck;
 
 		this.currentCards = new String[currentHoleCards.length + 1][];
@@ -26,7 +26,7 @@ public abstract class Cards {
 		this.cards = new String[currentHoleCards.length + 1][];
 		this.cards[0] = new String[5];
 		for (int i = 0; i < currentHoleCards.length; i++) {
-			this.cards[i + 1] = new String[4];
+			this.cards[i + 1] = new String[cardsPerHand];
 		}
 
 		for (int i = 0; i < currentCards.length; i++) {

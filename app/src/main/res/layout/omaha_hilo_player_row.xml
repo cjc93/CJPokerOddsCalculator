@@ -23,42 +23,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintWidth_percent="0.8"/>
 
-    <ImageButton
-        android:id="@+id/card1"
-        android:contentDescription="@string/card1"
-        app:layout_constraintTop_toBottomOf="@id/player_text"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/card2"
-        style="@style/SelectCardButton" />
-
-
-    <ImageButton
-        android:id="@+id/card2"
-        android:contentDescription="@string/card2"
-        app:layout_constraintTop_toBottomOf="@id/player_text"
-        app:layout_constraintLeft_toRightOf="@id/card1"
-        app:layout_constraintRight_toLeftOf="@id/card3"
-        style="@style/SelectCardButton" />
-
-
-    <ImageButton
-        android:id="@+id/card3"
-        android:contentDescription="@string/card3"
-        app:layout_constraintTop_toBottomOf="@id/player_text"
-        app:layout_constraintLeft_toRightOf="@id/card2"
-        app:layout_constraintRight_toLeftOf="@id/card4"
-        style="@style/SelectCardButton" />
-
-
-    <ImageButton
-        android:id="@+id/card4"
-        android:contentDescription="@string/card4"
-        app:layout_constraintTop_toBottomOf="@id/player_text"
-        app:layout_constraintLeft_toRightOf="@id/card3"
-        app:layout_constraintRight_toRightOf="@id/player_text"
-        style="@style/SelectCardButton" />
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove"
         android:layout_width="0dp"
@@ -90,7 +54,6 @@
         app:cornerRadius="10dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/remove"
-        app:layout_constraintBottom_toBottomOf="@id/card1"
         app:layout_constraintLeft_toRightOf="@id/player_text"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -101,7 +64,7 @@
         android:textSize="14sp"
         android:text="@string/win"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/card1"
+        app:layout_constraintTop_toBottomOf="@id/stats_button"
         app:layout_constraintBottom_toTopOf="@id/high_text"
         app:layout_constraintLeft_toRightOf="@id/high_text"
         app:layout_constraintRight_toLeftOf="@id/tie_text" />
@@ -113,7 +76,7 @@
         android:textSize="14sp"
         android:text="@string/tie"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/card1"
+        app:layout_constraintTop_toBottomOf="@id/stats_button"
         app:layout_constraintBottom_toTopOf="@id/high_text"
         app:layout_constraintLeft_toRightOf="@id/win_text"
         app:layout_constraintRight_toLeftOf="@id/equity_text" />
@@ -125,7 +88,7 @@
         android:textSize="14sp"
         android:text="@string/equity"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/card1"
+        app:layout_constraintTop_toBottomOf="@id/stats_button"
         app:layout_constraintBottom_toTopOf="@id/high_text"
         app:layout_constraintLeft_toRightOf="@id/tie_text"
         app:layout_constraintRight_toRightOf="parent" />

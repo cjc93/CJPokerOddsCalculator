@@ -37,17 +37,30 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = navHostFragment.getNavController();
         NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.nav_graph);
 
-        if (Objects.equals(startFragmentStr, "TexasHoldem")) {
-            navGraph.setStartDestination(R.id.TexasHoldemFragment);
-        } else if (Objects.equals(startFragmentStr, "OmahaHigh")) {
-            navGraph.setStartDestination(R.id.OmahaHighFragment);
-        } else if (Objects.equals(startFragmentStr, "OmahaHiLo")) {
-            navGraph.setStartDestination(R.id.OmahaHiLoFragment);
-        } else {
-            navGraph.setStartDestination(R.id.HomeFragment);
-        }
+        int startFragmentId = getFragmentId(startFragmentStr);
+
+        navGraph.setStartDestination(startFragmentId);
 
         navController.setGraph(navGraph);
+    }
+
+    private int getFragmentId(String startFragmentStr) {
+        int startFragmentId;
+
+        if (Objects.equals(startFragmentStr, "TexasHoldem")) {
+            startFragmentId = R.id.TexasHoldemFragment;
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh")) {
+            startFragmentId = R.id.OmahaHighFragment;
+        } else if (Objects.equals(startFragmentStr, "OmahaHiLo")) {
+            startFragmentId = R.id.OmahaHiLoFragment;
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh5")) {
+            startFragmentId = R.id.OmahaHigh5Fragment;
+        } else if (Objects.equals(startFragmentStr, "OmahaHiLo5")) {
+            startFragmentId = R.id.OmahaHiLo5Fragment;
+        } else {
+            startFragmentId = R.id.HomeFragment;
+        }
+        return startFragmentId;
     }
 
     @Override

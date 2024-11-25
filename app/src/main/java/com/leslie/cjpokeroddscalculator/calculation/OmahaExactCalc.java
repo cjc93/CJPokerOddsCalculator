@@ -5,15 +5,11 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.CardsExact;
 
 public class OmahaExactCalc extends OmahaCalc {
 
-    public Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) throws InterruptedException {
-        Cards cards = new CardsExact(deck, boardCards, playerCards);
+    public OmahaExactCalc(int cardsPerHand) {
+        super(cardsPerHand);
+    }
 
-        try {
-            this.totalSimulations = cards.count();
-        } catch (ArithmeticException e) {
-            throw new InterruptedException();
-        }
-
-        return cards;
+    public Cards createCards(String[] deck, String[] boardCards, String[][] playerCards) {
+        return new CardsExact(deck, boardCards, playerCards, this.cardsPerHand);
     }
 }

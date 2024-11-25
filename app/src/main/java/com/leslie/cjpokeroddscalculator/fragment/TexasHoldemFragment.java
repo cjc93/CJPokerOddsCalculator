@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -45,11 +44,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     int rangeCardApproxSize;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -62,37 +56,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.generateRangeSelector();
         rangeSelector.setListeners();
         rangeSelector.setFragmentResultListeners();
-
-        for (int i = 0; i < 2; i++) {
-            statsMatrix.get(i).get(0).setText(getString(R.string.two_decimal_perc, 50.0));
-            statsMatrix.get(i).get(1).setText(getString(R.string.two_decimal_perc, 47.97));
-            statsMatrix.get(i).get(2).setText(getString(R.string.two_decimal_perc, 2.03));
-            statsMatrix.get(i).get(3).setText(getString(R.string.two_decimal_perc, 17.41));
-            statsMatrix.get(i).get(4).setText(getString(R.string.two_decimal_perc, 43.82));
-            statsMatrix.get(i).get(5).setText(getString(R.string.two_decimal_perc, 23.5));
-            statsMatrix.get(i).get(6).setText(getString(R.string.two_decimal_perc, 4.83));
-            statsMatrix.get(i).get(7).setText(getString(R.string.two_decimal_perc, 4.62));
-            statsMatrix.get(i).get(8).setText(getString(R.string.two_decimal_perc, 3.03));
-            statsMatrix.get(i).get(9).setText(getString(R.string.two_decimal_perc, 2.6));
-            statsMatrix.get(i).get(10).setText(getString(R.string.two_decimal_perc, 0.17));
-            statsMatrix.get(i).get(11).setText(getString(R.string.two_decimal_perc, 0.03));
-        }
-
-        equityCalculatorBinding.title.setText(getString(R.string.texas_hold_em_equity_calculator));
-
-        monteCarloProc = () -> {
-            try {
-                TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-                calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
-            } catch (InterruptedException ignored) { }
-        };
-
-        exactCalcProc = () -> {
-            try {
-                TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-                calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
-            } catch (InterruptedException ignored) { }
-        };
     }
 
     @Override
@@ -106,10 +69,26 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         super.initialiseVariables();
 
         cardsPerHand = 2;
+        maxPlayers = 10;
         fragmentName = "TexasHoldem";
         fragmentId = R.id.TexasHoldemFragment;
         homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
-        rangeCardApproxSize = Math.min(cardMaxHeight, cardMaxWidth * 350 / 250);
+        rangeCardApproxSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250);
+        initialStats = new double[]{
+            50.0,
+            47.97,
+            2.03,
+            17.41,
+            43.82,
+            23.5,
+            4.83,
+            4.62,
+            3.03,
+            2.6,
+            0.17,
+            0.03
+        };
+        titleTextId = R.string.texas_hold_em_equity_calculator;
     }
 
     @Override
@@ -124,49 +103,36 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void addPlayerRow() {
         TexasHoldemPlayerRowBinding bindingPlayerRow = TexasHoldemPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
 
-        playerRowList.add(bindingPlayerRow.getRoot());
-        statsMatrix.add(
-            Arrays.asList(
-                bindingPlayerRow.equity,
-                bindingPlayerRow.win,
-                bindingPlayerRow.tie,
-                bindingPlayerRow.statsView.highCard,
-                bindingPlayerRow.statsView.onePair,
-                bindingPlayerRow.statsView.twoPair,
-                bindingPlayerRow.statsView.threeOfAKind,
-                bindingPlayerRow.statsView.straight,
-                bindingPlayerRow.statsView.flush,
-                bindingPlayerRow.statsView.fullHouse,
-                bindingPlayerRow.statsView.fourOfAKind,
-                bindingPlayerRow.statsView.straightFlush
-            )
-        );
-
-        twoCardsGroups.add(bindingPlayerRow.twoCards);
-
         List<ImageButton> cardList = Arrays.asList(
             bindingPlayerRow.card1,
             bindingPlayerRow.card2
         );
 
-        initialiseCardButtons(cardList);
-        cardButtonListOfLists.add(cardList);
+        setRowViews(bindingPlayerRow.getRoot(), bindingPlayerRow.playerText, cardList, boardCardMaxWidth, bindingPlayerRow.remove, bindingPlayerRow.statsButton, bindingPlayerRow.statsView.getRoot());
 
-        cardRows.add(new SpecificCardsRow(cardsPerHand));
+        addToStatsMatrix(
+            bindingPlayerRow.equity,
+            bindingPlayerRow.win,
+            bindingPlayerRow.tie,
+            bindingPlayerRow.statsView.highCard,
+            bindingPlayerRow.statsView.onePair,
+            bindingPlayerRow.statsView.twoPair,
+            bindingPlayerRow.statsView.threeOfAKind,
+            bindingPlayerRow.statsView.straight,
+            bindingPlayerRow.statsView.flush,
+            bindingPlayerRow.statsView.fullHouse,
+            bindingPlayerRow.statsView.fourOfAKind,
+            bindingPlayerRow.statsView.straightFlush
+        );
+
+        twoCardsGroups.add(bindingPlayerRow.twoCards);
 
         ImageButton rangeButton = bindingPlayerRow.range;
         rangeButton.setOnClickListener(rangeSelectorListener);
         rangeButtonList.add(rangeButton);
 
-        removeRowList.add(bindingPlayerRow.remove);
         handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
-        statsButtonMap.put(bindingPlayerRow.statsButton, bindingPlayerRow.statsView.getRoot());
-
-        bindingPlayerRow.playerText.setText(getString(R.string.player, playerRowList.size()));
-
-        bindingPlayerRow.remove.setOnClickListener(removePlayerListener);
         bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
-        bindingPlayerRow.statsButton.setOnClickListener(statsButtonListener);
     }
 
     private final View.OnClickListener rangeSwitchListener = v -> {
@@ -261,5 +227,21 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         handRangeSwitchList.remove(playerRemoveNumber - 1);
 
         super.removePlayerRow(playerRemoveNumber);
+    }
+
+    @Override
+    public void monteCarloProc() {
+        try {
+            TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
+            calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
+        } catch (InterruptedException ignored) { }
+    }
+
+    @Override
+    public void exactCalcProc() {
+        try {
+            TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
+            calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
+        } catch (InterruptedException ignored) { }
     }
 }
