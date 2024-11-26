@@ -128,46 +128,50 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         twoCardsGroups.add(bindingPlayerRow.twoCards);
 
         ImageButton rangeButton = bindingPlayerRow.range;
-        rangeButton.setOnClickListener(rangeSelectorListener);
+
+        rangeButton.setOnClickListener(v -> {
+            ImageButton rangeSelectorInput = (ImageButton) v;
+            showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
+        });
+
         rangeButtonList.add(rangeButton);
 
         handRangeSwitchList.add(bindingPlayerRow.handRangeButton);
-        bindingPlayerRow.handRangeButton.setOnClickListener(rangeSwitchListener);
-    }
 
-    private final View.OnClickListener rangeSwitchListener = v -> {
-        final MaterialButton rangeSwitchInput = (MaterialButton) v;
-        int playerRangeSwitchNumber = handRangeSwitchList.indexOf(rangeSwitchInput) + 1;
+        bindingPlayerRow.handRangeButton.setOnClickListener(v -> {
+            final MaterialButton rangeSwitchInput = (MaterialButton) v;
+            int playerRangeSwitchNumber = handRangeSwitchList.indexOf(rangeSwitchInput) + 1;
 
-        if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
-            for (int i = 0; i < 2; i++) {
-                setInputCardVisible(playerRangeSwitchNumber, i);
+            if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
+                for (int i = 0; i < 2; i++) {
+                    setInputCardVisible(playerRangeSwitchNumber, i);
+                }
+
+                twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
+                cardRows.set(playerRangeSwitchNumber, new RangeRow());
+                ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
+                b.setMaxHeight(cardButtonListOfLists.get(playerRangeSwitchNumber).get(0).getHeight());
+                b.setImageBitmap(this.emptyRangeBitmap);
+                b.setVisibility(View.VISIBLE);
+                rangeSwitchInput.setText(R.string.hand);
+                showRangeSelector(playerRangeSwitchNumber);
+                hideCardSelector();
+            } else {
+                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand));
+                for (int i = 0; i < cardsPerHand; i++) {
+                    setCardImage(playerRangeSwitchNumber, i, "");
+                }
+
+                rangeButtonList.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
+                twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.VISIBLE);
+
+                rangeSwitchInput.setText(R.string.range);
+                setSelectedCard(playerRangeSwitchNumber, 0);
+                showCardSelector();
             }
 
-            twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
-            cardRows.set(playerRangeSwitchNumber, new RangeRow());
-            ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
-            b.setMaxHeight(cardButtonListOfLists.get(playerRangeSwitchNumber).get(0).getHeight());
-            b.setImageBitmap(this.emptyRangeBitmap);
-            b.setVisibility(View.VISIBLE);
-            rangeSwitchInput.setText(R.string.hand);
-            showRangeSelector(playerRangeSwitchNumber);
-            hideCardSelector();
-        } else {
-            setEmptyHandRow(playerRangeSwitchNumber);
-            rangeSwitchInput.setText(R.string.range);
-            setSelectedCard(playerRangeSwitchNumber, 0);
-            showCardSelector();
-        }
-
-        calculateOdds();
-    };
-
-    @Override
-    public void setEmptyHandRow(int row) {
-        super.setEmptyHandRow(row);
-        rangeButtonList.get(row - 1).setVisibility(View.GONE);
-        twoCardsGroups.get(row - 1).setVisibility(View.VISIBLE);
+            calculateOdds();
+        });
     }
 
     private void showRangeSelector(int row) {
@@ -180,11 +184,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         equityCalculatorBinding.mainUi.setVisibility(View.GONE);
         rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
     }
-
-    private final View.OnClickListener rangeSelectorListener = v -> {
-        ImageButton rangeSelectorInput = (ImageButton) v;
-        showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
-    };
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
         if (selectedRangePosition != null) {
