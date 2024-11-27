@@ -394,7 +394,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
             setCardImage(selectedRowIdx, selectedCardIdx, cardStr);
 
-            if ((selectedRowIdx == 0 && selectedCardIdx < 4) || selectedCardIdx < (cardsPerHand - 1)) {
+            if ((selectedRowIdx == 0 && selectedCardIdx < 4) || (selectedRowIdx > 0 && selectedCardIdx < (cardsPerHand - 1))) {
                 setSelectedCard(selectedRowIdx, selectedCardIdx + 1);
             } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (cardsPerHand - 1)) {
                 setSelectedCard(0, 0);

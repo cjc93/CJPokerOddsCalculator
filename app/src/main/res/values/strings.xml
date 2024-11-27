@@ -59,4 +59,6 @@
     <string name="card_turn">CardTurn</string>
     <string name="card_river">CardRiver</string>
     <string name="player_rows">PlayerRows</string>
+    <string name="omaha_high_6_card_equity_calculator">Omaha High 6 Card Equity Calculator</string>
+    <string name="omaha_hi_lo_6_card_equity_calculator">Omaha Hi/Lo 6 Card Equity Calculator</string>
 </resources>
