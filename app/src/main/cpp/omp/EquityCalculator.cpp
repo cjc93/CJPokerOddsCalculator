@@ -773,6 +773,7 @@ double EquityCalculator::combineResults(const BatchResults& batch)
                         batchEquity += batch.winsByPlayerMask[i];
                 } else {
                     mResults.ties[batch.playerIds[j]] += batch.winsByPlayerMask[i] / (double)winnerCount;
+                    mResults.tieCount[batch.playerIds[j]] += batch.winsByPlayerMask[i];
                     if (batch.playerIds[j] == 0)
                         batchEquity += batch.winsByPlayerMask[i] / (double)winnerCount;
                 }
