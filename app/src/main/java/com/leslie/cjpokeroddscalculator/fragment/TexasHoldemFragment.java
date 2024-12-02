@@ -77,7 +77,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         initialStats = new double[]{
             50.0,
             47.97,
-            2.03,
+            4.07,
             17.41,
             43.82,
             23.5,

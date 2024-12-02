@@ -196,7 +196,7 @@ jobjectArray results_to_jdouble_matrix(JNIEnv *pEnv, const omp::EquityCalculator
 
     double tie[10];
     for (int i = 0; i < 10; ++i) {
-        tie[i] = abs(cpp_results.equity[i] - win[i]);
+        tie[i] = (double) cpp_results.tieCount[i] / (double) cpp_results.hands;
     }
 
     jdoubleArray jtie = cpp_double_array_to_jdouble_array(pEnv, tie);

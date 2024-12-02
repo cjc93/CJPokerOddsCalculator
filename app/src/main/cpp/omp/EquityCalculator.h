@@ -64,6 +64,7 @@ public:
         bool finished = false;
 
         uint64_t handStats[MAX_PLAYERS][9] = {};
+        uint64_t tieCount[MAX_PLAYERS] = {};
     };
 
     // Start a new calculation. Returns false if calculation is impossible for given hand ranges and board/dead cards.
