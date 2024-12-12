@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (Objects.equals(startFragmentStr, "OmahaHiLo6")) {
             startFragmentId = R.id.OmahaHiLo6Fragment;
         } else {
-            startFragmentId = R.id.HomeFragment;
+            startFragmentId = R.id.TexasHoldemFragment;
         }
         return startFragmentId;
     }
