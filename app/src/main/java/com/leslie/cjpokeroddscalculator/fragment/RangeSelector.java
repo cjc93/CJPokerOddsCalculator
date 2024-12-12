@@ -379,6 +379,9 @@ public class RangeSelector {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
                 clearSuitSelectorUI();
+                for (MaterialButton b : inputMatrixMap.keySet()) {
+                    b.setClickable(false);
+                }
             }
 
             @Override
@@ -396,6 +399,10 @@ public class RangeSelector {
                     } else {
                         suits.clear();
                     }
+                }
+
+                for (MaterialButton b : inputMatrixMap.keySet()) {
+                    b.setClickable(true);
                 }
             }
         });
