@@ -145,7 +145,7 @@
             android:orientation="vertical"
             android:contentDescription="@string/player_rows"
             app:layout_constraintTop_toBottomOf="@id/playersremaining"
-            app:layout_constraintBottom_toTopOf="@id/res_desc">
+            app:layout_constraintBottom_toTopOf="@id/discarded_cards">
 
             <LinearLayout
                 android:id="@+id/player_rows"
@@ -157,6 +157,66 @@
 
         </ScrollView>
 
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="discarded_cards,discard1,discard2,discard3,discard4,discard5"
+            android:id="@+id/discard_group"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/discarded_cards"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#696969"
+            android:gravity="center"
+            android:text="@string/discarded_cards"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scroll_view"
+            app:layout_constraintBottom_toTopOf="@id/discard1" />
+
+        <ImageButton
+            android:id="@+id/discard1"
+            style="@style/SelectCardButton"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/discard2"
+            app:layout_constraintTop_toBottomOf="@id/discarded_cards"
+            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+
+        <ImageButton
+            android:id="@+id/discard2"
+            style="@style/SelectCardButton"
+            app:layout_constraintLeft_toRightOf="@id/discard1"
+            app:layout_constraintRight_toLeftOf="@id/discard3"
+            app:layout_constraintTop_toBottomOf="@id/discarded_cards"
+            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+
+        <ImageButton
+            android:id="@+id/discard3"
+            style="@style/SelectCardButton"
+            app:layout_constraintLeft_toRightOf="@id/discard2"
+            app:layout_constraintRight_toLeftOf="@id/discard4"
+            app:layout_constraintTop_toBottomOf="@id/discarded_cards"
+            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+
+        <ImageButton
+            android:id="@+id/discard4"
+            style="@style/SelectCardButton"
+            app:layout_constraintLeft_toRightOf="@id/discard3"
+            app:layout_constraintRight_toLeftOf="@id/discard5"
+            app:layout_constraintTop_toBottomOf="@id/discarded_cards"
+            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+
+        <ImageButton
+            android:id="@+id/discard5"
+            style="@style/SelectCardButton"
+            app:layout_constraintLeft_toRightOf="@id/discard4"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/discarded_cards"
+            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+
+
         <TextView
             android:id="@+id/res_desc"
             android:layout_width="match_parent"
@@ -164,7 +224,7 @@
             android:gravity="center"
             android:text="@string/all_combinations_checked_result_is_exact"
             android:textSize="11sp"
-            app:layout_constraintTop_toBottomOf="@id/scroll_view"
+            app:layout_constraintTop_toBottomOf="@id/discard1"
             app:layout_constraintBottom_toTopOf="@id/addplayer" />
 
         <com.google.android.material.button.MaterialButton
@@ -186,6 +246,17 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/clear"
             app:layout_constraintLeft_toRightOf="@id/addplayer"
+            app:layout_constraintRight_toLeftOf="@id/discard"
+            app:layout_constraintTop_toBottomOf="@id/res_desc"
+            app:layout_constraintBottom_toTopOf="@id/input_cards" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/discard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Discard"
+            app:layout_constraintLeft_toRightOf="@id/clear"
             app:layout_constraintRight_toLeftOf="@id/button_unknown"
             app:layout_constraintTop_toBottomOf="@id/res_desc"
             app:layout_constraintBottom_toTopOf="@id/input_cards" />
@@ -198,7 +269,7 @@
             android:scaleType="fitCenter"
             android:padding="1dp"
             android:background="@null"
-            app:layout_constraintLeft_toRightOf="@id/clear"
+            app:layout_constraintLeft_toRightOf="@id/discard"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/res_desc"
             app:layout_constraintBottom_toTopOf="@id/input_cards"

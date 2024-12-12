@@ -11,13 +11,16 @@ import java.util.StringJoiner;
 
 public class SpecificCardsRow extends CardRow {
     public String[] cards;
+    public String cardType;
 
-    public SpecificCardsRow(int numOfCards) {
+    public SpecificCardsRow(int numOfCards, String cardType) {
         cards = new String[numOfCards];
 
         for (int i = 0; i < numOfCards; i++) {
             cards[i] = "";
         }
+
+        this.cardType = cardType;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class SpecificCardsRow extends CardRow {
         Arrays.fill(this.cards, "");
 
         for (int i = 0; i < this.cards.length; i++) {
-            equityCalculatorFragment.setCardImage(rowIdx, i, "");
+            equityCalculatorFragment.setCardImage(this.cardType, rowIdx, i, "");
         }
     }
 

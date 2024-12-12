@@ -63,4 +63,5 @@
     <string name="omaha_hi_lo_6_card_equity_calculator">Omaha Hi/Lo 6 Card Equity Calculator</string>
     <string name="texas_hold_em">Texas Hold\'em</string>
     <string name="omaha">Omaha</string>
+    <string name="discarded_cards">Discarded Cards</string>
 </resources>

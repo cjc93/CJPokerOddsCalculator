@@ -144,7 +144,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
                 for (int i = 0; i < 2; i++) {
-                    setInputCardVisible(playerRangeSwitchNumber, i);
+                    setInputCardVisible("board", playerRangeSwitchNumber, i);
                 }
 
                 twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
@@ -157,16 +157,16 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 showRangeSelector(playerRangeSwitchNumber);
                 hideCardSelector();
             } else {
-                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand));
+                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand, "board"));
                 for (int i = 0; i < cardsPerHand; i++) {
-                    setCardImage(playerRangeSwitchNumber, i, "");
+                    setCardImage("board", playerRangeSwitchNumber, i, "");
                 }
 
                 rangeButtonList.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
                 twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.VISIBLE);
 
                 rangeSwitchInput.setText(R.string.range);
-                setSelectedCard(playerRangeSwitchNumber, 0);
+                setSelectedCard("board", playerRangeSwitchNumber, 0);
                 showCardSelector();
             }
 
