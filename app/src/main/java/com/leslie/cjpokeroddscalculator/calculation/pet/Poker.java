@@ -251,8 +251,8 @@ public abstract class Poker {
 	private static void rem1(List<String> list, String[] a) {
 		if (a != null) {
 			for (String s : a) {
-				if (s != null && !list.remove(s)) {
-					throw new RuntimeException("card " + s + " already removed");
+				if (s != null) {
+					list.remove(s);
 				}
 			}
 		}
