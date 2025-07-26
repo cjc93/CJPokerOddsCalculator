@@ -426,7 +426,7 @@ public class RangeSelector {
 
     public void setFragmentResultListeners() {
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("add_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
-            String rangeName = (String) result.get("range_name");
+            String rangeName = result.getString("range_name");
 
             ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
                 PreferencesKeys.stringKey("thec_" + rangeName),
@@ -452,8 +452,8 @@ public class RangeSelector {
         });
 
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("rename_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
-            String oldRangeName = (String) result.get("old_range_name");
-            String newRangeName = (String) result.get("new_range_name");
+            String oldRangeName = result.getString("old_range_name");
+            String newRangeName = result.getString("new_range_name");
 
             Preferences.Key<String> OLD_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + oldRangeName);
             Preferences.Key<String> NEW_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + newRangeName);
@@ -491,7 +491,7 @@ public class RangeSelector {
         });
 
         texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
-            String rangeName = (String) result.get("range_name");
+            String rangeName = result.getString("range_name");
 
             ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(PreferencesKeys.stringKey("thec_" + rangeName));
 

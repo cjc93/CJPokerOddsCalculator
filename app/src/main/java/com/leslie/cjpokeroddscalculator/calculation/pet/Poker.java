@@ -55,7 +55,7 @@ public abstract class Poker {
 	
 	public static final String[] deckArrS;
 	
-	public static final List<String> deck = Collections.unmodifiableList(Arrays.asList(deckArr));
+	public static final List<String> deck = List.of(deckArr);
 
 	static {
 		deckArrS = deckArr.clone();
