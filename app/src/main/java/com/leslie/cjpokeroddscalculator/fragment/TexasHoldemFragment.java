@@ -186,11 +186,10 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        if (selectedRangePosition != null) {
+        if (selectedRangePosition != null && selectedRangePosition < this.cardRows.size()) {
             CardRow cardRow = this.cardRows.get(selectedRangePosition);
 
-            if (cardRow instanceof RangeRow) {
-                RangeRow rangeRow = (RangeRow) cardRow;
+            if (cardRow instanceof RangeRow rangeRow) {
 
                 rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 

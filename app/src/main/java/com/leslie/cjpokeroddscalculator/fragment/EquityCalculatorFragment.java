@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowMetrics;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,8 +112,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         equityCalculatorBinding.clear.setOnClickListener(v -> {
             for (int i = 0; i < cardRows.size(); i++) {
-                if (cardRows.get(i) instanceof SpecificCardsRow) {
-                    SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(i);
+                if (cardRows.get(i) instanceof SpecificCardsRow cardRow) {
                     for (int j = 0; j < cardRow.cards.length; j++) {
                         setInputCardVisible(i, j);
                     }
@@ -255,8 +255,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void initialiseVariables() {
-        // TODO: getDefaultDisplay is deprecated, when minSdk >= 30, we should fix this
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        WindowMetrics windowMetrics = requireActivity().getWindowManager().getCurrentWindowMetrics();
+        Rect bounds = windowMetrics.getBounds();
+        displayMetrics.widthPixels = bounds.width();
+        displayMetrics.heightPixels = bounds.height();
         boardCardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
         boardCardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
     }
@@ -418,7 +420,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             if(selectedRowIdx > 0 && (!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height())) {
                 equityCalculatorBinding.scrollView.post(
                     () -> {
-                        if (selectedRowIdx != null) {
+                        if (selectedRowIdx != null && selectedRowIdx > 0) {
                             equityCalculatorBinding.scrollView.smoothScrollTo(
                                 0,
                                 playerRowList.get(selectedRowIdx - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
@@ -521,7 +523,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
             if (selectedRowIdx != null && selectedRowIdx >= playerRemoveNumber) {
                 for (int i = selectedRowIdx; i >= 0; i--) {
-                    if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
+                    if (i == 0) {
+                        setSelectedCard(0, 0);
+                        break;
+                    } else if (i < cardRows.size() && cardRows.get(i) instanceof SpecificCardsRow) {
                         setSelectedCard(i, selectedCardIdx);
                         break;
                     }

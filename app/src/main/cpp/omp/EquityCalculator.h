@@ -98,7 +98,7 @@ public:
     void setTimeLimit(double seconds)
     {
         std::lock_guard<std::mutex> lock(mMutex);
-        mTimeLimit = seconds <= 0 ? INFINITE : seconds;
+        mTimeLimit = seconds <= 0 ? static_cast<double>(INFINITE) : seconds;
     }
 
     // Set a hand limit for the calculation or 0 to disable. Disabled by default.

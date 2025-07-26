@@ -72,8 +72,7 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
         assert navHostFragment != null;
         Fragment f = navHostFragment.getChildFragmentManager().getFragments().get(0);
-        if (f instanceof EquityCalculatorFragment) {
-            EquityCalculatorFragment equityCalculatorFragment = (EquityCalculatorFragment) f;
+        if (f instanceof EquityCalculatorFragment equityCalculatorFragment) {
             equityCalculatorFragment.checkClickToHideCardSelector(ev);
         }
         return super.dispatchTouchEvent(ev);
