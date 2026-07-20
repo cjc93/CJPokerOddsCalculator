@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
@@ -31,6 +32,7 @@ import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.FragmentEquityCalculatorBinding;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +43,7 @@ import java.util.Objects;
 public abstract class EquityCalculatorFragment extends Fragment {
 
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
+    public EquityCalculatorViewModel viewModel;
     public long startClickTime;
 
     Integer selectedRowIdx;
@@ -85,13 +88,23 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(EquityCalculatorViewModel.class);
+
         initialiseVariables();
 
         generateMainLayout();
 
+        observeLiveData();
+
         setButtonListeners();
 
         ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
+    }
+
+    public void observeLiveData() {
+        viewModel.resDesc.observe(getViewLifecycleOwner(), stringId -> {
+            equityCalculatorBinding.resDesc.setText(stringId);
+        });
     }
 
     private void setButtonListeners () {
@@ -466,7 +479,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
         }
 
-        equityCalculatorBinding.resDesc.setText(R.string.checking_random_subset);
+        viewModel.resDesc.postValue(R.string.checking_random_subset);
 
         monteCarloThread = new Thread(null, this::monteCarloProc);
         exactCalcThread = new Thread(null, this::exactCalcProc);

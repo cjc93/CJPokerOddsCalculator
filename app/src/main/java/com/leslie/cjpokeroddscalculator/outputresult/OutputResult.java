@@ -13,7 +13,7 @@ public abstract class OutputResult {
 
     public void updateResDesc(int stringId) {
         if (equityCalculatorFragment.equityCalculatorBinding != null) {
-            equityCalculatorFragment.equityCalculatorBinding.resDesc.setText(stringId);
+            equityCalculatorFragment.viewModel.resDesc.postValue(stringId);
         }
     }
 
