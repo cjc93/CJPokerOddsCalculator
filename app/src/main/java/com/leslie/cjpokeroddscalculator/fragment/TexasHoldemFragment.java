@@ -155,7 +155,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 b.setVisibility(View.VISIBLE);
                 rangeSwitchInput.setText(R.string.hand);
                 showRangeSelector(playerRangeSwitchNumber);
-                hideCardSelector();
+                viewModel.selectedCard.postValue(null);
             } else {
                 cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand));
                 for (int i = 0; i < cardsPerHand; i++) {
@@ -166,8 +166,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.VISIBLE);
 
                 rangeSwitchInput.setText(R.string.range);
-                setSelectedCard(playerRangeSwitchNumber, 0);
-                showCardSelector();
+                viewModel.selectedCard.postValue(new int[]{playerRangeSwitchNumber, 0});
             }
 
             calculateOdds();
