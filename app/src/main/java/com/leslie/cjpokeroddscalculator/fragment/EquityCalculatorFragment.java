@@ -71,7 +71,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     List<MaterialButton> statsButtonList = new ArrayList<>();
 
     int maxPlayers;
-    double[] initialStats;
 
     int titleTextId;
 
@@ -85,7 +84,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(EquityCalculatorViewModel.class);
+        viewModel = new ViewModelProvider(this).get(getViewModelClass());
 
         initialiseVariables();
 
@@ -97,6 +96,8 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
     }
+
+    protected abstract Class<? extends EquityCalculatorViewModel> getViewModelClass();
 
     public void observeLiveData() {
         viewModel.resDesc.observe(getViewLifecycleOwner(), stringId -> equityCalculatorBinding.resDesc.setText(stringId));
@@ -117,6 +118,24 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 hideCardSelector();
             } else {
                 showCardSelector();
+            }
+        });
+
+        viewModel.stats.observe(getViewLifecycleOwner(), results -> {
+            if (results == null) {
+                for (int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
+                    List<TextView> row = statsMatrix.get(playerIdx);
+                    for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
+                        row.get(statsIdx).setText("");
+                    }
+                }
+            } else {
+                for (int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
+                    List<TextView> row = statsMatrix.get(playerIdx);
+                    for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
+                        row.get(statsIdx).setText(getString(R.string.two_decimal_perc, results[playerIdx][statsIdx] * 100));
+                    }
+                }
             }
         });
     }
@@ -363,12 +382,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
 
         equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, playerRowList.size()));
-
-        for (int playerIdx = 0; playerIdx < 2; playerIdx++) {
-            for (int statIdx = 0; statIdx < initialStats.length; statIdx++) {
-                statsMatrix.get(playerIdx).get(statIdx).setText(getString(R.string.two_decimal_perc, initialStats[statIdx]));
-            }
-        }
     }
 
     public void removePlayerRow(int playerRemoveNumber) {
@@ -472,11 +485,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             exactCalcThread.interrupt();
         }
 
-        for(int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
-            for(int statsIdx = 0; statsIdx < statsMatrix.get(playerIdx).size(); statsIdx++) {
-                statsMatrix.get(playerIdx).get(statsIdx).setText("");
-            }
-        }
+        viewModel.stats.postValue(null);
 
         viewModel.resDesc.postValue(R.string.checking_random_subset);
 

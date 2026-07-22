@@ -18,16 +18,17 @@ public abstract class OutputResult {
     }
 
     public void updateWinResults(double[][] results) {
-        try {
-            if (equityCalculatorFragment.getActivity() != null) {
-                for (int playerIdx = 0; playerIdx < equityCalculatorFragment.statsMatrix.size(); playerIdx++) {
-                    for (int statsIdx = 0; statsIdx < equityCalculatorFragment.statsMatrix.get(playerIdx).size(); statsIdx++) {
-                        equityCalculatorFragment.statsMatrix.get(playerIdx).get(statsIdx).setText(
-                            equityCalculatorFragment.getString(R.string.two_decimal_perc, results[statsIdx][playerIdx] * 100)
-                        );
-                    }
-                }
+        int rows = results.length;
+        int cols = results[0].length;
+
+        double[][] transposedResults = new double[cols][rows];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposedResults[j][i] = results[i][j];
             }
-        } catch (IndexOutOfBoundsException ignored) { }
+        }
+
+        equityCalculatorFragment.viewModel.stats.postValue(transposedResults);
     }
 }

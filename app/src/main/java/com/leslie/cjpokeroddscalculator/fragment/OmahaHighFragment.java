@@ -17,6 +17,8 @@ import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,11 @@ import java.util.List;
 public class OmahaHighFragment extends EquityCalculatorFragment {
 
     public int playerCardMaxWidth;
+
+    @Override
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return OmahaHighViewModel.class;
+    }
 
     @Override
     public void monteCarloProc() {
@@ -120,20 +127,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         fragmentName = "OmahaHigh";
         fragmentId = R.id.OmahaHighFragment;
         homeButtonActionId = R.id.action_OmahaHighFragment_to_HomeFragment;
-        initialStats = new double[]{
-            50.0,
-            49.29,
-            1.42,
-            2.99,
-            26.47,
-            36.83,
-            8.79,
-            11.27,
-            6.72,
-            6.35,
-            0.48,
-            0.09
-        };
         titleTextId = R.string.omaha_high_equity_calculator;
     }
 }

@@ -22,6 +22,8 @@ import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +67,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     @Override
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return TexasHoldemViewModel.class;
+    }
+
+    @Override
     public void initialiseVariables() {
         super.initialiseVariables();
 
@@ -74,20 +81,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         fragmentId = R.id.TexasHoldemFragment;
         homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
         rangeCardApproxSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250);
-        initialStats = new double[]{
-            50.0,
-            47.97,
-            4.07,
-            17.41,
-            43.82,
-            23.5,
-            4.83,
-            4.62,
-            3.03,
-            2.6,
-            0.17,
-            0.03
-        };
         titleTextId = R.string.texas_hold_em_equity_calculator;
     }
 

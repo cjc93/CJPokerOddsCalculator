@@ -16,11 +16,18 @@ import com.leslie.cjpokeroddscalculator.databinding.OmahaHiloPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHiLoViewModel;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class OmahaHiLoFragment extends OmahaHighFragment {
+
+    @Override
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return OmahaHiLoViewModel.class;
+    }
 
     @Override
     public void addPlayerRow() {
@@ -95,23 +102,6 @@ public class OmahaHiLoFragment extends OmahaHighFragment {
         fragmentName = "OmahaHiLo";
         fragmentId = R.id.OmahaHiLoFragment;
         homeButtonActionId = R.id.action_OmahaHiLoFragment_to_HomeFragment;
-        initialStats = new double[]{
-            50.0,
-            49.29,
-            23.98,
-            1.42,
-            1.68,
-            2.98,
-            26.45,
-            36.86,
-            8.79,
-            11.28,
-            6.73,
-            6.35,
-            0.48,
-            0.09,
-            34.81
-        };
         titleTextId = R.string.omaha_high_low_equity_calculator;
     }
 

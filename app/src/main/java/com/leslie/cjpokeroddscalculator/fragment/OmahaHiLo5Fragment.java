@@ -1,8 +1,15 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHiLo5ViewModel;
 
 public class OmahaHiLo5Fragment extends OmahaHiLoFragment {
+
+    @Override
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return OmahaHiLo5ViewModel.class;
+    }
 
     @Override
     public void initialiseVariables() {
@@ -14,23 +21,6 @@ public class OmahaHiLo5Fragment extends OmahaHiLoFragment {
         fragmentName = "OmahaHiLo5";
         fragmentId = R.id.OmahaHiLo5Fragment;
         homeButtonActionId = R.id.action_OmahaHiLo5Fragment_to_HomeFragment;
-        initialStats = new double[]{
-            50.0,
-            48.98,
-            26.44,
-            2.03,
-            2.63,
-            0.78,
-            16.68,
-            37.62,
-            9.65,
-            15.25,
-            9.61,
-            9.56,
-            0.72,
-            0.14,
-            43.02
-        };
         titleTextId = R.string.omaha_high_low_5_equity_calculator;
     }
 }
