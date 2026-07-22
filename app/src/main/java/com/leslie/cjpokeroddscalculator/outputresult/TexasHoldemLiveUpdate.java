@@ -2,11 +2,12 @@ package com.leslie.cjpokeroddscalculator.outputresult;
 
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class TexasHoldemLiveUpdate extends TexasHoldemOutputResult {
 
-    public TexasHoldemLiveUpdate(EquityCalculatorFragment equityCalculatorFragment) {
-        super(equityCalculatorFragment);
+    public TexasHoldemLiveUpdate(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel) {
+        super(equityCalculatorFragment, equityCalculatorViewModel);
     }
 
     @Override
@@ -22,7 +23,7 @@ public class TexasHoldemLiveUpdate extends TexasHoldemOutputResult {
     @Override
     public void afterAllSimulations(double[][] results, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(results));
             } else {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {

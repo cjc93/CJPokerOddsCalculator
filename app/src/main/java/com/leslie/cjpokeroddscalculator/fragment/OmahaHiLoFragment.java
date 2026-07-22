@@ -104,24 +104,4 @@ public class OmahaHiLoFragment extends OmahaHighFragment {
         homeButtonActionId = R.id.action_OmahaHiLoFragment_to_HomeFragment;
         titleTextId = R.string.omaha_high_low_equity_calculator;
     }
-
-    @Override
-    public void monteCarloProc() {
-        try {
-            OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
-    public void exactCalcProc() {
-        try {
-            OmahaExactCalc calcObj = new OmahaExactCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
-    }
 }

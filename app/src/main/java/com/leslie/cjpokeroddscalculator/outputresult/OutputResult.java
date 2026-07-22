@@ -2,13 +2,16 @@ package com.leslie.cjpokeroddscalculator.outputresult;
 
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 
 public abstract class OutputResult {
     public EquityCalculatorFragment equityCalculatorFragment;
+    public EquityCalculatorViewModel equityCalculatorViewModel;
 
-    public OutputResult(EquityCalculatorFragment equityCalculatorFragment) {
+    public OutputResult(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel) {
         this.equityCalculatorFragment = equityCalculatorFragment;
+        this.equityCalculatorViewModel = equityCalculatorViewModel;
     }
 
     public void updateResDesc(int stringId) {

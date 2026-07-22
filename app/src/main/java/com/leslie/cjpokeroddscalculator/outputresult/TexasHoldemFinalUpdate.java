@@ -2,11 +2,12 @@ package com.leslie.cjpokeroddscalculator.outputresult;
 
 import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
 
-    public TexasHoldemFinalUpdate(EquityCalculatorFragment equityCalculatorFragment) {
-        super(equityCalculatorFragment);
+    public TexasHoldemFinalUpdate(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel) {
+        super(equityCalculatorFragment, equityCalculatorViewModel);
     }
 
     @Override
@@ -23,11 +24,11 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
     @Override
     public void afterAllSimulations(double[][] results, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.monteCarloThread.isAlive()) {
+            if (equityCalculatorViewModel.monteCarloThread.isAlive()) {
                 if (isCancelled[0]) {
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
                 } else {
-                    equityCalculatorFragment.monteCarloThread.interrupt();
+                    equityCalculatorViewModel.monteCarloThread.interrupt();
                     equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                         updateWinResults(results);
                         updateResDesc(R.string.all_combinations_checked_result_is_exact);

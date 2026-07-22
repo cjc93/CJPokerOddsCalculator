@@ -218,20 +218,4 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         super.removePlayerRow(playerRemoveNumber);
     }
-
-    @Override
-    public void monteCarloProc() {
-        try {
-            TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-            calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
-    public void exactCalcProc() {
-        try {
-            TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-            calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
-        } catch (InterruptedException ignored) { }
-    }
 }

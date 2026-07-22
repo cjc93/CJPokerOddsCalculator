@@ -33,26 +33,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     }
 
     @Override
-    public void monteCarloProc() {
-        try {
-            OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
-    public void exactCalcProc() {
-        try {
-            OmahaExactCalc calcObj = new OmahaExactCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
     public void addPlayerRow() {
         OmahaHighPlayerRowBinding bindingPlayerRow = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
 

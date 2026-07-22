@@ -46,12 +46,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public EquityCalculatorViewModel viewModel;
     public long startClickTime;
 
-    public Thread monteCarloThread = null;
-    public Thread exactCalcThread = null;
-
     public List<ConstraintLayout> playerRowList = new ArrayList<>();
     List<MaterialButton> removeRowList = new ArrayList<>();
-    List<CardRow> cardRows = new ArrayList<>();
+    public List<CardRow> cardRows = new ArrayList<>();
 
     public List<List<ImageButton>> cardButtonListOfLists = new ArrayList<>();
     HashBiMap<ImageButton, String> inputSuitRankMap;
@@ -60,7 +57,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     int boardCardMaxHeight;
     int boardCardMaxWidth;
 
-    int cardsPerHand;
+    public int cardsPerHand;
 
     public String fragmentName;
     public int fragmentId;
@@ -210,14 +207,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (monteCarloThread != null) {
-            monteCarloThread.interrupt();
-        }
-
-        if (exactCalcThread != null) {
-            exactCalcThread.interrupt();
-        }
-
         equityCalculatorBinding = null;
     }
 
@@ -472,23 +461,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
     }
 
     public void calculateOdds() {
-        if (monteCarloThread != null) {
-            monteCarloThread.interrupt();
-        }
-
-        if (exactCalcThread != null) {
-            exactCalcThread.interrupt();
-        }
-
         viewModel.stats.postValue(null);
-
         viewModel.resDesc.postValue(R.string.checking_random_subset);
-
-        monteCarloThread = new Thread(null, this::monteCarloProc);
-        exactCalcThread = new Thread(null, this::exactCalcProc);
-
-        monteCarloThread.start();
-        exactCalcThread.start();
+        viewModel.calculateOdds(this);
     }
 
     public void addToStatsMatrix(
@@ -561,7 +536,4 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
         });
     }
-
-    public abstract void monteCarloProc();
-    public abstract void exactCalcProc();
 }

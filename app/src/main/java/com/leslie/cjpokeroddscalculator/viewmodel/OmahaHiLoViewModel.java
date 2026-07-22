@@ -1,5 +1,14 @@
 package com.leslie.cjpokeroddscalculator.viewmodel;
 
+import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
+import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
+import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaHiLoPoker;
+import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
+import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+
 public class OmahaHiLoViewModel extends OmahaHighViewModel {
     public OmahaHiLoViewModel() {
         double[] initialSinglePlayerStats = new double[]{
@@ -27,5 +36,29 @@ public class OmahaHiLoViewModel extends OmahaHighViewModel {
         }
 
         stats.postValue(initialStats);
+    }
+
+    @Override
+    public Thread createMonteCarloThread(EquityCalculatorFragment fragment) {
+        return new Thread(() -> {
+            try {
+                OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(fragment.cardsPerHand);
+                OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(fragment, this, calcObj);
+                calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
+                calcObj.calculate(fragment.cardRows);
+            } catch (InterruptedException ignored) { }
+        });
+    }
+
+    @Override
+    public Thread createExactCalcThread(EquityCalculatorFragment fragment) {
+        return new Thread(() -> {
+            try {
+                OmahaExactCalc calcObj = new OmahaExactCalc(fragment.cardsPerHand);
+                OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(fragment, this, calcObj);
+                calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
+                calcObj.calculate(fragment.cardRows);
+            } catch (InterruptedException ignored) { }
+        });
     }
 }

@@ -5,12 +5,13 @@ import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.calculation.pet.EquityUtil;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class OmahaLiveUpdate extends OmahaOutputResult {
     private long lastUpdateTime;
 
-    public OmahaLiveUpdate(EquityCalculatorFragment equityCalculatorFragment, OmahaCalc omahaCalc) {
-        super(equityCalculatorFragment, omahaCalc);
+    public OmahaLiveUpdate(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
+        super(equityCalculatorFragment, equityCalculatorViewModel, omahaCalc);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         if (System.currentTimeMillis() - lastUpdateTime > 300) {
             EquityUtil.summariseEquities(eqs, count);
 
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                     double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
                     results = omahaCalc.averageUnknownStats(results);
@@ -50,7 +51,7 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
     @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
                 equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
                     double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
                     results = omahaCalc.averageUnknownStats(results);
