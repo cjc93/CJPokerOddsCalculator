@@ -149,14 +149,9 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         equityCalculatorBinding.clear.setOnClickListener(v -> {
-            for (int i = 0; i < cardRows.size(); i++) {
-                if (cardRows.get(i) instanceof SpecificCardsRow cardRow) {
-                    for (int j = 0; j < cardRow.cards.length; j++) {
-                        setInputCardVisible(i, j);
-                    }
-                }
-
-                cardRows.get(i).clear(this, i);
+            for (int rowIdx = 0; rowIdx < cardRows.size(); rowIdx++) {
+                clearRowImage(rowIdx);
+                cardRows.get(rowIdx).clear();
             }
 
             if (viewModel.selectedCard.getValue() != null) {
@@ -179,6 +174,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
+    }
+
+    public void clearRowImage(int rowIdx) {
+        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(rowIdx);
+        for (int cardIdx = 0; cardIdx < cardRow.cards.length; cardIdx++) {
+            setInputCardVisible(rowIdx, cardIdx);
+            setCardImage(rowIdx, cardIdx, "");
+        }
     }
 
     public abstract void addPlayerRow();

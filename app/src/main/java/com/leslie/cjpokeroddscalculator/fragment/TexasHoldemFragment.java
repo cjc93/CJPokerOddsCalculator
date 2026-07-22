@@ -16,12 +16,8 @@ import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
@@ -217,5 +213,18 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         handRangeSwitchList.remove(playerRemoveNumber - 1);
 
         super.removePlayerRow(playerRemoveNumber);
+    }
+
+    @Override
+    public void clearRowImage(int rowIdx) {
+        CardRow cardRow = cardRows.get(rowIdx);
+        if (cardRow instanceof SpecificCardsRow specificCardsRow) {
+            for (int cardIdx = 0; cardIdx < specificCardsRow.cards.length; cardIdx++) {
+                setInputCardVisible(rowIdx, cardIdx);
+                setCardImage(rowIdx, cardIdx, "");
+            }
+        } else {
+            rangeButtonList.get(rowIdx - 1).setImageBitmap(emptyRangeBitmap);
+        }
     }
 }
