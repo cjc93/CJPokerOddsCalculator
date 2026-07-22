@@ -463,7 +463,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void calculateOdds() {
         viewModel.stats.postValue(null);
         viewModel.resDesc.postValue(R.string.checking_random_subset);
-        viewModel.calculateOdds(this);
+        viewModel.calculateOdds(cardRows, cardsPerHand);
     }
 
     public void addToStatsMatrix(

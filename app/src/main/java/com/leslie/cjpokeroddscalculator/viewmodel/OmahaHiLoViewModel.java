@@ -3,10 +3,12 @@ package com.leslie.cjpokeroddscalculator.viewmodel;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaHiLoPoker;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+
+import java.util.List;
 
 public class OmahaHiLoViewModel extends OmahaHighViewModel {
     public OmahaHiLoViewModel() {
@@ -38,25 +40,25 @@ public class OmahaHiLoViewModel extends OmahaHighViewModel {
     }
 
     @Override
-    public Thread createMonteCarloThread(EquityCalculatorFragment fragment) {
+    public Thread createMonteCarloThread(List<CardRow> cardRows, int cardsPerHand) {
         return new Thread(() -> {
             try {
-                OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(fragment.cardsPerHand);
+                OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(cardsPerHand);
                 OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(this, calcObj);
                 calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
-                calcObj.calculate(fragment.cardRows);
+                calcObj.calculate(cardRows);
             } catch (InterruptedException ignored) { }
         });
     }
 
     @Override
-    public Thread createExactCalcThread(EquityCalculatorFragment fragment) {
+    public Thread createExactCalcThread(List<CardRow> cardRows, int cardsPerHand) {
         return new Thread(() -> {
             try {
-                OmahaExactCalc calcObj = new OmahaExactCalc(fragment.cardsPerHand);
+                OmahaExactCalc calcObj = new OmahaExactCalc(cardsPerHand);
                 OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(this, calcObj);
                 calcObj.setOmahaPokerObj(new OmahaHiLoPoker(omahaOutputResult));
-                calcObj.calculate(fragment.cardRows);
+                calcObj.calculate(cardRows);
             } catch (InterruptedException ignored) { }
         });
     }

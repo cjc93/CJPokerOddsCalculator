@@ -4,7 +4,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
+
+import java.util.List;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
@@ -14,7 +16,7 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     public Thread monteCarloThread = null;
     public Thread exactCalcThread = null;
 
-    public void calculateOdds(EquityCalculatorFragment fragment) {
+    public void calculateOdds(List<CardRow> cardRows, int cardsPerHand) {
         if (monteCarloThread != null) {
             monteCarloThread.interrupt();
         }
@@ -23,15 +25,15 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             exactCalcThread.interrupt();
         }
 
-        monteCarloThread = createMonteCarloThread(fragment);
-        exactCalcThread = createExactCalcThread(fragment);
+        monteCarloThread = createMonteCarloThread(cardRows, cardsPerHand);
+        exactCalcThread = createExactCalcThread(cardRows, cardsPerHand);
 
         monteCarloThread.start();
         exactCalcThread.start();
     }
 
-    public abstract Thread createMonteCarloThread(EquityCalculatorFragment fragment);
-    public abstract Thread createExactCalcThread(EquityCalculatorFragment fragment);
+    public abstract Thread createMonteCarloThread(List<CardRow> cardRows, int cardsPerHand);
+    public abstract Thread createExactCalcThread(List<CardRow> cardRows, int cardsPerHand);
 
     @Override
     protected void onCleared() {

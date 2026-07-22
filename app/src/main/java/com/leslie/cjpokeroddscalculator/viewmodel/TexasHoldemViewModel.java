@@ -2,9 +2,11 @@ package com.leslie.cjpokeroddscalculator.viewmodel;
 
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
+
+import java.util.List;
 
 public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     public TexasHoldemViewModel() {
@@ -33,21 +35,21 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     }
 
     @Override
-    public Thread createMonteCarloThread(EquityCalculatorFragment fragment) {
+    public Thread createMonteCarloThread(List<CardRow> cardRows, int cardsPerHand) {
         return new Thread(() -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-                calcObj.calculate(fragment.cardRows, new TexasHoldemLiveUpdate(this));
+                calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
 
     @Override
-    public Thread createExactCalcThread(EquityCalculatorFragment fragment) {
+    public Thread createExactCalcThread(List<CardRow> cardRows, int cardsPerHand) {
         return new Thread(() -> {
             try {
                 TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-                calcObj.calculate(fragment.cardRows, new TexasHoldemFinalUpdate(this));
+                calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
