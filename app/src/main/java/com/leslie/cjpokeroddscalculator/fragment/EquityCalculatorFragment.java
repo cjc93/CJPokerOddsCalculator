@@ -66,6 +66,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public List<List<TextView>> statsMatrix = new ArrayList<>();
 
     List<MaterialButton> statsButtonList = new ArrayList<>();
+    List<ConstraintLayout> statsViewList = new ArrayList<>();
 
     int maxPlayers;
 
@@ -127,6 +128,16 @@ public abstract class EquityCalculatorFragment extends Fragment {
                         statString = getString(R.string.two_decimal_perc, results[playerIdx][statsIdx] * 100);
                     }
                     row.get(statsIdx).setText(statString);
+                }
+            }
+        });
+
+        viewModel.statsVisibleList.observe(getViewLifecycleOwner(), statsVisibleList -> {
+            for (int rowIdx = 0; rowIdx < statsVisibleList.size(); rowIdx++) {
+                if (statsVisibleList.get(rowIdx)) {
+                    statsViewList.get(rowIdx).setVisibility(View.VISIBLE);
+                } else {
+                    statsViewList.get(rowIdx).setVisibility(View.GONE);
                 }
             }
         });
@@ -373,7 +384,13 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
     public void removePlayerRow(int playerRemoveNumber) {
         statsButtonList.remove(playerRemoveNumber - 1);
+        statsViewList.remove(playerRemoveNumber - 1);
         statsMatrix.remove(playerRemoveNumber - 1);
+
+        List<Boolean> statsVisibleList = viewModel.statsVisibleList.getValue();
+        assert statsVisibleList != null;
+        statsVisibleList.remove(playerRemoveNumber - 1);
+        viewModel.statsVisibleList.postValue(statsVisibleList);
 
         equityCalculatorBinding.playerRows.removeView(playerRowList.get(playerRemoveNumber - 1));
 
@@ -531,12 +548,21 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         statsButtonList.add(statsButton);
+        statsViewList.add(statsView);
+        List<Boolean> statsVisibleList = viewModel.statsVisibleList.getValue();
+        assert statsVisibleList != null;
+        if (statsViewList.size() > statsVisibleList.size()) {
+            statsVisibleList.add(false);
+            viewModel.statsVisibleList.postValue(statsVisibleList);
+        }
+
         statsButton.setOnClickListener(v -> {
-            if (statsView.getVisibility() == View.VISIBLE) {
-                statsView.setVisibility(View.GONE);
-            } else {
-                statsView.setVisibility(View.VISIBLE);
-            }
+            final MaterialButton statsButtonInput = (MaterialButton) v;
+            int rowIdx = statsButtonList.indexOf(statsButtonInput);
+            List<Boolean> liveStatsVisibleList = viewModel.statsVisibleList.getValue();
+            assert liveStatsVisibleList != null;
+            liveStatsVisibleList.set(rowIdx, !liveStatsVisibleList.get(rowIdx));
+            viewModel.statsVisibleList.postValue(liveStatsVisibleList);
         });
     }
 }
