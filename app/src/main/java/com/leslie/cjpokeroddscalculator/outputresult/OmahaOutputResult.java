@@ -1,6 +1,5 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
@@ -8,8 +7,8 @@ import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 public abstract class OmahaOutputResult extends OutputResult {
     OmahaCalc omahaCalc;
 
-    public OmahaOutputResult(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
-        super(equityCalculatorFragment, equityCalculatorViewModel);
+    public OmahaOutputResult(EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
+        super(equityCalculatorViewModel);
         this.omahaCalc = omahaCalc;
     }
 

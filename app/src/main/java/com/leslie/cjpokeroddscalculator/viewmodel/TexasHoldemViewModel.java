@@ -37,7 +37,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-                calcObj.calculate(fragment.cardRows, new TexasHoldemLiveUpdate(fragment, this));
+                calcObj.calculate(fragment.cardRows, new TexasHoldemLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
@@ -47,7 +47,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-                calcObj.calculate(fragment.cardRows, new TexasHoldemFinalUpdate(fragment, this));
+                calcObj.calculate(fragment.cardRows, new TexasHoldemFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }

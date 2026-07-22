@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
 import com.leslie.cjpokeroddscalculator.calculation.pet.EquityUtil;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
@@ -11,8 +10,8 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
     private long startTime;
     private boolean isStartingPeriod;
 
-    public OmahaFinalUpdate(EquityCalculatorFragment equityCalculatorFragment, EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
-        super(equityCalculatorFragment, equityCalculatorViewModel, omahaCalc);
+    public OmahaFinalUpdate(EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
+        super(equityCalculatorViewModel, omahaCalc);
     }
 
     @Override
@@ -34,7 +33,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
 
                 if ((double) (current_time - startTime) / (double) count > 4000000 / (double) omahaCalc.totalSimulations) {
                     if (!equityCalculatorViewModel.monteCarloThread.isAlive()) {
-                        equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
+                        updateResDesc(R.string.finished_checking_random_subset);
                     }
 
                     throw new InterruptedException();
@@ -50,12 +49,10 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
                 equityCalculatorViewModel.monteCarloThread.interrupt();
             }
 
-            equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-                results = omahaCalc.averageUnknownStats(results);
-                updateWinResults(results);
-                updateResDesc(R.string.all_combinations_checked_result_is_exact);
-            });
+            double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+            results = omahaCalc.averageUnknownStats(results);
+            updateWinResults(results);
+            updateResDesc(R.string.all_combinations_checked_result_is_exact);
         }
     }
 }
