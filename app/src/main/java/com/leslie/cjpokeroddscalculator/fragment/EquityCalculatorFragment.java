@@ -122,19 +122,14 @@ public abstract class EquityCalculatorFragment extends Fragment {
         });
 
         viewModel.stats.observe(getViewLifecycleOwner(), results -> {
-            if (results == null) {
-                for (int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
-                    List<TextView> row = statsMatrix.get(playerIdx);
-                    for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
-                        row.get(statsIdx).setText("");
+            for (int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
+                List<TextView> row = statsMatrix.get(playerIdx);
+                for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
+                    String statString = "";
+                    if (results != null) {
+                        statString = getString(R.string.two_decimal_perc, results[playerIdx][statsIdx] * 100);
                     }
-                }
-            } else {
-                for (int playerIdx = 0; playerIdx < statsMatrix.size(); playerIdx++) {
-                    List<TextView> row = statsMatrix.get(playerIdx);
-                    for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
-                        row.get(statsIdx).setText(getString(R.string.two_decimal_perc, results[playerIdx][statsIdx] * 100));
-                    }
+                    row.get(statsIdx).setText(statString);
                 }
             }
         });
