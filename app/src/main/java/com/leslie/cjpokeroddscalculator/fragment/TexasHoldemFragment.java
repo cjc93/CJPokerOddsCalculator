@@ -71,7 +71,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 2;
         maxPlayers = 10;
         fragmentName = "TexasHoldem";
         fragmentId = R.id.TexasHoldemFragment;
@@ -146,8 +145,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 showRangeSelector(playerRangeSwitchNumber);
                 viewModel.selectedCard.postValue(null);
             } else {
-                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand));
-                for (int i = 0; i < cardsPerHand; i++) {
+                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(viewModel.cardsPerHand));
+                for (int i = 0; i < viewModel.cardsPerHand; i++) {
                     setCardImage(playerRangeSwitchNumber, i, "");
                 }
 

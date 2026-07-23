@@ -10,13 +10,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
-import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
 
@@ -59,13 +53,13 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public List<ImageButton> createCardButtons(ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton) {
         List<ImageButton> cardList = new ArrayList<>();
 
-        for (int i = 0; i < this.cardsPerHand; i++) {
+        for (int i = 0; i < viewModel.cardsPerHand; i++) {
             ImageButton card = new ImageButton(requireActivity(), null, 0, R.style.SelectCardButton);
             card.setId(View.generateViewId());
             cardList.add(card);
         }
 
-        for (int i = 0; i < this.cardsPerHand; i++) {
+        for (int i = 0; i < viewModel.cardsPerHand; i++) {
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -75,7 +69,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
                 layoutParams.topToBottom = playerText.getId();
                 layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
                 layoutParams.rightToLeft = cardList.get(i + 1).getId();
-            } else if (i == this.cardsPerHand - 1) {
+            } else if (i == viewModel.cardsPerHand - 1) {
                 layoutParams.topToBottom = playerText.getId();
                 layoutParams.leftToRight = cardList.get(i - 1).getId();
                 layoutParams.rightToRight = playerText.getId();
@@ -101,7 +95,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 4;
         maxPlayers = 10;
         this.playerCardMaxWidth = this.boardCardMaxWidth;
         fragmentName = "OmahaHigh";

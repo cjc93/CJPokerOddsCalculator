@@ -15,7 +15,6 @@ public class OmahaHiLo6Fragment extends OmahaHiLoFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 6;
         maxPlayers = 7;
         this.playerCardMaxWidth = (int) (displayMetrics.widthPixels * 0.8 / 6.0);
         fragmentName = "OmahaHiLo6";

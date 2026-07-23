@@ -2,6 +2,8 @@ package com.leslie.cjpokeroddscalculator.viewmodel;
 
 public class OmahaHiLo6ViewModel extends OmahaHiLoViewModel {
     public OmahaHiLo6ViewModel() {
+        cardsPerHand = 6;
+
         double[] initialSinglePlayerStats = new double[]{
             0.5,
             0.4862,

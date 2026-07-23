@@ -57,8 +57,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     int boardCardMaxHeight;
     int boardCardMaxWidth;
 
-    public int cardsPerHand;
-
     public String fragmentName;
     public int fragmentId;
     public int homeButtonActionId;
@@ -423,10 +421,10 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         setCardImage(selectedRowIdx, selectedCardIdx, cardStr);
 
-        if ((selectedRowIdx == 0 && selectedCardIdx < 4) || (selectedRowIdx > 0 && selectedCardIdx < (cardsPerHand - 1))) {
+        if ((selectedRowIdx == 0 && selectedCardIdx < 4) || (selectedRowIdx > 0 && selectedCardIdx < (viewModel.cardsPerHand - 1))) {
             newSelectedRowIdx = selectedRowIdx;
             newSelectedCardIdx = selectedCardIdx + 1;
-        } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (cardsPerHand - 1)) {
+        } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (viewModel.cardsPerHand - 1)) {
             newSelectedRowIdx = 0;
             newSelectedCardIdx = 0;
         } else {
@@ -483,7 +481,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void calculateOdds() {
         viewModel.stats.postValue(null);
         viewModel.resDesc.postValue(R.string.checking_random_subset);
-        viewModel.calculateOdds(cardRows, cardsPerHand);
+        viewModel.calculateOdds(cardRows);
     }
 
     public void addToStatsMatrix(
@@ -515,7 +513,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
         initialiseCardButtons(cardList, cardMaxWidth);
         cardButtonListOfLists.add(cardList);
 
-        cardRows.add(new SpecificCardsRow(cardsPerHand));
+        cardRows.add(new SpecificCardsRow(viewModel.cardsPerHand));
 
         removeRowList.add(remove);
         remove.setOnClickListener(v -> {
@@ -523,7 +521,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
             int playerRemoveNumber = removeRowList.indexOf(removeInput) + 1;
 
             if (cardRows.get(playerRemoveNumber) instanceof SpecificCardsRow) {
-                for (int i = 0; i < cardsPerHand; i++) {
+                for (int i = 0; i < viewModel.cardsPerHand; i++) {
                     setInputCardVisible(playerRemoveNumber, i);
                 }
             }

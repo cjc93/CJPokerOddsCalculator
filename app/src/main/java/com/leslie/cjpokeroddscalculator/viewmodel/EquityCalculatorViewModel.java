@@ -18,7 +18,9 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     public Thread monteCarloThread = null;
     public Thread exactCalcThread = null;
 
-    public void calculateOdds(List<CardRow> cardRows, int cardsPerHand) {
+    public int cardsPerHand;
+
+    public void calculateOdds(List<CardRow> cardRows) {
         if (monteCarloThread != null) {
             monteCarloThread.interrupt();
         }
@@ -27,15 +29,15 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             exactCalcThread.interrupt();
         }
 
-        monteCarloThread = createMonteCarloThread(cardRows, cardsPerHand);
-        exactCalcThread = createExactCalcThread(cardRows, cardsPerHand);
+        monteCarloThread = createMonteCarloThread(cardRows);
+        exactCalcThread = createExactCalcThread(cardRows);
 
         monteCarloThread.start();
         exactCalcThread.start();
     }
 
-    public abstract Thread createMonteCarloThread(List<CardRow> cardRows, int cardsPerHand);
-    public abstract Thread createExactCalcThread(List<CardRow> cardRows, int cardsPerHand);
+    public abstract Thread createMonteCarloThread(List<CardRow> cardRows);
+    public abstract Thread createExactCalcThread(List<CardRow> cardRows);
 
     @Override
     protected void onCleared() {

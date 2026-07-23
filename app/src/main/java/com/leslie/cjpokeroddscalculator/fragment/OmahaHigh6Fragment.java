@@ -15,7 +15,6 @@ public class OmahaHigh6Fragment extends OmahaHighFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 6;
         maxPlayers = 7;
         this.playerCardMaxWidth = (int) (displayMetrics.widthPixels * 0.8 / 6.0);
         fragmentName = "OmahaHigh6";

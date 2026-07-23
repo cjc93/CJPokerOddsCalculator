@@ -10,6 +10,8 @@ import java.util.List;
 
 public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     public TexasHoldemViewModel() {
+        cardsPerHand = 2;
+
         double[] initialSinglePlayerStats = new double[]{
             0.5,
             0.4797,
@@ -35,7 +37,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     }
 
     @Override
-    public Thread createMonteCarloThread(List<CardRow> cardRows, int cardsPerHand) {
+    public Thread createMonteCarloThread(List<CardRow> cardRows) {
         return new Thread(() -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
@@ -45,7 +47,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     }
 
     @Override
-    public Thread createExactCalcThread(List<CardRow> cardRows, int cardsPerHand) {
+    public Thread createExactCalcThread(List<CardRow> cardRows) {
         return new Thread(() -> {
             try {
                 TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
