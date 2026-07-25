@@ -49,6 +49,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.initialiseVariables();
         rangeSelector.addBackPressedCallback();
         rangeSelector.generateRangeSelector();
+        rangeSelector.observeLiveData();
         rangeSelector.setListeners();
         rangeSelector.setFragmentResultListeners();
     }
@@ -64,10 +65,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
                 equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
             } else {
-                RangeRow rangeRow = (RangeRow) Objects.requireNonNull(texasHoldemViewModel.cardRows.getValue()).get(selectedRangePosition);
-
-                rangeSelector.updateRangeSelector(rangeRow.matrix);
-
                 equityCalculatorBinding.mainUi.setVisibility(View.GONE);
                 rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
             }
@@ -129,8 +126,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         rangeButton.setOnClickListener(v -> {
             ImageButton rangeSelectorInput = (ImageButton) v;
-            TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-            texasHoldemViewModel.selectedRangePosition.setValue(rangeButtonList.indexOf(rangeSelectorInput) + 1);
+            showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
         });
 
         rangeButtonList.add(rangeButton);
@@ -145,8 +141,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             assert cardRows != null;
             if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
                 cardRows.set(playerRangeSwitchNumber, new RangeRow(null, cardRows.get(playerRangeSwitchNumber).isStatsVisible));
-                TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-                texasHoldemViewModel.selectedRangePosition.setValue(playerRangeSwitchNumber);
+                showRangeSelector(playerRangeSwitchNumber);
                 viewModel.cardRows.setValue(cardRows);
                 viewModel.selectedCard.setValue(null);
             } else {
@@ -158,6 +153,15 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
             calculateOdds();
         });
+    }
+
+    private void showRangeSelector(int rowIdx) {
+        RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.cardRows.getValue()).get(rowIdx);
+
+        rangeSelector.updateRangeSelector(rangeRow.matrix);
+
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+        texasHoldemViewModel.selectedRangePosition.setValue(rowIdx);
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
