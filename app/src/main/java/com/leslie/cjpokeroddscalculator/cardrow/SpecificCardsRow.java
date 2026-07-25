@@ -11,7 +11,9 @@ import java.util.StringJoiner;
 public class SpecificCardsRow extends CardRow {
     public String[] cards;
 
-    public SpecificCardsRow(int numOfCards) {
+    public SpecificCardsRow(List<Double> stats, Boolean isStatsVisible, int numOfCards) {
+        super(stats, isStatsVisible);
+
         cards = new String[numOfCards];
 
         for (int i = 0; i < numOfCards; i++) {

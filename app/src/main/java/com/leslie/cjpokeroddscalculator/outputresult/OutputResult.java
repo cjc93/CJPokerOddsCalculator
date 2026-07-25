@@ -1,6 +1,10 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class OutputResult {
@@ -15,17 +19,18 @@ public abstract class OutputResult {
     }
 
     public void updateWinResults(double[][] results) {
-        int rows = results.length;
-        int cols = results[0].length;
+        List<CardRow> cardRows = equityCalculatorViewModel.cardRows.getValue();
+        assert cardRows != null;
 
-        double[][] transposedResults = new double[cols][rows];
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                transposedResults[j][i] = results[i][j];
+        for (int playerIdx = 1; playerIdx < cardRows.size(); playerIdx++) {
+            CardRow cardRow = cardRows.get(playerIdx);
+            List<Double> stats = new ArrayList<>();
+            for (double[] result : results) {
+                stats.add(result[playerIdx - 1]);
             }
+            cardRow.stats = stats;
         }
 
-        equityCalculatorViewModel.stats.postValue(transposedResults);
+        equityCalculatorViewModel.cardRows.postValue(cardRows);
     }
 }

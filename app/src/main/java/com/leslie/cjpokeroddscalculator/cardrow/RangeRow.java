@@ -11,7 +11,9 @@ import java.util.StringJoiner;
 public class RangeRow extends CardRow {
     public List<List<Set<String>>> matrix;
 
-    public RangeRow() {
+    public RangeRow(List<Double> stats, Boolean isStatsVisible) {
+        super(stats, isStatsVisible);
+
         this.matrix = new ArrayList<>(13);
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             List<Set<String>> row = new ArrayList<>(13);

@@ -1,10 +1,20 @@
 package com.leslie.cjpokeroddscalculator.viewmodel;
 
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class OmahaHigh6ViewModel extends OmahaHighViewModel {
     public OmahaHigh6ViewModel() {
         cardsPerHand = 6;
 
-        double[] initialSinglePlayerStats = new double[]{
+        List<CardRow> cardRowList = new ArrayList<>();
+        cardRowList.add(new SpecificCardsRow(null, null, 5));
+
+        List<Double> initialStats = Arrays.asList(
             0.5,
             0.4864,
             0.0273,
@@ -17,14 +27,11 @@ public class OmahaHigh6ViewModel extends OmahaHighViewModel {
             0.1289,
             0.0101,
             0.0022
-        };
+        );
 
-        double[][] initialStats = new double[2][];
+        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand));
+        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand));
 
-        for (int playerIdx = 0; playerIdx < 2; playerIdx++) {
-            initialStats[playerIdx] = initialSinglePlayerStats;
-        }
-
-        stats.postValue(initialStats);
+        cardRows.setValue(cardRowList);
     }
 }

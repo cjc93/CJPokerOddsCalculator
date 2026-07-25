@@ -10,6 +10,8 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
@@ -101,5 +103,12 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
         fragmentId = R.id.OmahaHighFragment;
         homeButtonActionId = R.id.action_OmahaHighFragment_to_HomeFragment;
         titleTextId = R.string.omaha_high_equity_calculator;
+    }
+
+    @Override
+    public void setViewsFromCardRow(int rowIdx, CardRow cardRow) {
+        super.setViewsFromCardRow(rowIdx, cardRow);
+
+        setViewsFromSpecificCardRow(rowIdx, (SpecificCardsRow) cardRow);
     }
 }
