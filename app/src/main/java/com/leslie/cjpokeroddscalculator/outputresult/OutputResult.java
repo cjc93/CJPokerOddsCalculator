@@ -22,15 +22,17 @@ public abstract class OutputResult {
         List<CardRow> cardRows = equityCalculatorViewModel.cardRows.getValue();
         assert cardRows != null;
 
-        for (int playerIdx = 1; playerIdx < cardRows.size(); playerIdx++) {
-            CardRow cardRow = cardRows.get(playerIdx);
-            List<Double> stats = new ArrayList<>();
-            for (double[] result : results) {
-                stats.add(result[playerIdx - 1]);
+        try {
+            for (int playerIdx = 1; playerIdx < cardRows.size(); playerIdx++) {
+                CardRow cardRow = cardRows.get(playerIdx);
+                List<Double> stats = new ArrayList<>();
+                for (double[] result : results) {
+                    stats.add(result[playerIdx - 1]);
+                }
+                cardRow.stats = stats;
             }
-            cardRow.stats = stats;
-        }
 
-        equityCalculatorViewModel.cardRows.postValue(cardRows);
+            equityCalculatorViewModel.cardRows.postValue(cardRows);
+        } catch (IndexOutOfBoundsException ignored) { }
     }
 }
