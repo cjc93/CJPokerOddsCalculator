@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.viewmodel;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
@@ -12,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TexasHoldemViewModel extends EquityCalculatorViewModel {
+    public MutableLiveData<Integer> selectedRangePosition = new MutableLiveData<>();
+
     public TexasHoldemViewModel() {
         cardsPerHand = 2;
 

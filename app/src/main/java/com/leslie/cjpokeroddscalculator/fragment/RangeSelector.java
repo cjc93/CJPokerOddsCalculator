@@ -30,6 +30,7 @@ import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
+import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,7 +63,8 @@ public class RangeSelector {
             @Override
             public void handleOnBackPressed() {
                 if (rangeSelectorBinding.rangeSelector.getVisibility() == View.VISIBLE) {
-                    hideRangeSelector();
+                    TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
+                    texasHoldemViewModel.selectedRangePosition.setValue(null);
                 } else {
                     setEnabled(false);
                     texasHoldemFragment.requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -414,14 +416,9 @@ public class RangeSelector {
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
             texasHoldemFragment.updateRange(this.matrixInput);
-            hideRangeSelector();
+            TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
+            texasHoldemViewModel.selectedRangePosition.setValue(null);
         });
-    }
-
-    private void hideRangeSelector() {
-        rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
-        texasHoldemFragment.equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
-        texasHoldemFragment.selectedRangePosition = null;
     }
 
     public void setFragmentResultListeners() {

@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    public Integer selectedRangePosition;
-
     public List<Group> twoCardsGroups = new ArrayList<>();
 
     public List<ImageButton> rangeButtonList = new ArrayList<>();
@@ -53,6 +51,27 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.generateRangeSelector();
         rangeSelector.setListeners();
         rangeSelector.setFragmentResultListeners();
+    }
+
+    @Override
+    public void observeLiveData() {
+        super.observeLiveData();
+
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+
+        texasHoldemViewModel.selectedRangePosition.observe(getViewLifecycleOwner(), selectedRangePosition -> {
+            if (selectedRangePosition == null) {
+                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
+                equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
+            } else {
+                RangeRow rangeRow = (RangeRow) Objects.requireNonNull(texasHoldemViewModel.cardRows.getValue()).get(selectedRangePosition);
+
+                rangeSelector.updateRangeSelector(rangeRow.matrix);
+
+                equityCalculatorBinding.mainUi.setVisibility(View.GONE);
+                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -110,7 +129,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         rangeButton.setOnClickListener(v -> {
             ImageButton rangeSelectorInput = (ImageButton) v;
-            showRangeSelector(rangeButtonList.indexOf(rangeSelectorInput) + 1);
+            TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+            texasHoldemViewModel.selectedRangePosition.setValue(rangeButtonList.indexOf(rangeSelectorInput) + 1);
         });
 
         rangeButtonList.add(rangeButton);
@@ -125,9 +145,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             assert cardRows != null;
             if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
                 cardRows.set(playerRangeSwitchNumber, new RangeRow(null, cardRows.get(playerRangeSwitchNumber).isStatsVisible));
+                TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+                texasHoldemViewModel.selectedRangePosition.setValue(playerRangeSwitchNumber);
                 viewModel.cardRows.setValue(cardRows);
-
-                showRangeSelector(playerRangeSwitchNumber);
                 viewModel.selectedCard.setValue(null);
             } else {
                 cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(null, cardRows.get(playerRangeSwitchNumber).isStatsVisible, viewModel.cardsPerHand));
@@ -140,20 +160,12 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         });
     }
 
-    private void showRangeSelector(int row) {
-        selectedRangePosition = row;
-
-        RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.cardRows.getValue()).get(selectedRangePosition);
-
-        rangeSelector.updateRangeSelector(rangeRow.matrix);
-
-        equityCalculatorBinding.mainUi.setVisibility(View.GONE);
-        rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
-    }
-
     public void updateRange(List<List<Set<String>>> matrixInput) {
         List<CardRow> cardRows = viewModel.cardRows.getValue();
         assert cardRows != null;
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+        Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition.getValue();
+        assert selectedRangePosition != null;
         RangeRow rangeRow = (RangeRow) cardRows.get(selectedRangePosition);
 
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
