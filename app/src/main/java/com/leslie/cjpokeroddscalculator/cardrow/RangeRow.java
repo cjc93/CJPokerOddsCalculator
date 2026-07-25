@@ -1,8 +1,6 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
-import com.leslie.cjpokeroddscalculator.fragment.TexasHoldemFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,7 +11,9 @@ import java.util.StringJoiner;
 public class RangeRow extends CardRow {
     public List<List<Set<String>>> matrix;
 
-    public RangeRow() {
+    public RangeRow(List<Double> stats, Boolean isStatsVisible) {
+        super(stats, isStatsVisible);
+
         this.matrix = new ArrayList<>(13);
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             List<Set<String>> row = new ArrayList<>(13);
@@ -25,15 +25,12 @@ public class RangeRow extends CardRow {
     }
 
     @Override
-    public void clear(EquityCalculatorFragment equityCalculatorFragment, int rowIdx) {
-        TexasHoldemFragment texasHoldemFragment = (TexasHoldemFragment) equityCalculatorFragment;
+    public void clear() {
         for (int i = 0; i < 13; i++) {
             for (int j = 0; j < 13; j++) {
                 this.matrix.get(i).get(j).clear();
             }
         }
-
-        texasHoldemFragment.rangeButtonList.get(rowIdx - 1).setImageBitmap(texasHoldemFragment.emptyRangeBitmap);
     }
 
     @Override

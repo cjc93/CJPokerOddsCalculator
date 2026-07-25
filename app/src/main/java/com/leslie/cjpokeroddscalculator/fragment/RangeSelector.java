@@ -20,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.slider.Slider;
@@ -30,6 +31,8 @@ import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
+import com.leslie.cjpokeroddscalculator.viewmodel.RangeSelectorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,10 +46,10 @@ import java.util.Set;
 public class RangeSelector {
     private final TexasHoldemFragment texasHoldemFragment;
     public RangeSelectorBinding rangeSelectorBinding;
+    public RangeSelectorViewModel viewModel;
+
     private MaterialButton selectedMatrixButton = null;
-    private final int[] selectedMatrixPosition = new int[2];
     HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
-    List<List<Set<String>>> matrixInput;
     Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
     Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
@@ -55,6 +58,7 @@ public class RangeSelector {
 
     public RangeSelector(TexasHoldemFragment texasHoldemFragment) {
         this.texasHoldemFragment = texasHoldemFragment;
+        this.viewModel = new ViewModelProvider(texasHoldemFragment).get(RangeSelectorViewModel.class);
     }
 
     public void addBackPressedCallback() {
@@ -62,7 +66,8 @@ public class RangeSelector {
             @Override
             public void handleOnBackPressed() {
                 if (rangeSelectorBinding.rangeSelector.getVisibility() == View.VISIBLE) {
-                    hideRangeSelector();
+                    TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
+                    texasHoldemViewModel.selectedRangePosition.setValue(null);
                 } else {
                     setEnabled(false);
                     texasHoldemFragment.requireActivity().getOnBackPressedDispatcher().onBackPressed();
@@ -108,7 +113,6 @@ public class RangeSelector {
                 this.inputMatrixMap.put(b, Arrays.asList(rowIdx, colIdx));
             }
         }
-
 
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
@@ -170,44 +174,19 @@ public class RangeSelector {
         int row = matrixPosition.get(0);
         int col = matrixPosition.get(1);
 
-        Set<String> suits = this.matrixInput.get(row).get(col);
+        List<List<Set<String>>> matrixInput = viewModel.matrixInput.getValue();
+        assert matrixInput != null;
+        Set<String> suits = matrixInput.get(row).get(col);
 
         if (GlobalStatic.isAllSuits(suits, row, col)) {
-            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - suits.size());
             suits.clear();
-            matrixButton.setBackgroundColor(Color.LTGRAY);
         } else if (suits.isEmpty()) {
             GlobalStatic.addAllSuits(suits, row, col);
-
-            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + suits.size());
-
-            matrixButton.setBackgroundColor(Color.YELLOW);
         }
 
-        if (selectedMatrixButton != null) {
-            selectedMatrixButton.setStrokeWidth(0);
-        }
+        viewModel.matrixInput.setValue(matrixInput);
 
-        selectedMatrixPosition[0] = row;
-        selectedMatrixPosition[1] = col;
-
-        selectedMatrixButton = matrixButton;
-        selectedMatrixButton.setStrokeWidth(2);
-
-        if (row == col) {
-            String rank = rankStrings[row];
-            setSuitSelectorUI(pairButtonSuitsMap, rank, rank, suits);
-        } else if (col > row) {
-            String highRank = rankStrings[row];
-            String lowRank = rankStrings[col];
-            setSuitSelectorUI(suitedButtonSuitsMap, highRank, lowRank, suits);
-        } else {
-            String highRank = rankStrings[col];
-            String lowRank = rankStrings[row];
-            setSuitSelectorUI(offsuitButtonSuitsMap, highRank, lowRank, suits);
-        }
-
-        rangeSelectorBinding.suitSelectorText.setText(R.string.choose_suits);
+        viewModel.selectedMatrixPosition.setValue(new int[]{row, col});
     };
 
     public void appendSavedRangeButton(String rangeName) {
@@ -250,10 +229,15 @@ public class RangeSelector {
     private final View.OnClickListener suitsListener = v -> {
         ImageButton suitsButton = (ImageButton) v;
 
+        int[] selectedMatrixPosition = viewModel.selectedMatrixPosition.getValue();
+        assert selectedMatrixPosition != null;
         int row = selectedMatrixPosition[0];
         int col = selectedMatrixPosition[1];
 
-        Set<String> suits = this.matrixInput.get(row).get(col);
+        List<List<Set<String>>> matrixInput = viewModel.matrixInput.getValue();
+        assert matrixInput != null;
+        Set<String> suits = matrixInput.get(row).get(col);
+
         String currentSuit;
         if (row == col) {
             currentSuit = pairButtonSuitsMap.get(suitsButton);
@@ -265,24 +249,14 @@ public class RangeSelector {
 
         if (suits.contains(currentSuit)) {
             suits.remove(currentSuit);
-            suitsButton.setBackgroundResource(0);
-            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() - 1);
         } else {
             suits.add(currentSuit);
-            suitsButton.setBackgroundResource(R.drawable.selected_border);
-            rangeSelectorBinding.rangeSlider.setValue(rangeSelectorBinding.rangeSlider.getValue() + 1);
         }
 
-        if (GlobalStatic.isAllSuits(suits, row, col)) {
-            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.YELLOW);
-        } else if (suits.isEmpty()) {
-            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.LTGRAY);
-        } else {
-            Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row, col))).setBackgroundColor(Color.CYAN);
-        }
+        viewModel.matrixInput.setValue(matrixInput);
     };
 
-    private void setSuitSelectorUI(Map<ImageButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
+    private void setSuitSelectorUIGivenRankSuit(Map<ImageButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
         for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
             String currentSuit = buttonSuitsMap.get(b);
             if (currentSuit == null) {
@@ -315,61 +289,54 @@ public class RangeSelector {
         }
     }
 
+    private void setSuitSelectorUIGivenRowCol(List<List<Set<String>>> matrixInput, int row, int col) {
+        Set<String> suits = matrixInput.get(row).get(col);
+
+        if (row == col) {
+            String rank = rankStrings[row];
+            setSuitSelectorUIGivenRankSuit(pairButtonSuitsMap, rank, rank, suits);
+        } else if (col > row) {
+            String highRank = rankStrings[row];
+            String lowRank = rankStrings[col];
+            setSuitSelectorUIGivenRankSuit(suitedButtonSuitsMap, highRank, lowRank, suits);
+        } else {
+            String highRank = rankStrings[col];
+            String lowRank = rankStrings[row];
+            setSuitSelectorUIGivenRankSuit(offsuitButtonSuitsMap, highRank, lowRank, suits);
+        }
+    }
+
     public void updateRangeSelector(List<List<Set<String>>> matrix) {
         List<List<Set<String>>> copiedMatrix = GlobalStatic.copyMatrix(matrix);
 
         if (copiedMatrix != null) {
-            this.matrixInput = copiedMatrix;
-
-            int handCount = 0;
-
-            for (int row_idx = 0; row_idx < 13; row_idx++) {
-                for (int col_idx = 0; col_idx < 13; col_idx++) {
-                    Set<String> suits = this.matrixInput.get(row_idx).get(col_idx);
-                    if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
-                    } else if (suits.isEmpty()) {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
-                    } else {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
-                    }
-
-                    handCount += suits.size();
-                }
-            }
-
-            rangeSelectorBinding.rangeSlider.setValue(handCount);
+            viewModel.matrixInput.setValue(copiedMatrix);
         }
 
-        clearSuitSelectorUI();
-    }
-
-    private void clearSuitSelectorUI() {
-        if (selectedMatrixButton != null) {
-            selectedMatrixButton.setStrokeWidth(0);
-        }
-
-        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
-            b.setVisibility(View.INVISIBLE);
-        }
-
-        rangeSelectorBinding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
+        viewModel.selectedMatrixPosition.setValue(null);
     }
 
     public void setListeners() {
         rangeSelectorBinding.rangeSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (fromUser) {
+                List<List<Set<String>>> matrixInput = viewModel.matrixInput.getValue();
+                assert matrixInput != null;
+
                 float finalValue = 0;
                 for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
                     List<Integer> matrixPosition = entry.getValue();
                     int cumulativeHands = entry.getKey();
+                    int row = matrixPosition.get(0);
+                    int col = matrixPosition.get(1);
+                    Set<String> suits = matrixInput.get(row).get(col);
                     if (cumulativeHands <= value) {
-                        Objects.requireNonNull(inputMatrixMap.inverse().get(matrixPosition)).setBackgroundColor(Color.YELLOW);
+                        GlobalStatic.addAllSuits(suits, row, col);
                         finalValue = cumulativeHands;
                     } else {
-                        Objects.requireNonNull(inputMatrixMap.inverse().get(matrixPosition)).setBackgroundColor(Color.LTGRAY);
+                        suits.clear();
                     }
                 }
+                viewModel.matrixInput.setValue(matrixInput);
                 slider.setValue(finalValue);
             }
             rangeSelectorBinding.handsPerc.setText(texasHoldemFragment.getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
@@ -378,7 +345,7 @@ public class RangeSelector {
         rangeSelectorBinding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
-                clearSuitSelectorUI();
+                viewModel.selectedMatrixPosition.setValue(null);
                 for (MaterialButton b : inputMatrixMap.keySet()) {
                     b.setClickable(false);
                 }
@@ -386,21 +353,6 @@ public class RangeSelector {
 
             @Override
             public void onStopTrackingTouch(@NonNull Slider slider) {
-                float selectedValue = slider.getValue();
-                for (java.util.Map.Entry<Integer, List<Integer>> entry : GlobalStatic.bestHandsMap.entrySet()) {
-                    List<Integer> matrixPosition = entry.getValue();
-                    int row = matrixPosition.get(0);
-                    int col = matrixPosition.get(1);
-
-                    Set<String> suits = matrixInput.get(row).get(col);
-
-                    if (entry.getKey() <= selectedValue) {
-                        GlobalStatic.addAllSuits(suits, row, col);
-                    } else {
-                        suits.clear();
-                    }
-                }
-
                 for (MaterialButton b : inputMatrixMap.keySet()) {
                     b.setClickable(true);
                 }
@@ -413,15 +365,10 @@ public class RangeSelector {
         });
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
-            texasHoldemFragment.updateRange(this.matrixInput);
-            hideRangeSelector();
+            texasHoldemFragment.updateRange(viewModel.matrixInput.getValue());
+            TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
+            texasHoldemViewModel.selectedRangePosition.setValue(null);
         });
-    }
-
-    private void hideRangeSelector() {
-        rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
-        texasHoldemFragment.equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
-        texasHoldemFragment.selectedRangePosition = null;
     }
 
     public void setFragmentResultListeners() {
@@ -430,7 +377,7 @@ public class RangeSelector {
 
             ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
                 PreferencesKeys.stringKey("thec_" + rangeName),
-                gson.toJson(this.matrixInput)
+                gson.toJson(viewModel.matrixInput.getValue())
             );
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
@@ -544,4 +491,60 @@ public class RangeSelector {
         offsuitButtonSuitsMap.put(rangeSelectorBinding.suits11, "dh");
         offsuitButtonSuitsMap.put(rangeSelectorBinding.suits12, "dc");
     }
+
+    public void observeLiveData() {
+        viewModel.matrixInput.observe(texasHoldemFragment.getViewLifecycleOwner(), matrixInput -> {
+            int handCount = 0;
+
+            for (int row_idx = 0; row_idx < 13; row_idx++) {
+                for (int col_idx = 0; col_idx < 13; col_idx++) {
+                    Set<String> suits = matrixInput.get(row_idx).get(col_idx);
+                    if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
+                    } else if (suits.isEmpty()) {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                    } else {
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
+                    }
+
+                    handCount += suits.size();
+                }
+            }
+
+            rangeSelectorBinding.rangeSlider.setValue(handCount);
+
+            int[] selectedMatrixPosition = viewModel.selectedMatrixPosition.getValue();
+            if (selectedMatrixPosition != null) {
+                int row = selectedMatrixPosition[0];
+                int col = selectedMatrixPosition[1];
+
+                setSuitSelectorUIGivenRowCol(matrixInput, row, col);
+            }
+        });
+
+        viewModel.selectedMatrixPosition.observe(texasHoldemFragment.getViewLifecycleOwner(), selectedMatrixPosition -> {
+            if (selectedMatrixButton != null) {
+                selectedMatrixButton.setStrokeWidth(0);
+            }
+
+            if (selectedMatrixPosition == null) {
+                for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+                    b.setVisibility(View.INVISIBLE);
+                }
+
+                rangeSelectorBinding.suitSelectorText.setText(R.string.select_a_hand_to_choose_suits);
+            } else {
+                int row = selectedMatrixPosition[0];
+                int col = selectedMatrixPosition[1];
+
+                selectedMatrixButton = Objects.requireNonNull(inputMatrixMap.inverse().get(Arrays.asList(row, col)));
+                selectedMatrixButton.setStrokeWidth(2);
+
+                rangeSelectorBinding.suitSelectorText.setText(R.string.choose_suits);
+
+                setSuitSelectorUIGivenRowCol(Objects.requireNonNull(viewModel.matrixInput.getValue()), row, col);
+            }
+        });
+    }
+
 }

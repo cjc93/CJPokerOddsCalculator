@@ -16,32 +16,27 @@ import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    public Integer selectedRangePosition;
-
     public List<Group> twoCardsGroups = new ArrayList<>();
 
     public List<ImageButton> rangeButtonList = new ArrayList<>();
 
     List<MaterialButton> handRangeSwitchList = new ArrayList<>();
 
-    public Bitmap emptyRangeBitmap;
-
     public RangeSelector rangeSelector;
 
-    int rangeCardApproxSize;
+    int rangeCardSize;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -54,8 +49,26 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         rangeSelector.initialiseVariables();
         rangeSelector.addBackPressedCallback();
         rangeSelector.generateRangeSelector();
+        rangeSelector.observeLiveData();
         rangeSelector.setListeners();
         rangeSelector.setFragmentResultListeners();
+    }
+
+    @Override
+    public void observeLiveData() {
+        super.observeLiveData();
+
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+
+        texasHoldemViewModel.selectedRangePosition.observe(getViewLifecycleOwner(), selectedRangePosition -> {
+            if (selectedRangePosition == null) {
+                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
+                equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
+            } else {
+                equityCalculatorBinding.mainUi.setVisibility(View.GONE);
+                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
@@ -65,38 +78,20 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     @Override
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return TexasHoldemViewModel.class;
+    }
+
+    @Override
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 2;
         maxPlayers = 10;
         fragmentName = "TexasHoldem";
         fragmentId = R.id.TexasHoldemFragment;
         homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
-        rangeCardApproxSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250);
-        initialStats = new double[]{
-            50.0,
-            47.97,
-            4.07,
-            17.41,
-            43.82,
-            23.5,
-            4.83,
-            4.62,
-            3.03,
-            2.6,
-            0.17,
-            0.03
-        };
+        rangeCardSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250) - (int) (10 * getResources().getDisplayMetrics().density);
         titleTextId = R.string.texas_hold_em_equity_calculator;
-    }
-
-    @Override
-    public void generateMainLayout() {
-        super.generateMainLayout();
-
-        this.emptyRangeBitmap = Bitmap.createBitmap(rangeCardApproxSize, rangeCardApproxSize, Bitmap.Config.ARGB_8888);
-        this.emptyRangeBitmap.eraseColor(Color.LTGRAY);
     }
 
     @Override
@@ -142,104 +137,90 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
             final MaterialButton rangeSwitchInput = (MaterialButton) v;
             int playerRangeSwitchNumber = handRangeSwitchList.indexOf(rangeSwitchInput) + 1;
 
+            List<CardRow> cardRows = viewModel.cardRows.getValue();
+            assert cardRows != null;
             if (cardRows.get(playerRangeSwitchNumber) instanceof SpecificCardsRow) {
-                for (int i = 0; i < 2; i++) {
-                    setInputCardVisible(playerRangeSwitchNumber, i);
-                }
-
-                twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
-                cardRows.set(playerRangeSwitchNumber, new RangeRow());
-                ImageButton b = this.rangeButtonList.get(playerRangeSwitchNumber - 1);
-                b.setMaxHeight(cardButtonListOfLists.get(playerRangeSwitchNumber).get(0).getHeight());
-                b.setImageBitmap(this.emptyRangeBitmap);
-                b.setVisibility(View.VISIBLE);
-                rangeSwitchInput.setText(R.string.hand);
+                cardRows.set(playerRangeSwitchNumber, new RangeRow(null, cardRows.get(playerRangeSwitchNumber).isStatsVisible));
                 showRangeSelector(playerRangeSwitchNumber);
-                hideCardSelector();
+                viewModel.cardRows.setValue(cardRows);
+                viewModel.selectedCard.setValue(null);
             } else {
-                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(cardsPerHand));
-                for (int i = 0; i < cardsPerHand; i++) {
-                    setCardImage(playerRangeSwitchNumber, i, "");
-                }
+                cardRows.set(playerRangeSwitchNumber, new SpecificCardsRow(null, cardRows.get(playerRangeSwitchNumber).isStatsVisible, viewModel.cardsPerHand));
+                viewModel.cardRows.setValue(cardRows);
 
-                rangeButtonList.get(playerRangeSwitchNumber - 1).setVisibility(View.GONE);
-                twoCardsGroups.get(playerRangeSwitchNumber - 1).setVisibility(View.VISIBLE);
-
-                rangeSwitchInput.setText(R.string.range);
-                setSelectedCard(playerRangeSwitchNumber, 0);
-                showCardSelector();
+                viewModel.selectedCard.setValue(new int[]{playerRangeSwitchNumber, 0});
             }
 
             calculateOdds();
         });
     }
 
-    private void showRangeSelector(int row) {
-        selectedRangePosition = row;
-
-        RangeRow rangeRow = (RangeRow) this.cardRows.get(selectedRangePosition);
+    private void showRangeSelector(int rowIdx) {
+        RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.cardRows.getValue()).get(rowIdx);
 
         rangeSelector.updateRangeSelector(rangeRow.matrix);
 
-        equityCalculatorBinding.mainUi.setVisibility(View.GONE);
-        rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+        texasHoldemViewModel.selectedRangePosition.setValue(rowIdx);
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        if (selectedRangePosition != null && selectedRangePosition < this.cardRows.size()) {
-            CardRow cardRow = this.cardRows.get(selectedRangePosition);
+        List<CardRow> cardRows = viewModel.cardRows.getValue();
+        assert cardRows != null;
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+        Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition.getValue();
+        assert selectedRangePosition != null;
+        RangeRow rangeRow = (RangeRow) cardRows.get(selectedRangePosition);
 
-            if (cardRow instanceof RangeRow rangeRow) {
+        rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
+        viewModel.cardRows.setValue(cardRows);
 
-                rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
+        calculateOdds();
+    }
 
-                Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+    @Override
+    public void removeAllPlayerRows() {
+        rangeButtonList.clear();
+        twoCardsGroups.clear();
+        handRangeSwitchList.clear();
 
-                for (int i = 0; i < 13; i++)  {
-                    for (int j = 0; j < 13; j++)  {
-                        Set<String> suits = rangeRow.matrix.get(i).get(j);
-                        if (GlobalStatic.isAllSuits(suits, i, j)) {
-                            matrixBitmap.setPixel(j, i, Color.YELLOW);
-                        } else if (suits.isEmpty()) {
-                            matrixBitmap.setPixel(j, i, Color.LTGRAY);
-                        } else {
-                            matrixBitmap.setPixel(j, i, Color.CYAN);
-                        }
+        super.removeAllPlayerRows();
+    }
+
+    @Override
+    public void setViewsFromCardRow(int rowIdx, CardRow cardRow) {
+        super.setViewsFromCardRow(rowIdx, cardRow);
+
+        if (cardRow instanceof SpecificCardsRow specificCardRow) {
+            setViewsFromSpecificCardRow(rowIdx, specificCardRow);
+
+            twoCardsGroups.get(rowIdx - 1).setVisibility(View.VISIBLE);
+            rangeButtonList.get(rowIdx - 1).setVisibility(View.GONE);
+            handRangeSwitchList.get(rowIdx - 1).setText(R.string.range);
+        } else {
+            RangeRow rangeRow = (RangeRow) cardRow;
+            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+
+            for (int i = 0; i < 13; i++)  {
+                for (int j = 0; j < 13; j++)  {
+                    Set<String> suits = rangeRow.matrix.get(i).get(j);
+                    if (GlobalStatic.isAllSuits(suits, i, j)) {
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                    } else if (suits.isEmpty()) {
+                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                    } else {
+                        matrixBitmap.setPixel(j, i, Color.CYAN);
                     }
                 }
-
-                ImageButton rangeButton = rangeButtonList.get(selectedRangePosition - 1);
-                int h = cardButtonListOfLists.get(selectedRangePosition).get(0).getHeight();
-                rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, h, h, false));
-                matrixBitmap.recycle();
-
-                calculateOdds();
             }
+
+            ImageButton rangeButton = rangeButtonList.get(rowIdx - 1);
+            rangeButton.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, rangeCardSize, rangeCardSize, false));
+            matrixBitmap.recycle();
+
+            twoCardsGroups.get(rowIdx - 1).setVisibility(View.GONE);
+            rangeButtonList.get(rowIdx - 1).setVisibility(View.VISIBLE);
+            handRangeSwitchList.get(rowIdx - 1).setText(R.string.hand);
         }
-    }
-
-    @Override
-    public void removePlayerRow(int playerRemoveNumber) {
-        rangeButtonList.remove(playerRemoveNumber - 1);
-        twoCardsGroups.remove(playerRemoveNumber - 1);
-        handRangeSwitchList.remove(playerRemoveNumber - 1);
-
-        super.removePlayerRow(playerRemoveNumber);
-    }
-
-    @Override
-    public void monteCarloProc() {
-        try {
-            TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-            calcObj.calculate(cardRows, new TexasHoldemLiveUpdate(this));
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
-    public void exactCalcProc() {
-        try {
-            TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-            calcObj.calculate(cardRows, new TexasHoldemFinalUpdate(this));
-        } catch (InterruptedException ignored) { }
     }
 }

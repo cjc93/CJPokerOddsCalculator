@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,9 @@ import java.util.StringJoiner;
 public class SpecificCardsRow extends CardRow {
     public String[] cards;
 
-    public SpecificCardsRow(int numOfCards) {
+    public SpecificCardsRow(List<Double> stats, Boolean isStatsVisible, int numOfCards) {
+        super(stats, isStatsVisible);
+
         cards = new String[numOfCards];
 
         for (int i = 0; i < numOfCards; i++) {
@@ -21,12 +22,8 @@ public class SpecificCardsRow extends CardRow {
     }
 
     @Override
-    public void clear(EquityCalculatorFragment equityCalculatorFragment, int rowIdx) {
+    public void clear() {
         Arrays.fill(this.cards, "");
-
-        for (int i = 0; i < this.cards.length; i++) {
-            equityCalculatorFragment.setCardImage(rowIdx, i, "");
-        }
     }
 
     @Override

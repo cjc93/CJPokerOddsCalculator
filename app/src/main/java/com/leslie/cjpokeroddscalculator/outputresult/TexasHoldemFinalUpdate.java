@@ -1,12 +1,12 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
 
-    public TexasHoldemFinalUpdate(EquityCalculatorFragment equityCalculatorFragment) {
-        super(equityCalculatorFragment);
+    public TexasHoldemFinalUpdate(EquityCalculatorViewModel equityCalculatorViewModel) {
+        super(equityCalculatorViewModel);
     }
 
     @Override
@@ -15,7 +15,7 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
             return false;
         }
 
-        equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_combinations));
+        updateResDesc(R.string.checking_combinations);
 
         return true;
     }
@@ -23,24 +23,20 @@ public class TexasHoldemFinalUpdate extends TexasHoldemOutputResult {
     @Override
     public void afterAllSimulations(double[][] results, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.monteCarloThread.isAlive()) {
+            if (equityCalculatorViewModel.monteCarloThread.isAlive()) {
                 if (isCancelled[0]) {
-                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.checking_random_subset));
+                    updateResDesc(R.string.checking_random_subset);
                 } else {
-                    equityCalculatorFragment.monteCarloThread.interrupt();
-                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                        updateWinResults(results);
-                        updateResDesc(R.string.all_combinations_checked_result_is_exact);
-                    });
+                    equityCalculatorViewModel.monteCarloThread.interrupt();
+                    updateWinResults(results);
+                    updateResDesc(R.string.all_combinations_checked_result_is_exact);
                 }
             } else {
                 if (isCancelled[0]) {
-                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateResDesc(R.string.finished_checking_random_subset));
+                    updateResDesc(R.string.finished_checking_random_subset);
                 } else {
-                    equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                        updateWinResults(results);
-                        updateResDesc(R.string.all_combinations_checked_result_is_exact);
-                    });
+                    updateWinResults(results);
+                    updateResDesc(R.string.all_combinations_checked_result_is_exact);
                 }
             }
         }

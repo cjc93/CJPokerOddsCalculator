@@ -10,13 +10,11 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
-import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
-import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,23 +24,8 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public int playerCardMaxWidth;
 
     @Override
-    public void monteCarloProc() {
-        try {
-            OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
-    }
-
-    @Override
-    public void exactCalcProc() {
-        try {
-            OmahaExactCalc calcObj = new OmahaExactCalc(this.cardsPerHand);
-            OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(this, calcObj);
-            calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-            calcObj.calculate(cardRows);
-        } catch (InterruptedException ignored) { }
+    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+        return OmahaHighViewModel.class;
     }
 
     @Override
@@ -72,13 +55,13 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public List<ImageButton> createCardButtons(ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton) {
         List<ImageButton> cardList = new ArrayList<>();
 
-        for (int i = 0; i < this.cardsPerHand; i++) {
+        for (int i = 0; i < viewModel.cardsPerHand; i++) {
             ImageButton card = new ImageButton(requireActivity(), null, 0, R.style.SelectCardButton);
             card.setId(View.generateViewId());
             cardList.add(card);
         }
 
-        for (int i = 0; i < this.cardsPerHand; i++) {
+        for (int i = 0; i < viewModel.cardsPerHand; i++) {
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -88,7 +71,7 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
                 layoutParams.topToBottom = playerText.getId();
                 layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
                 layoutParams.rightToLeft = cardList.get(i + 1).getId();
-            } else if (i == this.cardsPerHand - 1) {
+            } else if (i == viewModel.cardsPerHand - 1) {
                 layoutParams.topToBottom = playerText.getId();
                 layoutParams.leftToRight = cardList.get(i - 1).getId();
                 layoutParams.rightToRight = playerText.getId();
@@ -114,26 +97,18 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        cardsPerHand = 4;
         maxPlayers = 10;
         this.playerCardMaxWidth = this.boardCardMaxWidth;
         fragmentName = "OmahaHigh";
         fragmentId = R.id.OmahaHighFragment;
         homeButtonActionId = R.id.action_OmahaHighFragment_to_HomeFragment;
-        initialStats = new double[]{
-            50.0,
-            49.29,
-            1.42,
-            2.99,
-            26.47,
-            36.83,
-            8.79,
-            11.27,
-            6.72,
-            6.35,
-            0.48,
-            0.09
-        };
         titleTextId = R.string.omaha_high_equity_calculator;
+    }
+
+    @Override
+    public void setViewsFromCardRow(int rowIdx, CardRow cardRow) {
+        super.setViewsFromCardRow(rowIdx, cardRow);
+
+        setViewsFromSpecificCardRow(rowIdx, (SpecificCardsRow) cardRow);
     }
 }

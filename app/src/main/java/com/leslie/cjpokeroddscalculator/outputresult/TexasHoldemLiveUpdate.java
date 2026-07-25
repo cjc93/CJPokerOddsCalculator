@@ -1,12 +1,12 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class TexasHoldemLiveUpdate extends TexasHoldemOutputResult {
 
-    public TexasHoldemLiveUpdate(EquityCalculatorFragment equityCalculatorFragment) {
-        super(equityCalculatorFragment);
+    public TexasHoldemLiveUpdate(EquityCalculatorViewModel equityCalculatorViewModel) {
+        super(equityCalculatorViewModel);
     }
 
     @Override
@@ -15,20 +15,18 @@ public class TexasHoldemLiveUpdate extends TexasHoldemOutputResult {
             return false;
         }
 
-        equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(results));
+        updateWinResults(results);
         return true;
     }
 
     @Override
     public void afterAllSimulations(double[][] results, boolean... isCancelled) {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> updateWinResults(results));
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
+                updateWinResults(results);
             } else {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    updateWinResults(results);
-                    updateResDesc(R.string.finished_checking_random_subset);
-                });
+                updateWinResults(results);
+                updateResDesc(R.string.finished_checking_random_subset);
             }
         }
     }

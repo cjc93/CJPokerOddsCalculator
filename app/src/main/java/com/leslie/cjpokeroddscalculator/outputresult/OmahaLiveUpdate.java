@@ -1,16 +1,16 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.calculation.pet.EquityUtil;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 public class OmahaLiveUpdate extends OmahaOutputResult {
     private long lastUpdateTime;
 
-    public OmahaLiveUpdate(EquityCalculatorFragment equityCalculatorFragment, OmahaCalc omahaCalc) {
-        super(equityCalculatorFragment, omahaCalc);
+    public OmahaLiveUpdate(EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
+        super(equityCalculatorViewModel, omahaCalc);
     }
 
     @Override
@@ -27,20 +27,16 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
         if (System.currentTimeMillis() - lastUpdateTime > 300) {
             EquityUtil.summariseEquities(eqs, count);
 
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-                    results = omahaCalc.averageUnknownStats(results);
-                    updateWinResults(results);
-                    updateResDesc(R.string.checking_combinations);
-                });
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
+                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                results = omahaCalc.averageUnknownStats(results);
+                updateWinResults(results);
+                updateResDesc(R.string.checking_combinations);
             } else {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-                    results = omahaCalc.averageUnknownStats(results);
-                    updateWinResults(results);
-                    updateResDesc(R.string.checking_random_subset);
-                });
+                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                results = omahaCalc.averageUnknownStats(results);
+                updateWinResults(results);
+                updateResDesc(R.string.checking_random_subset);
             }
 
             lastUpdateTime = System.currentTimeMillis();
@@ -50,19 +46,15 @@ public class OmahaLiveUpdate extends OmahaOutputResult {
     @Override
     public void afterAllSimulations(Equity[] eqs) throws InterruptedException {
         if (!Thread.interrupted()) {
-            if (equityCalculatorFragment.exactCalcThread.isAlive()) {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-                    results = omahaCalc.averageUnknownStats(results);
-                    updateWinResults(results);
-                });
+            if (equityCalculatorViewModel.exactCalcThread.isAlive()) {
+                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                results = omahaCalc.averageUnknownStats(results);
+                updateWinResults(results);
             } else {
-                equityCalculatorFragment.requireActivity().runOnUiThread(() -> {
-                    double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-                    results = omahaCalc.averageUnknownStats(results);
-                    updateWinResults(results);
-                    updateResDesc(R.string.finished_checking_random_subset);
-                });
+                double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
+                results = omahaCalc.averageUnknownStats(results);
+                updateWinResults(results);
+                updateResDesc(R.string.finished_checking_random_subset);
             }
         }
     }

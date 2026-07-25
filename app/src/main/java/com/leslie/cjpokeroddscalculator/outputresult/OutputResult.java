@@ -1,33 +1,36 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
+import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
+import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class OutputResult {
-    public EquityCalculatorFragment equityCalculatorFragment;
+    public EquityCalculatorViewModel equityCalculatorViewModel;
 
-    public OutputResult(EquityCalculatorFragment equityCalculatorFragment) {
-        this.equityCalculatorFragment = equityCalculatorFragment;
+    public OutputResult(EquityCalculatorViewModel equityCalculatorViewModel) {
+        this.equityCalculatorViewModel = equityCalculatorViewModel;
     }
 
     public void updateResDesc(int stringId) {
-        if (equityCalculatorFragment.equityCalculatorBinding != null) {
-            equityCalculatorFragment.equityCalculatorBinding.resDesc.setText(stringId);
-        }
+        equityCalculatorViewModel.resDesc.postValue(stringId);
     }
 
     public void updateWinResults(double[][] results) {
-        try {
-            if (equityCalculatorFragment.getActivity() != null) {
-                for (int playerIdx = 0; playerIdx < equityCalculatorFragment.statsMatrix.size(); playerIdx++) {
-                    for (int statsIdx = 0; statsIdx < equityCalculatorFragment.statsMatrix.get(playerIdx).size(); statsIdx++) {
-                        equityCalculatorFragment.statsMatrix.get(playerIdx).get(statsIdx).setText(
-                            equityCalculatorFragment.getString(R.string.two_decimal_perc, results[statsIdx][playerIdx] * 100)
-                        );
-                    }
-                }
+        List<CardRow> cardRows = equityCalculatorViewModel.cardRows.getValue();
+        assert cardRows != null;
+
+        for (int playerIdx = 1; playerIdx < cardRows.size(); playerIdx++) {
+            CardRow cardRow = cardRows.get(playerIdx);
+            List<Double> stats = new ArrayList<>();
+            for (double[] result : results) {
+                stats.add(result[playerIdx - 1]);
             }
-        } catch (IndexOutOfBoundsException ignored) { }
+            cardRow.stats = stats;
+        }
+
+        equityCalculatorViewModel.cardRows.postValue(cardRows);
     }
 }
