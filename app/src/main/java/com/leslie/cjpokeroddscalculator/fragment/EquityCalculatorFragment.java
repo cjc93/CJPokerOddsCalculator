@@ -139,9 +139,11 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
 
             if (selectedCard == null) {
-                hideCardSelector();
+                equityCalculatorBinding.inputCards.setVisibility(View.GONE);
+                equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
             } else {
-                showCardSelector();
+                equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
+                equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
             }
         });
 
@@ -277,16 +279,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 }
             }
         }
-    }
-
-    public void showCardSelector() {
-        equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
-        equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
-    }
-
-    public void hideCardSelector() {
-        equityCalculatorBinding.inputCards.setVisibility(View.GONE);
-        equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
     }
 
     public void initialiseVariables() {
