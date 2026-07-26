@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.widget.ImageButton;
+
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -76,6 +78,13 @@ public class GlobalStatic {
         NavController navController = NavHostFragment.findNavController(fragment);
         if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
             navController.navigate(actionId);
+        }
+    }
+
+    public static void setCardImage(ImageButton cardButton, String cardStr) {
+        Integer id = suitRankDrawableMap.get(cardStr);
+        if (id != null) {
+            cardButton.setImageResource(id);
         }
     }
 

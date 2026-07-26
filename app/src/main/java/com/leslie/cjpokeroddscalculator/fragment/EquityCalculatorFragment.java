@@ -11,11 +11,9 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowMetrics;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,9 +22,13 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.HashBiMap;
+import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
+import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
@@ -40,34 +42,26 @@ import java.util.List;
 import java.util.Objects;
 
 
-public abstract class EquityCalculatorFragment extends Fragment {
+public abstract class EquityCalculatorFragment extends Fragment implements PlayerRowInteractionListener {
 
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
     public EquityCalculatorViewModel viewModel;
-    public long startClickTime;
 
-    public List<ConstraintLayout> playerRowList = new ArrayList<>();
-    List<MaterialButton> removeRowList = new ArrayList<>();
+    public List<ImageButton> boardButtons = new ArrayList<>();
+    public HashBiMap<ImageButton, String> inputSuitRankMap;
 
-    public List<List<ImageButton>> cardButtonListOfLists = new ArrayList<>();
-    HashBiMap<ImageButton, String> inputSuitRankMap;
-    
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    int boardCardMaxHeight;
-    int boardCardMaxWidth;
+    public DisplayMetrics displayMetrics = new DisplayMetrics();
+    public int boardCardMaxHeight;
+    public int boardCardMaxWidth;
 
     public String fragmentName;
     public int fragmentId;
     public int homeButtonActionId;
 
-    public List<List<TextView>> statsMatrix = new ArrayList<>();
+    public int maxPlayers;
+    public int titleTextId;
 
-    List<MaterialButton> statsButtonList = new ArrayList<>();
-    List<ConstraintLayout> statsViewList = new ArrayList<>();
-
-    int maxPlayers;
-
-    int titleTextId;
+    public PlayerAdapter playerAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,43 +94,38 @@ public abstract class EquityCalculatorFragment extends Fragment {
                 inputButton.setVisibility(View.VISIBLE);
             }
 
-            SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
-            setViewsFromSpecificCardRow(0, boardCards);
-
-            equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
-            int numOfPlayersInUI = equityCalculatorBinding.playerRows.getChildCount();
-            if (numOfPlayersInUI > cardRows.size() - 1) {
-                removeAllPlayerRows();
-                for (int rowIdx = 1; rowIdx < cardRows.size(); rowIdx++) {
-                    addPlayerRow();
-                }
-            } else {
-                for (int rowIdx = 0; rowIdx < cardRows.size() - 1 - numOfPlayersInUI; rowIdx++) {
-                    addPlayerRow();
-                }
-            }
-
-            for (int rowIdx = 1; rowIdx < cardRows.size(); rowIdx++) {
-                setViewsFromCardRow(rowIdx, cardRows.get(rowIdx));
-            }
-
-            int[] selectedCard = viewModel.selectedCard.getValue();
-            if (selectedCard != null && selectedCard[0] < cardButtonListOfLists.size()) {
-                cardButtonListOfLists.get(selectedCard[0]).get(selectedCard[1]).setBackgroundResource(R.drawable.selected_border);
-            }
-        });
-
-        viewModel.selectedCard.observe(getViewLifecycleOwner(), selectedCard -> {
-            for (int rowIdx = 0; rowIdx < cardButtonListOfLists.size(); rowIdx++) {
-                List<ImageButton> row = cardButtonListOfLists.get(rowIdx);
-                for (int cardIdx = 0; cardIdx < row.size(); cardIdx++) {
-                    if (selectedCard != null && rowIdx == selectedCard[0] && cardIdx == selectedCard[1]) {
-                        row.get(cardIdx).setBackgroundResource(R.drawable.selected_border);
-                    } else {
-                        row.get(cardIdx).setBackgroundResource(0);
+            for (CardRow cardRow : cardRows) {
+                if (cardRow instanceof SpecificCardsRow specificCardRow) {
+                    for (String cardStr : specificCardRow.cards) {
+                        if (!cardStr.isEmpty()) {
+                            ImageButton cardButton = inputSuitRankMap.inverse().get(cardStr);
+                            if (cardButton != null) {
+                                cardButton.setVisibility(View.INVISIBLE);
+                            }
+                        }
                     }
                 }
             }
+
+            SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
+            setViewsFromSpecificCardRow(boardCards);
+
+            equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
+
+            playerAdapter.submitList(cardRows.subList(1, cardRows.size()));
+        });
+
+        viewModel.selectedCard.observe(getViewLifecycleOwner(), selectedCard -> {
+            for (int i = 0; i < boardButtons.size(); i++) {
+                if (selectedCard != null && selectedCard[0] == 0 && selectedCard[1] == i) {
+                    boardButtons.get(i).setBackgroundResource(R.drawable.selected_border);
+                } else {
+                    boardButtons.get(i).setBackgroundResource(0);
+                }
+            }
+
+            playerAdapter.setSelectedCard(selectedCard);
+            playerAdapter.notifyItemRangeChanged(0, playerAdapter.getItemCount());
 
             if (selectedCard == null) {
                 equityCalculatorBinding.inputCards.setVisibility(View.GONE);
@@ -156,66 +145,74 @@ public abstract class EquityCalculatorFragment extends Fragment {
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             List<CardRow> cardRows = viewModel.cardRows.getValue();
             assert cardRows != null;
-            if(cardRows.size() - 1 < this.maxPlayers){
-                cardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand));
-                viewModel.cardRows.setValue(cardRows);
+            if (cardRows.size() - 1 < this.maxPlayers) {
+                List<CardRow> newCardRows = new ArrayList<>();
+                for (CardRow cardRow : cardRows) {
+                    newCardRows.add(cardRow.copy());
+                }
+                newCardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand));
+                viewModel.cardRows.setValue(newCardRows);
 
                 calculateOdds();
-            }
-            else{
+            } else {
                 Toast.makeText(requireActivity(), "Max number of players is " + this.maxPlayers, Toast.LENGTH_SHORT).show();
             }
         });
 
         equityCalculatorBinding.clear.setOnClickListener(v -> {
             List<CardRow> cardRows = viewModel.cardRows.getValue();
-            for (int rowIdx = 0; rowIdx < Objects.requireNonNull(cardRows).size(); rowIdx++) {
-                cardRows.get(rowIdx).clear();
+            assert cardRows != null;
+            List<CardRow> newCardRows = new ArrayList<>();
+            for (CardRow cardRow : cardRows) {
+                CardRow copy = cardRow.copy();
+                copy.clear();
+                newCardRows.add(copy);
             }
-            viewModel.cardRows.setValue(cardRows);
+            viewModel.cardRows.setValue(newCardRows);
 
             if (viewModel.selectedCard.getValue() != null) {
-                if (cardRows.size() > 1 && cardRows.get(1) instanceof SpecificCardsRow) {
+                if (newCardRows.size() > 1 && newCardRows.get(1) instanceof SpecificCardsRow) {
                     viewModel.selectedCard.setValue(new int[]{1, 0});
                 } else {
                     viewModel.selectedCard.setValue(new int[]{0, 0});
                 }
             }
 
-            equityCalculatorBinding.scrollView.post(
-                () -> {
-                    if (equityCalculatorBinding != null) {
-                        equityCalculatorBinding.scrollView.smoothScrollTo(0, 0);
-                    }
-                }
-            );
+            equityCalculatorBinding.playerList.scrollToPosition(0);
 
             calculateOdds();
         });
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
+
+        equityCalculatorBinding.hideCardSelectorArea.setOnClickListener(v -> viewModel.selectedCard.setValue(null));
+
+        equityCalculatorBinding.playerList.addOnItemTouchListener(
+            new RecyclerView.SimpleOnItemTouchListener() {
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                    if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                        View child = rv.findChildViewUnder(e.getX(), e.getY());
+
+                        if (child == null) {
+                            viewModel.selectedCard.setValue(null);
+                        }
+                    }
+
+                    return false;
+                }
+            }
+        );
     }
 
-    public abstract void addPlayerRow();
-
-    public void initialiseCardButtons(List<ImageButton> cardButtons, int cardMaxWidth) {
-        for (ImageButton card : cardButtons) {
+    public void initialiseCardButtons(List<ImageButton> cardButtons, int cardMaxWidth, int rowIdx) {
+        for (int i = 0; i < cardButtons.size(); i++) {
+            ImageButton card = cardButtons.get(i);
             card.setMaxHeight(boardCardMaxHeight);
             card.setMaxWidth(cardMaxWidth);
 
-            card.setOnClickListener(v -> {
-                int rowIdx;
-                int cardIdx = 0;
-
-                for (rowIdx = 0; rowIdx < cardButtonListOfLists.size(); rowIdx++) {
-                    cardIdx = cardButtonListOfLists.get(rowIdx).indexOf((ImageButton) v);
-                    if (cardIdx != -1) {
-                        break;
-                    }
-                }
-
-                viewModel.selectedCard.setValue(new int[]{rowIdx, cardIdx});
-            });
+            int cardIdx = i;
+            card.setOnClickListener(v -> viewModel.selectedCard.setValue(new int[]{rowIdx, cardIdx}));
         }
     }
 
@@ -223,62 +220,6 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         equityCalculatorBinding = null;
-    }
-
-    public void checkClickToHideCardSelector(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            startClickTime = System.currentTimeMillis();
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (System.currentTimeMillis() - startClickTime < ViewConfiguration.getTapTimeout()) {
-                Rect outRect = new Rect();
-
-                int event_x = (int) event.getRawX();
-                int event_y = (int) event.getRawY();
-
-                boolean hideCardSelectorFlag = true;
-
-                equityCalculatorBinding.addplayer.getGlobalVisibleRect(outRect);
-                if (outRect.top < event_y) {
-                    hideCardSelectorFlag = false;
-                }
-
-                if (hideCardSelectorFlag) {
-                    for (List<ImageButton> row : cardButtonListOfLists) {
-                        for (ImageButton card : row) {
-                            card.getGlobalVisibleRect(outRect);
-                            if (outRect.contains(event_x, event_y)) {
-                                hideCardSelectorFlag = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (hideCardSelectorFlag) {
-                    for (MaterialButton b : removeRowList) {
-                        b.getGlobalVisibleRect(outRect);
-                        if (outRect.contains(event_x, event_y)) {
-                            hideCardSelectorFlag = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (hideCardSelectorFlag) {
-                    for (MaterialButton b : statsButtonList) {
-                        b.getGlobalVisibleRect(outRect);
-                        if (outRect.contains(event_x, event_y)) {
-                            hideCardSelectorFlag = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (hideCardSelectorFlag) {
-                    viewModel.selectedCard.setValue(null);
-                }
-            }
-        }
     }
 
     public void initialiseVariables() {
@@ -293,7 +234,7 @@ public abstract class EquityCalculatorFragment extends Fragment {
     public void generateMainLayout() {
         equityCalculatorBinding.title.setText(this.titleTextId);
 
-        List<ImageButton> cardList = Arrays.asList(
+        boardButtons = Arrays.asList(
             equityCalculatorBinding.flop1,
             equityCalculatorBinding.flop2,
             equityCalculatorBinding.flop3,
@@ -301,8 +242,12 @@ public abstract class EquityCalculatorFragment extends Fragment {
             equityCalculatorBinding.river
         );
 
-        initialiseCardButtons(cardList, boardCardMaxWidth);
-        cardButtonListOfLists.add(cardList);
+        initialiseCardButtons(boardButtons, boardCardMaxWidth, 0);
+
+        playerAdapter = createPlayerAdapter();
+        equityCalculatorBinding.playerList.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        equityCalculatorBinding.playerList.setItemAnimator(null);
+        equityCalculatorBinding.playerList.setAdapter(playerAdapter);
 
         inputSuitRankMap = HashBiMap.create();
         for (String suit : suitStrings) {
@@ -365,51 +310,25 @@ public abstract class EquityCalculatorFragment extends Fragment {
         }
     }
 
-    public void removeAllPlayerRows() {
-        statsButtonList.clear();
-        statsViewList.clear();
-        statsMatrix.clear();
-
-        equityCalculatorBinding.playerRows.removeAllViews();
-
-        playerRowList.clear();
-        removeRowList.clear();
-
-        cardButtonListOfLists.subList(1, cardButtonListOfLists.size()).clear();
-    }
-
-    public void setViewsFromCardRow(int rowIdx, CardRow cardRow) {
-        List<TextView> row = statsMatrix.get(rowIdx - 1);
-        for (int statsIdx = 0; statsIdx < row.size(); statsIdx++) {
-            String statString = "";
-            if (cardRow.stats != null) {
-                statString = getString(R.string.two_decimal_perc, cardRow.stats.get(statsIdx) * 100);
-            }
-            row.get(statsIdx).setText(statString);
-        }
-
-        if (cardRow.isStatsVisible) {
-            statsViewList.get(rowIdx - 1).setVisibility(View.VISIBLE);
-        } else {
-            statsViewList.get(rowIdx - 1).setVisibility(View.GONE);
-        }
-    }
-
-    public void setViewsFromSpecificCardRow(int rowIdx, SpecificCardsRow specificCardRow) {
+    public void setViewsFromSpecificCardRow(SpecificCardsRow specificCardRow) {
         for (int cardIdx = 0; cardIdx < specificCardRow.cards.length; cardIdx++) {
             String cardStr = specificCardRow.cards[cardIdx];
-            setCardImage(rowIdx, cardIdx, cardStr);
-            if (!Objects.equals(cardStr, "")) {
+            GlobalStatic.setCardImage(boardButtons.get(cardIdx), cardStr);
+            if (!cardStr.isEmpty()) {
                 ImageButton card = inputSuitRankMap.inverse().get(cardStr);
-                assert card != null;
-                card.setVisibility(View.INVISIBLE);
+                if (card != null) {
+                    card.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
 
     public void setValueToSelectedCard(String cardStr) {
         int[] selectedCard = viewModel.selectedCard.getValue();
-        assert selectedCard != null;
+        if (selectedCard == null) {
+            return;
+        }
+
         int selectedRowIdx = selectedCard[0];
         int selectedCardIdx = selectedCard[1];
 
@@ -418,22 +337,28 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         List<CardRow> cardRows = viewModel.cardRows.getValue();
         assert cardRows != null;
-        SpecificCardsRow cardRow = (SpecificCardsRow) cardRows.get(selectedRowIdx);
+
+        List<CardRow> newCardRows = new ArrayList<>();
+        for (CardRow cardRow : cardRows) {
+            newCardRows.add(cardRow.copy());
+        }
+
+        SpecificCardsRow cardRow = (SpecificCardsRow) newCardRows.get(selectedRowIdx);
 
         cardRow.cards[selectedCardIdx] = cardStr;
 
-        viewModel.cardRows.setValue(cardRows);
+        viewModel.cardRows.setValue(newCardRows);
 
         if ((selectedRowIdx == 0 && selectedCardIdx < 4) || (selectedRowIdx > 0 && selectedCardIdx < (viewModel.cardsPerHand - 1))) {
             newSelectedRowIdx = selectedRowIdx;
             newSelectedCardIdx = selectedCardIdx + 1;
-        } else if ((selectedRowIdx == 1 || selectedRowIdx == playerRowList.size()) && selectedCardIdx == (viewModel.cardsPerHand - 1)) {
+        } else if ((selectedRowIdx == 1 || selectedRowIdx == newCardRows.size() - 1) && selectedCardIdx == (viewModel.cardsPerHand - 1)) {
             newSelectedRowIdx = 0;
             newSelectedCardIdx = 0;
         } else {
             boolean foundNext = false;
-            for (int rowIdx = selectedRowIdx + 1; rowIdx < cardRows.size(); rowIdx++) {
-                if (cardRows.get(rowIdx) instanceof SpecificCardsRow) {
+            for (int rowIdx = selectedRowIdx + 1; rowIdx < newCardRows.size(); rowIdx++) {
+                if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
                     newSelectedRowIdx = rowIdx;
                     newSelectedCardIdx = 0;
                     foundNext = true;
@@ -449,86 +374,46 @@ public abstract class EquityCalculatorFragment extends Fragment {
 
         viewModel.selectedCard.setValue(new int[]{newSelectedRowIdx, newSelectedCardIdx});
 
-        Rect rect = new Rect();
-        ImageButton selectedCardButton = cardButtonListOfLists.get(newSelectedRowIdx).get(newSelectedCardIdx);
-        if(newSelectedRowIdx > 0 && (!selectedCardButton.getGlobalVisibleRect(rect) || selectedCardButton.getHeight() != rect.height())) {
-            int finalNewSelectedRowIdx = newSelectedRowIdx;
-            equityCalculatorBinding.scrollView.post(
-                () -> equityCalculatorBinding.scrollView.smoothScrollTo(
-                    0,
-                    playerRowList.get(finalNewSelectedRowIdx - 1).getBottom() - equityCalculatorBinding.scrollView.getHeight()
-                )
-            );
+        if (newSelectedRowIdx > 0) {
+            equityCalculatorBinding.playerList.scrollToPosition(newSelectedRowIdx - 1);
         }
 
         calculateOdds();
     }
 
-    public void setCardImage(int rowIdx, int cardIdx, String cardStr) {
-        ImageButton cardButton = cardButtonListOfLists.get(rowIdx).get(cardIdx);
-        Integer id = suitRankDrawableMap.get(cardStr);
-        assert id != null;
-        cardButton.setImageResource(id);
-    }
-
     public void calculateOdds() {
         List<CardRow> cardRows = viewModel.cardRows.getValue();
         assert cardRows != null;
-        for (int rowIdx = 0; rowIdx < cardRows.size(); rowIdx++) {
-            cardRows.get(rowIdx).stats = null;
+        List<CardRow> newCardRows = new ArrayList<>();
+        for (CardRow cardRow : cardRows) {
+            CardRow copy = cardRow.copy();
+            copy.stats = null;
+            newCardRows.add(copy);
         }
-        viewModel.cardRows.setValue(cardRows);
+        viewModel.cardRows.setValue(newCardRows);
 
         viewModel.resDesc.setValue(R.string.checking_random_subset);
         viewModel.calculateOdds();
     }
 
-    public void addToStatsMatrix(
-        TextView equity, TextView win, TextView tie, TextView highCard, TextView onePair, TextView twoPair, TextView threeOfAKind,
-        TextView straight, TextView flush, TextView fullHouse, TextView fourOfAKind, TextView straightFlush
-    ) {
-        this.statsMatrix.add(
-            Arrays.asList(
-                equity,
-                win,
-                tie,
-                highCard,
-                onePair,
-                twoPair,
-                threeOfAKind,
-                straight,
-                flush,
-                fullHouse,
-                fourOfAKind,
-                straightFlush
-            )
-        );
-    }
-
-    public void setRowViews(ConstraintLayout playerRow, TextView playerText, List<ImageButton> cardList, int cardMaxWidth, MaterialButton remove, MaterialButton statsButton, ConstraintLayout statsView) {
-        playerRowList.add(playerRow);
-        playerText.setText(getString(R.string.player, playerRowList.size()));
-
-        initialiseCardButtons(cardList, cardMaxWidth);
-        cardButtonListOfLists.add(cardList);
-
-        removeRowList.add(remove);
-        remove.setOnClickListener(v -> {
-            final MaterialButton removeInput = (MaterialButton) v;
-            int playerRemoveNumber = removeRowList.indexOf(removeInput) + 1;
-
-            List<CardRow> cardRows = viewModel.cardRows.getValue();
-            assert cardRows != null;
-            cardRows.remove(playerRemoveNumber);
-            viewModel.cardRows.setValue(cardRows);
-
+    @Override
+    public void onRemovePlayer(int playerRemoveNumber) {
+        List<CardRow> cardRows = viewModel.cardRows.getValue();
+        if (cardRows != null && playerRemoveNumber < cardRows.size()) {
+            List<CardRow> newCardRows = new ArrayList<>();
+            for (CardRow row : cardRows) {
+                newCardRows.add(row.copy());
+            }
+            newCardRows.remove(playerRemoveNumber);
+            viewModel.cardRows.setValue(newCardRows);
             int[] selectedCard = viewModel.selectedCard.getValue();
+
             if (selectedCard != null && selectedCard[0] >= playerRemoveNumber) {
                 for (int rowIdx = selectedCard[0]; rowIdx >= 0; rowIdx--) {
                     if (rowIdx == 0) {
                         viewModel.selectedCard.setValue(new int[]{0, 0});
                         break;
-                    } else if (rowIdx < cardRows.size() && cardRows.get(rowIdx) instanceof SpecificCardsRow) {
+                    } else if (rowIdx < newCardRows.size() && newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
                         viewModel.selectedCard.setValue(new int[]{rowIdx, selectedCard[1]});
                         break;
                     }
@@ -536,18 +421,42 @@ public abstract class EquityCalculatorFragment extends Fragment {
             }
 
             calculateOdds();
-        });
-
-        statsButtonList.add(statsButton);
-        statsViewList.add(statsView);
-
-        statsButton.setOnClickListener(v -> {
-            final MaterialButton statsButtonInput = (MaterialButton) v;
-            int rowIdx = statsButtonList.indexOf(statsButtonInput);
-            List<CardRow> cardRows = viewModel.cardRows.getValue();
-            assert cardRows != null;
-            cardRows.get(rowIdx + 1).isStatsVisible = !cardRows.get(rowIdx + 1).isStatsVisible;
-            viewModel.cardRows.setValue(cardRows);
-        });
+        }
     }
+
+    @Override
+    public void onToggleStats(int rowIdx) {
+        List<CardRow> cardRows = viewModel.cardRows.getValue();
+        if (cardRows != null && rowIdx < cardRows.size()) {
+            List<CardRow> newCardRows = new ArrayList<>();
+            for (CardRow row : cardRows) {
+                newCardRows.add(row.copy());
+            }
+            newCardRows.get(rowIdx).isStatsVisible = !newCardRows.get(rowIdx).isStatsVisible;
+            viewModel.cardRows.setValue(newCardRows);
+        }
+    }
+
+    @Override
+    public void onSelectCard(int rowIdx, int cardIdx) {
+        viewModel.selectedCard.setValue(new int[]{rowIdx, cardIdx});
+    }
+
+    @Override
+    public void onHideCardSelector() {
+        viewModel.selectedCard.setValue(null);
+    }
+
+    @Override
+    public void onToggleRangeHand(int rowIdx) {
+        // Default implementation does nothing, overridden in TexasHoldemFragment
+    }
+
+    @Override
+    public void onShowRangeSelector(int rowIdx) {
+        // Default implementation does nothing, overridden in TexasHoldemFragment
+    }
+
+
+    public abstract PlayerAdapter createPlayerAdapter();
 }

@@ -5,6 +5,7 @@ import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -83,5 +84,27 @@ public class RangeRow extends CardRow {
         } else {
             return sj.toString();
         }
+    }
+
+    @Override
+    public CardRow copy() {
+        RangeRow copy = new RangeRow(copyStats(), isStatsVisible);
+        copy.id = this.id;
+        copy.matrix = GlobalStatic.copyMatrix(this.matrix);
+        return copy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        RangeRow rangeRow = (RangeRow) o;
+        return Objects.equals(matrix, rangeRow.matrix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), matrix);
     }
 }
