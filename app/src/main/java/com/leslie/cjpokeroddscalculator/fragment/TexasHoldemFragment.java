@@ -1,17 +1,12 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.Group;
 
-import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
@@ -26,7 +21,6 @@ import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

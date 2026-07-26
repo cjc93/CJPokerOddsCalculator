@@ -22,18 +22,53 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
 
     public TexasHoldemPlayerViewHolder(TexasHoldemPlayerRowBinding binding, PlayerRowInteractionListener listener, int boardCardMaxHeight, int cardMaxWidth, int rangeCardSize) {
         super(binding.getRoot(), listener, boardCardMaxHeight, cardMaxWidth);
-        this.binding = binding;
         this.rangeCardSize = rangeCardSize;
+        this.binding = binding;
+        this.binding.getRoot().setOnClickListener(v -> listener.onHideCardSelector());
     }
 
     @Override
     public void bind(CardRow cardRow, int rowIdx, int[] selectedCard) {
         binding.playerText.setText(binding.getRoot().getContext().getString(R.string.player, rowIdx));
 
+        binding.range.setOnClickListener(v -> listener.onShowRangeSelector(rowIdx));
         binding.remove.setOnClickListener(v -> listener.onRemovePlayer(rowIdx));
+        binding.handRangeButton.setOnClickListener(v -> listener.onToggleRangeHand(rowIdx));
         binding.statsButton.setOnClickListener(v -> listener.onToggleStats(rowIdx));
 
         binding.statsView.getRoot().setVisibility(cardRow.isStatsVisible ? View.VISIBLE : View.GONE);
+
+        if (cardRow instanceof SpecificCardsRow specificCardRow) {
+            binding.twoCards.setVisibility(View.VISIBLE);
+            binding.range.setVisibility(View.GONE);
+            binding.handRangeButton.setText(R.string.range);
+
+            List<ImageButton> cardList = Arrays.asList(binding.card1, binding.card2);
+            GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, rowIdx, listener);
+            GlobalStatic.setCardRowImages(cardList, specificCardRow);
+            GlobalStatic.setSelectedCardBorder(cardList, rowIdx, selectedCard);
+        } else {
+            RangeRow rangeRow = (RangeRow) cardRow;
+            binding.twoCards.setVisibility(View.GONE);
+            binding.range.setVisibility(View.VISIBLE);
+            binding.handRangeButton.setText(R.string.hand);
+
+            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
+            for (int i = 0; i < 13; i++)  {
+                for (int j = 0; j < 13; j++)  {
+                    Set<String> suits = rangeRow.matrix.get(i).get(j);
+                    if (GlobalStatic.isAllSuits(suits, i, j)) {
+                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                    } else if (suits.isEmpty()) {
+                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                    } else {
+                        matrixBitmap.setPixel(j, i, Color.CYAN);
+                    }
+                }
+            }
+            binding.range.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, rangeCardSize, rangeCardSize, false));
+            matrixBitmap.recycle();
+        }
 
         if (cardRow.stats != null) {
             binding.equity.setText(binding.getRoot().getContext().getString(R.string.two_decimal_perc, cardRow.stats.get(0) * 100));
@@ -63,55 +98,5 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
             binding.statsView.fourOfAKind.setText("");
             binding.statsView.straightFlush.setText("");
         }
-
-        if (cardRow instanceof SpecificCardsRow specificCardRow) {
-            binding.twoCards.setVisibility(View.VISIBLE);
-            binding.range.setVisibility(View.GONE);
-            binding.handRangeButton.setText(R.string.range);
-
-            List<ImageButton> cardList = Arrays.asList(binding.card1, binding.card2);
-            for (int i = 0; i < cardList.size(); i++) {
-                cardList.get(i).setMaxHeight(boardCardMaxHeight);
-                cardList.get(i).setMaxWidth(cardMaxWidth);
-                int cardIdx = i;
-                cardList.get(i).setOnClickListener(v -> listener.onSelectCard(rowIdx, cardIdx));
-            }
-
-            for (int i = 0; i < specificCardRow.cards.length; i++) {
-                String cardStr = specificCardRow.cards[i];
-                GlobalStatic.setCardImage(cardList.get(i), cardStr);
-
-                if (selectedCard != null && selectedCard[0] == rowIdx && selectedCard[1] == i) {
-                    cardList.get(i).setBackgroundResource(R.drawable.selected_border);
-                } else {
-                    cardList.get(i).setBackgroundResource(0);
-                }
-            }
-        } else {
-            RangeRow rangeRow = (RangeRow) cardRow;
-            binding.twoCards.setVisibility(View.GONE);
-            binding.range.setVisibility(View.VISIBLE);
-            binding.handRangeButton.setText(R.string.hand);
-
-            Bitmap matrixBitmap = Bitmap.createBitmap(13, 13, Bitmap.Config.ARGB_8888);
-            for (int i = 0; i < 13; i++)  {
-                for (int j = 0; j < 13; j++)  {
-                    Set<String> suits = rangeRow.matrix.get(i).get(j);
-                    if (GlobalStatic.isAllSuits(suits, i, j)) {
-                        matrixBitmap.setPixel(j, i, Color.YELLOW);
-                    } else if (suits.isEmpty()) {
-                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
-                    } else {
-                        matrixBitmap.setPixel(j, i, Color.CYAN);
-                    }
-                }
-            }
-            binding.range.setImageBitmap(Bitmap.createScaledBitmap(matrixBitmap, rangeCardSize, rangeCardSize, false));
-            matrixBitmap.recycle();
-        }
-
-        binding.handRangeButton.setOnClickListener(v -> listener.onToggleRangeHand(rowIdx));
-        binding.range.setOnClickListener(v -> listener.onShowRangeSelector(rowIdx));
-        binding.getRoot().setOnClickListener(v -> listener.onHideCardSelector());
     }
 }

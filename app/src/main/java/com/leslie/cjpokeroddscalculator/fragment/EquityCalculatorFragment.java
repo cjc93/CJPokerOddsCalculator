@@ -108,7 +108,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
 
             SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
-            setViewsFromSpecificCardRow(boardCards);
+            GlobalStatic.setCardRowImages(boardButtons, boardCards);
 
             equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
 
@@ -116,13 +116,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
         });
 
         viewModel.selectedCard.observe(getViewLifecycleOwner(), selectedCard -> {
-            for (int i = 0; i < boardButtons.size(); i++) {
-                if (selectedCard != null && selectedCard[0] == 0 && selectedCard[1] == i) {
-                    boardButtons.get(i).setBackgroundResource(R.drawable.selected_border);
-                } else {
-                    boardButtons.get(i).setBackgroundResource(0);
-                }
-            }
+            GlobalStatic.setSelectedCardBorder(boardButtons, 0, selectedCard);
 
             playerAdapter.setSelectedCard(selectedCard);
             playerAdapter.notifyItemRangeChanged(0, playerAdapter.getItemCount());
@@ -205,17 +199,6 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
         );
     }
 
-    public void initialiseCardButtons(List<ImageButton> cardButtons, int cardMaxWidth, int rowIdx) {
-        for (int i = 0; i < cardButtons.size(); i++) {
-            ImageButton card = cardButtons.get(i);
-            card.setMaxHeight(boardCardMaxHeight);
-            card.setMaxWidth(cardMaxWidth);
-
-            int cardIdx = i;
-            card.setOnClickListener(v -> viewModel.selectedCard.setValue(new int[]{rowIdx, cardIdx}));
-        }
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -242,7 +225,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             equityCalculatorBinding.river
         );
 
-        initialiseCardButtons(boardButtons, boardCardMaxWidth, 0);
+        GlobalStatic.initialiseCardButtons(boardButtons, boardCardMaxHeight, boardCardMaxWidth, 0, this);
 
         playerAdapter = createPlayerAdapter();
         equityCalculatorBinding.playerList.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -306,19 +289,6 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                 ImageButton button = this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i]);
                 assert button != null;
                 button.setLayoutParams(layoutParams);
-            }
-        }
-    }
-
-    public void setViewsFromSpecificCardRow(SpecificCardsRow specificCardRow) {
-        for (int cardIdx = 0; cardIdx < specificCardRow.cards.length; cardIdx++) {
-            String cardStr = specificCardRow.cards[cardIdx];
-            GlobalStatic.setCardImage(boardButtons.get(cardIdx), cardStr);
-            if (!cardStr.isEmpty()) {
-                ImageButton card = inputSuitRankMap.inverse().get(cardStr);
-                if (card != null) {
-                    card.setVisibility(View.INVISIBLE);
-                }
             }
         }
     }
