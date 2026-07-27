@@ -9,17 +9,21 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.ContextCompat;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
@@ -32,7 +36,6 @@ import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.RangeSelectorViewModel;
-import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -43,8 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class RangeSelector {
-    private final TexasHoldemFragment texasHoldemFragment;
+public class RangeSelectorFragment extends Fragment {
     public RangeSelectorBinding rangeSelectorBinding;
     public RangeSelectorViewModel viewModel;
 
@@ -56,35 +58,41 @@ public class RangeSelector {
     Map<String, MaterialButton> savedHandRangeMap = new HashMap<>();
     Gson gson = new Gson();
 
-    public RangeSelector(TexasHoldemFragment texasHoldemFragment) {
-        this.texasHoldemFragment = texasHoldemFragment;
-        this.viewModel = new ViewModelProvider(texasHoldemFragment).get(RangeSelectorViewModel.class);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rangeSelectorBinding = RangeSelectorBinding.inflate(inflater, container, false);
+        return rangeSelectorBinding.getRoot();
     }
 
-    public void addBackPressedCallback() {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (rangeSelectorBinding.rangeSelector.getVisibility() == View.VISIBLE) {
-                    TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
-                    texasHoldemViewModel.selectedRangePosition.setValue(null);
-                } else {
-                    setEnabled(false);
-                    texasHoldemFragment.requireActivity().getOnBackPressedDispatcher().onBackPressed();
-                    setEnabled(true);
-                }
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(RangeSelectorViewModel.class);
+
+        if (getArguments() != null) {
+            String matrixJson = getArguments().getString("matrix");
+            if (matrixJson != null) {
+                List<List<Set<String>>> matrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
+                updateRangeSelector(matrix);
             }
-        };
-        texasHoldemFragment.requireActivity().getOnBackPressedDispatcher().addCallback(texasHoldemFragment.getViewLifecycleOwner(), callback);
+        }
+
+        initialiseVariables();
+        generateRangeSelector();
+        observeLiveData();
+        setListeners();
+        setFragmentResultListeners();
     }
 
     public void generateRangeSelector() {
-        int squareLength = min(texasHoldemFragment.displayMetrics.widthPixels - 12, texasHoldemFragment.displayMetrics.heightPixels / 2)  / 13;
+        DisplayMetrics displayMetrics = GlobalStatic.getDisplayMetrics(requireActivity());
+
+        int squareLength = min(displayMetrics.widthPixels - 12, displayMetrics.heightPixels / 2)  / 13;
         this.inputMatrixMap = HashBiMap.create();
 
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
-                MaterialButton b = new MaterialButton(texasHoldemFragment.requireActivity());
+                MaterialButton b = new MaterialButton(requireActivity());
                 b.setId(View.generateViewId());
                 b.setPadding(0, 0, 0, 0);
                 b.setHeight(squareLength);
@@ -102,11 +110,11 @@ public class RangeSelector {
                 b.setOnClickListener(matrixListener);
 
                 if (rowIdx == colIdx) {
-                    b.setText(texasHoldemFragment.getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[rowIdx], ""));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[rowIdx], ""));
                 } else if (colIdx > rowIdx) {
-                    b.setText(texasHoldemFragment.getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[colIdx], "s"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[rowIdx], GlobalStatic.rankStrings[colIdx], "s"));
                 } else {
-                    b.setText(texasHoldemFragment.getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
+                    b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
                 }
 
                 rangeSelectorBinding.rangeSelector.addView(b);
@@ -151,7 +159,7 @@ public class RangeSelector {
         layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(12, 0))).getId();
         rangeSelectorBinding.rangeSlider.setLayoutParams(layoutParams);
 
-        String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
+        String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
 
         if (rangeNamesJson != null) {
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
@@ -190,7 +198,7 @@ public class RangeSelector {
     };
 
     public void appendSavedRangeButton(String rangeName) {
-        MaterialButton b = new MaterialButton(texasHoldemFragment.requireActivity());
+        MaterialButton b = new MaterialButton(requireActivity());
         b.setId(View.generateViewId());
         b.setText(rangeName);
         b.setTextSize(12);
@@ -203,7 +211,7 @@ public class RangeSelector {
 
         b.setOnClickListener(v -> {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
-            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(RANGE_NAME_KEY);
+            String matrixJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(RANGE_NAME_KEY);
 
             // TODO: Fix bug if app crashes here
             assert matrixJson != null;
@@ -215,7 +223,7 @@ public class RangeSelector {
 
         b.setOnLongClickListener(v -> {
             EditSavedHandRangeFragment dialog = EditSavedHandRangeFragment.newInstance((String) b.getText(), new ArrayList<>(savedHandRangeMap.keySet()));
-            dialog.show(texasHoldemFragment.getParentFragmentManager(), "EDIT_SAVED_HAND_RANGE_DIALOG");
+            dialog.show(getParentFragmentManager(), "EDIT_SAVED_HAND_RANGE_DIALOG");
             return true;
         });
 
@@ -264,11 +272,11 @@ public class RangeSelector {
             } else {
                 Integer leftID = suitRankDrawableMap.get(highRank + currentSuit.charAt(0));
                 assert leftID != null;
-                Drawable leftCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), leftID);
+                Drawable leftCard = ContextCompat.getDrawable(requireActivity(), leftID);
 
                 Integer rightID = suitRankDrawableMap.get(lowRank + currentSuit.charAt(1));
                 assert rightID != null;
-                Drawable rightCard = ContextCompat.getDrawable(texasHoldemFragment.requireActivity(), rightID);
+                Drawable rightCard = ContextCompat.getDrawable(requireActivity(), rightID);
 
                 LayerDrawable combinedDrawable = new LayerDrawable(new Drawable[] {leftCard, rightCard});
 
@@ -339,7 +347,7 @@ public class RangeSelector {
                 viewModel.matrixInput.setValue(matrixInput);
                 slider.setValue(finalValue);
             }
-            rangeSelectorBinding.handsPerc.setText(texasHoldemFragment.getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
+            rangeSelectorBinding.handsPerc.setText(getString(R.string.hands_perc, slider.getValue() / 1326.0 * 100));
         });
 
         rangeSelectorBinding.rangeSlider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
@@ -361,72 +369,73 @@ public class RangeSelector {
 
         rangeSelectorBinding.addRangeButton.setOnClickListener(v -> {
             AddSavedHandRangeFragment dialog = AddSavedHandRangeFragment.newInstance(new ArrayList<>(savedHandRangeMap.keySet()));
-            dialog.show(texasHoldemFragment.getParentFragmentManager(), "ADD_SAVED_HAND_RANGE_DIALOG");
+            dialog.show(getParentFragmentManager(), "ADD_SAVED_HAND_RANGE_DIALOG");
         });
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
-            texasHoldemFragment.updateRange(viewModel.matrixInput.getValue());
-            TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) texasHoldemFragment.viewModel;
-            texasHoldemViewModel.selectedRangePosition.setValue(null);
+            Bundle result = new Bundle();
+            result.putString("matrix", gson.toJson(viewModel.matrixInput.getValue()));
+            getParentFragmentManager().setFragmentResult("range_selector_result", result);
+            getParentFragmentManager().popBackStack();
         });
     }
 
     public void setFragmentResultListeners() {
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("add_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener("add_saved_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = result.getString("range_name");
 
-            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+            ((MainActivity) requireActivity()).dataStore.writeToDataStore(
                 PreferencesKeys.stringKey("thec_" + rangeName),
                 gson.toJson(viewModel.matrixInput.getValue())
             );
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             if (rangeNamesJson == null) {
-                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+                ((MainActivity) requireActivity()).dataStore.writeToDataStore(
                     ALL_NAMES_KEY,
                     gson.toJson(Collections.singletonList(rangeName))
                 );
             } else {
                 List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
                 rangeNameList.add(rangeName);
-                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             appendSavedRangeButton(rangeName);
         });
 
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("rename_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener("rename_saved_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
             String oldRangeName = result.getString("old_range_name");
             String newRangeName = result.getString("new_range_name");
 
             Preferences.Key<String> OLD_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + oldRangeName);
             Preferences.Key<String> NEW_RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + newRangeName);
 
-            String matrixJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(OLD_RANGE_NAME_KEY);
+            String matrixJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(OLD_RANGE_NAME_KEY);
 
             // TODO: Fix bug if app crashes here
             assert matrixJson != null;
 
-            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(OLD_RANGE_NAME_KEY);
+            ((MainActivity) requireActivity()).dataStore.deleteKeyFromDataStore(OLD_RANGE_NAME_KEY);
 
-            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(
+            ((MainActivity) requireActivity()).dataStore.writeToDataStore(
                 NEW_RANGE_NAME_KEY,
                 matrixJson
             );
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             // TODO: Fix bug if app crashes here
             assert rangeNamesJson != null;
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
             if (Collections.replaceAll(rangeNameList, oldRangeName, newRangeName)) {
-                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             MaterialButton savedHandRangeButton = savedHandRangeMap.get(oldRangeName);
@@ -437,19 +446,19 @@ public class RangeSelector {
             savedHandRangeMap.put(newRangeName, savedHandRangeButton);
         });
 
-        texasHoldemFragment.requireActivity().getSupportFragmentManager().setFragmentResultListener("delete_saved_hand_range", texasHoldemFragment.getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener("delete_saved_hand_range", getViewLifecycleOwner(), (requestKey, result) -> {
             String rangeName = result.getString("range_name");
 
-            ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.deleteKeyFromDataStore(PreferencesKeys.stringKey("thec_" + rangeName));
+            ((MainActivity) requireActivity()).dataStore.deleteKeyFromDataStore(PreferencesKeys.stringKey("thec_" + rangeName));
 
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
-            String rangeNamesJson = ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
+            String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
 
             if (rangeNamesJson != null) {
                 List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
                 rangeNameList.remove(rangeName);
-                ((MainActivity) texasHoldemFragment.requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
+                ((MainActivity) requireActivity()).dataStore.writeToDataStore(ALL_NAMES_KEY, gson.toJson(rangeNameList));
             }
 
             MaterialButton savedHandRangeButton = savedHandRangeMap.get(rangeName);
@@ -493,7 +502,7 @@ public class RangeSelector {
     }
 
     public void observeLiveData() {
-        viewModel.matrixInput.observe(texasHoldemFragment.getViewLifecycleOwner(), matrixInput -> {
+        viewModel.matrixInput.observe(getViewLifecycleOwner(), matrixInput -> {
             int handCount = 0;
 
             for (int row_idx = 0; row_idx < 13; row_idx++) {
@@ -522,7 +531,7 @@ public class RangeSelector {
             }
         });
 
-        viewModel.selectedMatrixPosition.observe(texasHoldemFragment.getViewLifecycleOwner(), selectedMatrixPosition -> {
+        viewModel.selectedMatrixPosition.observe(getViewLifecycleOwner(), selectedMatrixPosition -> {
             if (selectedMatrixButton != null) {
                 selectedMatrixButton.setStrokeWidth(0);
             }
@@ -547,4 +556,9 @@ public class RangeSelector {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        rangeSelectorBinding = null;
+    }
 }

@@ -5,14 +5,12 @@ import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowMetrics;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -191,10 +189,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     }
 
     public void initialiseVariables() {
-        WindowMetrics windowMetrics = requireActivity().getWindowManager().getCurrentWindowMetrics();
-        Rect bounds = windowMetrics.getBounds();
-        displayMetrics.widthPixels = bounds.width();
-        displayMetrics.heightPixels = bounds.height();
+        displayMetrics = GlobalStatic.getDisplayMetrics(requireActivity());
         boardCardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
         boardCardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
     }

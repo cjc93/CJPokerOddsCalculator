@@ -41,7 +41,7 @@ public class EditSavedHandRangeFragment extends DialogFragment {
             .setNeutralButton("Delete", (dialog, id) -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("range_name", currentRangeName);
-                requireActivity().getSupportFragmentManager().setFragmentResult("delete_saved_hand_range", bundle);
+                getParentFragmentManager().setFragmentResult("delete_saved_hand_range", bundle);
             });
 
         AlertDialog dialog = builder.create();
@@ -57,7 +57,7 @@ public class EditSavedHandRangeFragment extends DialogFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("old_range_name", currentRangeName);
                     bundle.putString("new_range_name", newRangeName);
-                    requireActivity().getSupportFragmentManager().setFragmentResult("rename_saved_hand_range", bundle);
+                    getParentFragmentManager().setFragmentResult("rename_saved_hand_range", bundle);
                     dialog.dismiss();
                 }
             });

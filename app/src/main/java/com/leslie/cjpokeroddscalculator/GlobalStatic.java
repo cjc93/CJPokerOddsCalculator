@@ -1,12 +1,16 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowMetrics;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
@@ -87,6 +91,15 @@ public class GlobalStatic {
         if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
             navController.navigate(actionId);
         }
+    }
+
+    public static DisplayMetrics getDisplayMetrics(FragmentActivity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+        Rect bounds = windowMetrics.getBounds();
+        displayMetrics.widthPixels = bounds.width();
+        displayMetrics.heightPixels = bounds.height();
+        return displayMetrics;
     }
 
     public static void initialiseCardButtons(List<ImageButton> cardButtons, int boardCardMaxHeight, int cardMaxWidth, int rowIdx, PlayerRowInteractionListener listener) {
