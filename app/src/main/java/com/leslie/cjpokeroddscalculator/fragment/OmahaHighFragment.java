@@ -1,23 +1,17 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.annotation.NonNull;
 
-import com.google.android.material.button.MaterialButton;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
-import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
+import com.leslie.cjpokeroddscalculator.adapter.OmahaHighPlayerViewHolder;
+import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
+import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHighPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OmahaHighFragment extends EquityCalculatorFragment {
 
@@ -26,71 +20,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     @Override
     protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
         return OmahaHighViewModel.class;
-    }
-
-    @Override
-    public void addPlayerRow() {
-        OmahaHighPlayerRowBinding bindingPlayerRow = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.playerRows, true);
-
-        List<ImageButton> cardList = createCardButtons(bindingPlayerRow.getRoot(), bindingPlayerRow.playerText, bindingPlayerRow.statsButton);
-
-        setRowViews(bindingPlayerRow.getRoot(), bindingPlayerRow.playerText, cardList, this.playerCardMaxWidth, bindingPlayerRow.remove, bindingPlayerRow.statsButton, bindingPlayerRow.statsView.getRoot());
-
-        addToStatsMatrix(
-            bindingPlayerRow.equity,
-            bindingPlayerRow.win,
-            bindingPlayerRow.tie,
-            bindingPlayerRow.statsView.highCard,
-            bindingPlayerRow.statsView.onePair,
-            bindingPlayerRow.statsView.twoPair,
-            bindingPlayerRow.statsView.threeOfAKind,
-            bindingPlayerRow.statsView.straight,
-            bindingPlayerRow.statsView.flush,
-            bindingPlayerRow.statsView.fullHouse,
-            bindingPlayerRow.statsView.fourOfAKind,
-            bindingPlayerRow.statsView.straightFlush
-        );
-    }
-
-    public List<ImageButton> createCardButtons(ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton) {
-        List<ImageButton> cardList = new ArrayList<>();
-
-        for (int i = 0; i < viewModel.cardsPerHand; i++) {
-            ImageButton card = new ImageButton(requireActivity(), null, 0, R.style.SelectCardButton);
-            card.setId(View.generateViewId());
-            cardList.add(card);
-        }
-
-        for (int i = 0; i < viewModel.cardsPerHand; i++) {
-            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                ConstraintLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            if (i == 0) {
-                layoutParams.topToBottom = playerText.getId();
-                layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
-                layoutParams.rightToLeft = cardList.get(i + 1).getId();
-            } else if (i == viewModel.cardsPerHand - 1) {
-                layoutParams.topToBottom = playerText.getId();
-                layoutParams.leftToRight = cardList.get(i - 1).getId();
-                layoutParams.rightToRight = playerText.getId();
-            } else {
-                layoutParams.topToBottom = playerText.getId();
-                layoutParams.leftToRight = cardList.get(i - 1).getId();
-                layoutParams.rightToLeft = cardList.get(i + 1).getId();
-            }
-
-            cardList.get(i).setLayoutParams(layoutParams);
-
-            playerRow.addView(cardList.get(i));
-        }
-
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) statsButton.getLayoutParams();
-        layoutParams.bottomToBottom = cardList.get(0).getId();
-        statsButton.setLayoutParams(layoutParams);
-
-        return cardList;
     }
 
     @Override
@@ -106,9 +35,14 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     }
 
     @Override
-    public void setViewsFromCardRow(int rowIdx, CardRow cardRow) {
-        super.setViewsFromCardRow(rowIdx, cardRow);
-
-        setViewsFromSpecificCardRow(rowIdx, (SpecificCardsRow) cardRow);
+    public PlayerAdapter createPlayerAdapter() {
+        return new PlayerAdapter(this) {
+            @NonNull
+            @Override
+            public PlayerViewHolder createPlayerViewHolder(ViewGroup parent) {
+                OmahaHighPlayerRowBinding binding = OmahaHighPlayerRowBinding.inflate(LayoutInflater.from(requireActivity()), parent, false);
+                return new OmahaHighPlayerViewHolder(binding, listener, boardCardMaxHeight, playerCardMaxWidth, viewModel.cardsPerHand);
+            }
+        };
     }
 }

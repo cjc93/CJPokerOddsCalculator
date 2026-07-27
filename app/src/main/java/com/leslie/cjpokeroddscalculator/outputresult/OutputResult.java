@@ -19,12 +19,11 @@ public abstract class OutputResult {
     }
 
     public void updateWinResults(double[][] results) {
-        List<CardRow> cardRows = equityCalculatorViewModel.cardRows.getValue();
-        assert cardRows != null;
+        List<CardRow> newCardRows = equityCalculatorViewModel.getCardRowsCopy();
 
         try {
-            for (int playerIdx = 1; playerIdx < cardRows.size(); playerIdx++) {
-                CardRow cardRow = cardRows.get(playerIdx);
+            for (int playerIdx = 1; playerIdx < newCardRows.size(); playerIdx++) {
+                CardRow cardRow = newCardRows.get(playerIdx);
                 List<Double> stats = new ArrayList<>();
                 for (double[] result : results) {
                     stats.add(result[playerIdx - 1]);
@@ -32,7 +31,7 @@ public abstract class OutputResult {
                 cardRow.stats = stats;
             }
 
-            equityCalculatorViewModel.cardRows.postValue(cardRows);
+            equityCalculatorViewModel.cardRows.postValue(newCardRows);
         } catch (IndexOutOfBoundsException ignored) { }
     }
 }

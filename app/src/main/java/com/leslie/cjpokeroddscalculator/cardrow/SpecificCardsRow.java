@@ -10,9 +10,12 @@ import java.util.StringJoiner;
 
 public class SpecificCardsRow extends CardRow {
     public String[] cards;
+    public Integer selectedCard;
 
-    public SpecificCardsRow(List<Double> stats, Boolean isStatsVisible, int numOfCards) {
+    public SpecificCardsRow(List<Double> stats, Boolean isStatsVisible, int numOfCards, Integer selectedCard) {
         super(stats, isStatsVisible);
+
+        this.selectedCard = selectedCard;
 
         cards = new String[numOfCards];
 
@@ -66,5 +69,22 @@ public class SpecificCardsRow extends CardRow {
             }
         }
         return omahaCards.toArray(new String[0]);
+    }
+
+    @Override
+    public CardRow copy() {
+        SpecificCardsRow copy = new SpecificCardsRow(copyStats(), isStatsVisible, cards.length, selectedCard);
+        copy.id = this.id;
+        System.arraycopy(this.cards, 0, copy.cards, 0, this.cards.length);
+        return copy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        SpecificCardsRow that = (SpecificCardsRow) o;
+        return Arrays.equals(cards, that.cards) && Objects.equals(selectedCard, that.selectedCard);
     }
 }

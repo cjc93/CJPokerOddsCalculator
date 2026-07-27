@@ -1,18 +1,15 @@
 package com.leslie.cjpokeroddscalculator;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
-import com.leslie.cjpokeroddscalculator.fragment.EquityCalculatorFragment;
 
 import java.util.Objects;
 
@@ -65,16 +62,5 @@ public class MainActivity extends AppCompatActivity {
             startFragmentId = R.id.TexasHoldemFragment;
         }
         return startFragmentId;
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-        assert navHostFragment != null;
-        Fragment f = navHostFragment.getChildFragmentManager().getFragments().get(0);
-        if (f instanceof EquityCalculatorFragment equityCalculatorFragment) {
-            equityCalculatorFragment.checkClickToHideCardSelector(ev);
-        }
-        return super.dispatchTouchEvent(ev);
     }
 }

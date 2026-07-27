@@ -1,10 +1,20 @@
 package com.leslie.cjpokeroddscalculator;
 
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.viewbinding.ViewBinding;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.common.collect.Sets;
+import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
+import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +86,74 @@ public class GlobalStatic {
         NavController navController = NavHostFragment.findNavController(fragment);
         if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
             navController.navigate(actionId);
+        }
+    }
+
+    public static void initialiseCardButtons(List<ImageButton> cardButtons, int boardCardMaxHeight, int cardMaxWidth, int rowIdx, PlayerRowInteractionListener listener) {
+        for (int i = 0; i < cardButtons.size(); i++) {
+            ImageButton card = cardButtons.get(i);
+            card.setMaxHeight(boardCardMaxHeight);
+            card.setMaxWidth(cardMaxWidth);
+
+            int cardIdx = i;
+            card.setOnClickListener(v -> listener.onSelectCard(rowIdx, cardIdx));
+        }
+    }
+
+    public static List<ImageButton> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton, int cardsPerHand) {
+        List<ImageButton> cardList = new ArrayList<>();
+
+        for (int i = 0; i < cardsPerHand; i++) {
+            ImageButton card = new ImageButton(binding.getRoot().getContext(), null, 0, R.style.SelectCardButton);
+            card.setId(View.generateViewId());
+            cardList.add(card);
+        }
+
+        for (int i = 0; i < cardsPerHand; i++) {
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+            );
+
+            if (i == 0) {
+                layoutParams.topToBottom = playerText.getId();
+                layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
+                layoutParams.rightToLeft = cardList.get(i + 1).getId();
+            } else if (i == cardsPerHand - 1) {
+                layoutParams.topToBottom = playerText.getId();
+                layoutParams.leftToRight = cardList.get(i - 1).getId();
+                layoutParams.rightToRight = playerText.getId();
+            } else {
+                layoutParams.topToBottom = playerText.getId();
+                layoutParams.leftToRight = cardList.get(i - 1).getId();
+                layoutParams.rightToLeft = cardList.get(i + 1).getId();
+            }
+
+            cardList.get(i).setLayoutParams(layoutParams);
+
+            playerRow.addView(cardList.get(i));
+        }
+
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) statsButton.getLayoutParams();
+        layoutParams.bottomToBottom = cardList.get(0).getId();
+        statsButton.setLayoutParams(layoutParams);
+
+        return cardList;
+    }
+
+    public static void setCardRowImages(List<ImageButton> cardList, SpecificCardsRow specificCardsRow) {
+        for (int cardIdx = 0; cardIdx < specificCardsRow.cards.length; cardIdx++) {
+            String cardStr = specificCardsRow.cards[cardIdx];
+            Integer id = suitRankDrawableMap.get(cardStr);
+            if (id != null) {
+                cardList.get(cardIdx).setImageResource(id);
+            }
+
+            if (specificCardsRow.selectedCard != null && specificCardsRow.selectedCard == cardIdx) {
+                cardList.get(cardIdx).setBackgroundResource(R.drawable.selected_border);
+            } else {
+                cardList.get(cardIdx).setBackgroundResource(0);
+            }
         }
     }
 
