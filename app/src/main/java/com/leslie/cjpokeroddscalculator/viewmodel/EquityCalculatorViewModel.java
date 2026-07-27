@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
+    // TODO: split board cards out of cardRows
     public MutableLiveData<List<CardRow>> cardRows = new MutableLiveData<>();
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
 
@@ -38,6 +39,18 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     public abstract Thread createMonteCarloThread();
     public abstract Thread createExactCalcThread();
 
+    public List<CardRow> getCardRowsCopy() {
+        List<CardRow> cardRows = this.cardRows.getValue();
+        assert cardRows != null;
+
+        List<CardRow> newCardRows = new ArrayList<>();
+        for (CardRow cardRow : cardRows) {
+            CardRow copy = cardRow.copy();
+            newCardRows.add(copy);
+        }
+        return newCardRows;
+    }
+
     public int[] getSelectedCardPosition() {
         List<CardRow> cardRows = this.cardRows.getValue();
         if (cardRows != null) {
@@ -54,23 +67,21 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     }
 
     public void setSelectedCardPosition(Integer selectedRowIdx, Integer selectedCardIdx) {
-        List<CardRow> cardRows = this.cardRows.getValue();
-        assert cardRows != null;
+        List<CardRow> newCardRows = getCardRowsCopy();
+        setSelectedCardPositionInCardRows(newCardRows, selectedRowIdx, selectedCardIdx);
+        this.cardRows.setValue(newCardRows);
+    }
 
-        List<CardRow> newCardRows = new ArrayList<>();
+    public void setSelectedCardPositionInCardRows(List<CardRow> cardRows, Integer selectedRowIdx, Integer selectedCardIdx) {
         for (int rowIdx = 0; rowIdx < cardRows.size(); rowIdx++) {
-            CardRow newCardRow = cardRows.get(rowIdx).copy();
-            if (newCardRow instanceof SpecificCardsRow specificCardsRow) {
+            if (cardRows.get(rowIdx) instanceof SpecificCardsRow specificCardsRow) {
                 if (selectedRowIdx != null && rowIdx == selectedRowIdx) {
                     specificCardsRow.selectedCard = selectedCardIdx;
                 } else {
                     specificCardsRow.selectedCard = null;
                 }
             }
-            newCardRows.add(newCardRow);
         }
-
-        this.cardRows.setValue(newCardRows);
     }
 
     @Override

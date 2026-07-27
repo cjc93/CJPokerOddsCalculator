@@ -20,7 +20,6 @@ import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -98,25 +97,19 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     @Override
     public void onToggleRangeHand(int rowIdx) {
-        List<CardRow> cardRows = viewModel.cardRows.getValue();
-        if (cardRows != null && rowIdx < cardRows.size()) {
-            List<CardRow> newCardRows = new ArrayList<>();
-            for (CardRow row : cardRows) {
-                newCardRows.add(row.copy());
-            }
-
-            if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
-                newCardRows.set(rowIdx, new RangeRow(null, newCardRows.get(rowIdx).isStatsVisible));
-                viewModel.cardRows.setValue(newCardRows);
-                viewModel.setSelectedCardPosition(null, null);
-                onShowRangeSelector(rowIdx);
-            } else {
-                newCardRows.set(rowIdx, new SpecificCardsRow(null, newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
-                viewModel.cardRows.setValue(newCardRows);
-            }
-
-            calculateOdds();
+        List<CardRow> newCardRows = viewModel.getCardRowsCopy();
+        if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
+            newCardRows.set(rowIdx, new RangeRow(null, newCardRows.get(rowIdx).isStatsVisible));
+            viewModel.setSelectedCardPositionInCardRows(newCardRows, null, null);
+            viewModel.cardRows.setValue(newCardRows);
+            onShowRangeSelector(rowIdx);
+        } else {
+            newCardRows.set(rowIdx, new SpecificCardsRow(null, newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
+            viewModel.setSelectedCardPositionInCardRows(newCardRows, rowIdx, 0);
+            viewModel.cardRows.setValue(newCardRows);
         }
+
+        calculateOdds();
     }
 
     @Override
@@ -130,15 +123,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
-        List<CardRow> cardRows = viewModel.cardRows.getValue();
-        assert cardRows != null;
+        List<CardRow> newCardRows = viewModel.getCardRowsCopy();
+
         TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
         Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition.getValue();
         assert selectedRangePosition != null;
-        List<CardRow> newCardRows = new ArrayList<>();
-        for (CardRow row : cardRows) {
-            newCardRows.add(row.copy());
-        }
 
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
 
