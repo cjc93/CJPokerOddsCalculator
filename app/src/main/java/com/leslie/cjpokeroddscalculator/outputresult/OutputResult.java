@@ -19,17 +19,9 @@ public abstract class OutputResult {
     }
 
     public void updateWinResults(double[][] results) {
-        List<CardRow> cardRows = equityCalculatorViewModel.cardRows.getValue();
-        if (cardRows == null) {
-            return;
-        }
+        List<CardRow> newCardRows = equityCalculatorViewModel.getCardRowsCopy();
 
         try {
-            List<CardRow> newCardRows = new ArrayList<>();
-            for (CardRow cardRow : cardRows) {
-                newCardRows.add(cardRow.copy());
-            }
-
             for (int playerIdx = 1; playerIdx < newCardRows.size(); playerIdx++) {
                 CardRow cardRow = newCardRows.get(playerIdx);
                 List<Double> stats = new ArrayList<>();
