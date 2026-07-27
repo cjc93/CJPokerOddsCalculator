@@ -151,7 +151,6 @@ std::string jstr_to_cppstring(JNIEnv *pEnv, jstring pJstring) {
     const char *charBuffer = pEnv->GetStringUTFChars(pJstring, (jboolean *) nullptr);
     std::string cpp_str(charBuffer, strLen);
     pEnv->ReleaseStringUTFChars(pJstring, charBuffer);
-    pEnv->DeleteLocalRef(pJstring);
 
     return cpp_str;
 }
