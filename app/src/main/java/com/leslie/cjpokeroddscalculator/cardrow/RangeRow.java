@@ -102,9 +102,4 @@ public class RangeRow extends CardRow {
         RangeRow rangeRow = (RangeRow) o;
         return Objects.equals(matrix, rangeRow.matrix);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), matrix);
-    }
 }

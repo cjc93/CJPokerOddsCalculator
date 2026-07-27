@@ -9,15 +9,10 @@ import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 
 public abstract class PlayerAdapter extends ListAdapter<CardRow, PlayerViewHolder> {
     protected final PlayerRowInteractionListener listener;
-    private int[] selectedCard;
 
     public PlayerAdapter(PlayerRowInteractionListener listener) {
         super(new CardRowDiffCallback());
         this.listener = listener;
-    }
-
-    public void setSelectedCard(int[] selectedCard) {
-        this.selectedCard = selectedCard;
     }
 
     @NonNull
@@ -28,7 +23,7 @@ public abstract class PlayerAdapter extends ListAdapter<CardRow, PlayerViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
-        holder.bind(getItem(position), position + 1, selectedCard);
+        holder.bind(getItem(position), position + 1);
     }
 
     public abstract PlayerViewHolder createPlayerViewHolder(ViewGroup parent);

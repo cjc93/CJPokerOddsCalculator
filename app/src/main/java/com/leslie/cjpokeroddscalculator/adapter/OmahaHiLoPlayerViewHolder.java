@@ -65,7 +65,7 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
     }
 
     @Override
-    public void bind(CardRow cardRow, int rowIdx, int[] selectedCard) {
+    public void bind(CardRow cardRow, int rowIdx) {
         binding.playerText.setText(binding.getRoot().getContext().getString(R.string.player, rowIdx));
 
         binding.remove.setOnClickListener(v -> listener.onRemovePlayer(rowIdx));
@@ -77,7 +77,6 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
 
         SpecificCardsRow specificCardRow = (SpecificCardsRow) cardRow;
         GlobalStatic.setCardRowImages(cardList, specificCardRow);
-        GlobalStatic.setSelectedCardBorder(cardList, rowIdx, selectedCard);
 
         if (cardRow.stats != null && cardRow.stats.size() >= 15) {
             binding.equity.setText(binding.getRoot().getContext().getString(R.string.two_decimal_perc, cardRow.stats.get(0) * 100));

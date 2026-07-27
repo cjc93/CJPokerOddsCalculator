@@ -28,7 +28,7 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
     }
 
     @Override
-    public void bind(CardRow cardRow, int rowIdx, int[] selectedCard) {
+    public void bind(CardRow cardRow, int rowIdx) {
         binding.playerText.setText(binding.getRoot().getContext().getString(R.string.player, rowIdx));
 
         binding.range.setOnClickListener(v -> listener.onShowRangeSelector(rowIdx));
@@ -46,7 +46,6 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
             List<ImageButton> cardList = Arrays.asList(binding.card1, binding.card2);
             GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, rowIdx, listener);
             GlobalStatic.setCardRowImages(cardList, specificCardRow);
-            GlobalStatic.setSelectedCardBorder(cardList, rowIdx, selectedCard);
         } else {
             RangeRow rangeRow = (RangeRow) cardRow;
             binding.twoCards.setVisibility(View.GONE);

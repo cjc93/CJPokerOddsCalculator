@@ -148,12 +148,8 @@ public class GlobalStatic {
             if (id != null) {
                 cardList.get(cardIdx).setImageResource(id);
             }
-        }
-    }
 
-    public static void setSelectedCardBorder(List<ImageButton> cardList, int rowIdx, int[] selectedCard) {
-        for (int cardIdx = 0; cardIdx < cardList.size(); cardIdx++) {
-            if (selectedCard != null && selectedCard[0] == rowIdx && selectedCard[1] == cardIdx) {
+            if (specificCardsRow.selectedCard != null && specificCardsRow.selectedCard == cardIdx) {
                 cardList.get(cardIdx).setBackgroundResource(R.drawable.selected_border);
             } else {
                 cardList.get(cardIdx).setBackgroundResource(0);

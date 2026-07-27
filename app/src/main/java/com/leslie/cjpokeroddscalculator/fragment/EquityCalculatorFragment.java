@@ -107,27 +107,20 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                 }
             }
 
+            if (viewModel.getSelectedCardPosition() != null) {
+                equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
+                equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
+            } else {
+                equityCalculatorBinding.inputCards.setVisibility(View.GONE);
+                equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
+            }
+
             SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
             GlobalStatic.setCardRowImages(boardButtons, boardCards);
 
-            equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
-
             playerAdapter.submitList(cardRows.subList(1, cardRows.size()));
-        });
 
-        viewModel.selectedCard.observe(getViewLifecycleOwner(), selectedCard -> {
-            GlobalStatic.setSelectedCardBorder(boardButtons, 0, selectedCard);
-
-            playerAdapter.setSelectedCard(selectedCard);
-            playerAdapter.notifyItemRangeChanged(0, playerAdapter.getItemCount());
-
-            if (selectedCard == null) {
-                equityCalculatorBinding.inputCards.setVisibility(View.GONE);
-                equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
-            } else {
-                equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
-                equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
-            }
+            equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
         });
 
         viewModel.resDesc.observe(getViewLifecycleOwner(), stringId -> equityCalculatorBinding.resDesc.setText(stringId));
@@ -144,7 +137,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                 for (CardRow cardRow : cardRows) {
                     newCardRows.add(cardRow.copy());
                 }
-                newCardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand));
+                newCardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand, null));
                 viewModel.cardRows.setValue(newCardRows);
 
                 calculateOdds();
@@ -164,11 +157,11 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
             viewModel.cardRows.setValue(newCardRows);
 
-            if (viewModel.selectedCard.getValue() != null) {
+            if (viewModel.getSelectedCardPosition() != null) {
                 if (newCardRows.size() > 1 && newCardRows.get(1) instanceof SpecificCardsRow) {
-                    viewModel.selectedCard.setValue(new int[]{1, 0});
+                    viewModel.setSelectedCardPosition(1, 0);
                 } else {
-                    viewModel.selectedCard.setValue(new int[]{0, 0});
+                    viewModel.setSelectedCardPosition(0, 0);
                 }
             }
 
@@ -179,7 +172,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
 
-        equityCalculatorBinding.hideCardSelectorArea.setOnClickListener(v -> viewModel.selectedCard.setValue(null));
+        equityCalculatorBinding.hideCardSelectorArea.setOnClickListener(v -> viewModel.setSelectedCardPosition(null, null));
 
         equityCalculatorBinding.playerList.addOnItemTouchListener(
             new RecyclerView.SimpleOnItemTouchListener() {
@@ -189,7 +182,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                         View child = rv.findChildViewUnder(e.getX(), e.getY());
 
                         if (child == null) {
-                            viewModel.selectedCard.setValue(null);
+                            viewModel.setSelectedCardPosition(null, null);
                         }
                     }
 
@@ -294,7 +287,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     }
 
     public void setValueToSelectedCard(String cardStr) {
-        int[] selectedCard = viewModel.selectedCard.getValue();
+        int[] selectedCard = viewModel.getSelectedCardPosition();
         if (selectedCard == null) {
             return;
         }
@@ -342,7 +335,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
         }
 
-        viewModel.selectedCard.setValue(new int[]{newSelectedRowIdx, newSelectedCardIdx});
+        viewModel.setSelectedCardPosition(newSelectedRowIdx, newSelectedCardIdx);
 
         if (newSelectedRowIdx > 0) {
             equityCalculatorBinding.playerList.scrollToPosition(newSelectedRowIdx - 1);
@@ -368,6 +361,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
     @Override
     public void onRemovePlayer(int playerRemoveNumber) {
+        int[] selectedCard = viewModel.getSelectedCardPosition();
         List<CardRow> cardRows = viewModel.cardRows.getValue();
         if (cardRows != null && playerRemoveNumber < cardRows.size()) {
             List<CardRow> newCardRows = new ArrayList<>();
@@ -376,15 +370,14 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
             newCardRows.remove(playerRemoveNumber);
             viewModel.cardRows.setValue(newCardRows);
-            int[] selectedCard = viewModel.selectedCard.getValue();
 
-            if (selectedCard != null && selectedCard[0] >= playerRemoveNumber) {
+            if (selectedCard != null && selectedCard[0] == playerRemoveNumber) {
                 for (int rowIdx = selectedCard[0]; rowIdx >= 0; rowIdx--) {
                     if (rowIdx == 0) {
-                        viewModel.selectedCard.setValue(new int[]{0, 0});
+                        viewModel.setSelectedCardPosition(0, 0);
                         break;
                     } else if (rowIdx < newCardRows.size() && newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
-                        viewModel.selectedCard.setValue(new int[]{rowIdx, selectedCard[1]});
+                        viewModel.setSelectedCardPosition(rowIdx, selectedCard[1]);
                         break;
                     }
                 }
@@ -409,12 +402,12 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
     @Override
     public void onSelectCard(int rowIdx, int cardIdx) {
-        viewModel.selectedCard.setValue(new int[]{rowIdx, cardIdx});
+        viewModel.setSelectedCardPosition(rowIdx, cardIdx);
     }
 
     @Override
     public void onHideCardSelector() {
-        viewModel.selectedCard.setValue(null);
+        viewModel.setSelectedCardPosition(null, null);
     }
 
     @Override

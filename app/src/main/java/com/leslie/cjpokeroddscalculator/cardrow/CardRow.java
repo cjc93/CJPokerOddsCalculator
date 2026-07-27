@@ -31,11 +31,6 @@ public abstract class CardRow {
         return Objects.equals(stats, cardRow.stats) && Objects.equals(isStatsVisible, cardRow.isStatsVisible);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(stats, isStatsVisible);
-    }
-
     protected List<Double> copyStats() {
         return stats == null ? null : new ArrayList<>(stats);
     }
