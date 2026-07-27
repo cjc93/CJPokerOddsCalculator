@@ -6,20 +6,17 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.Poker;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
+import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
 import java.util.List;
 
 public abstract class OmahaCalc extends Calculation{
     public final int cardsPerHand;
-    public int totalSimulations;
     public OmahaPoker omahaPokerObj;
 
-    public OmahaCalc(int cardsPerHand) {
+    public OmahaCalc(OmahaPoker omahaPoker, int cardsPerHand) {
+        this.omahaPokerObj = omahaPoker;
         this.cardsPerHand = cardsPerHand;
-    }
-
-    public void setOmahaPokerObj(OmahaPoker omahaPokerObj) {
-        this.omahaPokerObj = omahaPokerObj;
     }
 
     public String[][] convertPlayerCardsToStr(List<CardRow> cardRows) {
@@ -32,7 +29,7 @@ public abstract class OmahaCalc extends Calculation{
         return playerCards;
     }
 
-    public void calculate(List<CardRow> cardRows) throws InterruptedException {
+    public void calculate(List<CardRow> cardRows, OmahaOutputResult omahaOutputResult) throws InterruptedException {
         initialiseVariables(cardRows);
 
         String[] boardCards = ((SpecificCardsRow) cardRows.get(0)).convertOmahaCardsToStr();
@@ -43,11 +40,16 @@ public abstract class OmahaCalc extends Calculation{
 
         Cards cards = createCards(deck, boardCards, playerCards);
 
+        int totalSimulations;
         try {
-            this.totalSimulations = cards.count();
+            totalSimulations = cards.count();
         } catch (ArithmeticException e) {
             throw new InterruptedException();
         }
+
+        this.omahaPokerObj.omahaOutputResult = omahaOutputResult;
+        this.omahaPokerObj.omahaOutputResult.totalSimulations = totalSimulations;
+        this.omahaPokerObj.omahaOutputResult.averageUnknownStats = this::averageUnknownStats;
 
         this.omahaPokerObj.omahaOutputResult.beforeAllSimulations();
 

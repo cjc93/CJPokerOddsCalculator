@@ -9,11 +9,6 @@ public class OmahaPoker extends Poker {
 
 	public OmahaOutputResult omahaOutputResult;
 
-	public OmahaPoker(OmahaOutputResult omahaOutputResult) {
-        this.omahaOutputResult = omahaOutputResult;
-	}
-
-
 	/**
 	 * Calc exact omaha hand equity for each hand for given board
 	 */

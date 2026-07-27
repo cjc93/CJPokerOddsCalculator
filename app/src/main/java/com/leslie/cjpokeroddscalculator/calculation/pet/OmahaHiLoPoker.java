@@ -1,16 +1,9 @@
 package com.leslie.cjpokeroddscalculator.calculation.pet;
 
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
-
 /**
  * Omaha hand analysis, using a combinatorial number system.
  */
 public class OmahaHiLoPoker extends OmahaPoker {
-    public OmahaHiLoPoker(OmahaOutputResult omahaOutputResult) {
-        super(omahaOutputResult);
-    }
-
-
     /**
      * Calc exact omaha hand equity for each hand for given board
      */
