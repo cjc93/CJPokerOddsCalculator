@@ -48,7 +48,16 @@
             android:id="@+id/action_TexasHoldemFragment_to_HomeFragment"
             app:destination="@id/HomeFragment" />
 
+        <action
+            android:id="@+id/action_TexasHoldemFragment_to_RangeSelectorFragment"
+            app:destination="@id/RangeSelectorFragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/RangeSelectorFragment"
+        android:name="com.leslie.cjpokeroddscalculator.fragment.RangeSelectorFragment"
+        tools:layout="@layout/range_selector" />
 
     <fragment
         android:id="@+id/OmahaHighFragment"

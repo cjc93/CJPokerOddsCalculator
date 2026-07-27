@@ -2,211 +2,200 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fullscreen_ui"
+    android:id="@+id/main_ui"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_ui"
+    <View
+        android:id="@+id/hide_card_selector_area"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-        <View
-            android:id="@+id/hide_card_selector_area"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/input_cards" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="@id/home_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="19sp"
-            app:layout_constraintBottom_toBottomOf="@id/home_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/home_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:text="@string/home"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/home_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:text="@string/home"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.6" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.8" />
+    <TextView
+        android:id="@+id/flop_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#696969"
+        android:gravity="center_horizontal"
+        android:text="@string/flop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/guideline_1"
+        app:layout_constraintTop_toBottomOf="@id/home_button" />
 
-        <TextView
-            android:id="@+id/flop_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#696969"
-            android:gravity="center_horizontal"
-            android:text="@string/flop"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/guideline_1"
-            app:layout_constraintTop_toBottomOf="@id/home_button" />
+    <TextView
+        android:id="@+id/turn_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#696969"
+        android:gravity="center_horizontal"
+        android:text="@string/turn"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintLeft_toRightOf="@id/guideline_1"
+        app:layout_constraintRight_toLeftOf="@id/guideline_2"
+        app:layout_constraintTop_toBottomOf="@id/home_button" />
 
-        <TextView
-            android:id="@+id/turn_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#696969"
-            android:gravity="center_horizontal"
-            android:text="@string/turn"
-            android:layout_marginStart="1dp"
-            android:layout_marginEnd="1dp"
-            app:layout_constraintLeft_toRightOf="@id/guideline_1"
-            app:layout_constraintRight_toLeftOf="@id/guideline_2"
-            app:layout_constraintTop_toBottomOf="@id/home_button" />
+    <TextView
+        android:id="@+id/river_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#696969"
+        android:gravity="center_horizontal"
+        android:text="@string/river"
+        app:layout_constraintLeft_toRightOf="@id/guideline_2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_button" />
 
-        <TextView
-            android:id="@+id/river_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="#696969"
-            android:gravity="center_horizontal"
-            android:text="@string/river"
-            app:layout_constraintLeft_toRightOf="@id/guideline_2"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/home_button" />
+    <ImageButton
+        android:id="@+id/flop1"
+        style="@style/SelectCardButton"
+        android:contentDescription="@string/flop1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/flop2"
+        app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-        <ImageButton
-            android:id="@+id/flop1"
-            style="@style/SelectCardButton"
-            android:contentDescription="@string/flop1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/flop2"
-            app:layout_constraintTop_toBottomOf="@id/flop_text" />
+    <ImageButton
+        android:id="@+id/flop2"
+        style="@style/SelectCardButton"
+        android:contentDescription="@string/flop2"
+        app:layout_constraintLeft_toRightOf="@id/flop1"
+        app:layout_constraintRight_toLeftOf="@id/flop3"
+        app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-        <ImageButton
-            android:id="@+id/flop2"
-            style="@style/SelectCardButton"
-            android:contentDescription="@string/flop2"
-            app:layout_constraintLeft_toRightOf="@id/flop1"
-            app:layout_constraintRight_toLeftOf="@id/flop3"
-            app:layout_constraintTop_toBottomOf="@id/flop_text" />
-
-        <ImageButton
-            android:id="@+id/flop3"
-            style="@style/SelectCardButton"
-            android:contentDescription="@string/flop3"
-            app:layout_constraintLeft_toRightOf="@id/flop2"
-            app:layout_constraintRight_toLeftOf="@id/guideline_1"
-            app:layout_constraintTop_toBottomOf="@id/flop_text" />
+    <ImageButton
+        android:id="@+id/flop3"
+        style="@style/SelectCardButton"
+        android:contentDescription="@string/flop3"
+        app:layout_constraintLeft_toRightOf="@id/flop2"
+        app:layout_constraintRight_toLeftOf="@id/guideline_1"
+        app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
 
-        <ImageButton
-            android:id="@+id/turn"
-            style="@style/SelectCardButton"
-            android:contentDescription="@string/card_turn"
-            app:layout_constraintLeft_toRightOf="@id/guideline_1"
-            app:layout_constraintRight_toLeftOf="@id/guideline_2"
-            app:layout_constraintTop_toBottomOf="@id/turn_text" />
+    <ImageButton
+        android:id="@+id/turn"
+        style="@style/SelectCardButton"
+        android:contentDescription="@string/card_turn"
+        app:layout_constraintLeft_toRightOf="@id/guideline_1"
+        app:layout_constraintRight_toLeftOf="@id/guideline_2"
+        app:layout_constraintTop_toBottomOf="@id/turn_text" />
 
-        <ImageButton
-            android:id="@+id/river"
-            style="@style/SelectCardButton"
-            android:contentDescription="@string/card_river"
-            app:layout_constraintLeft_toRightOf="@id/guideline_2"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/river_text" />
+    <ImageButton
+        android:id="@+id/river"
+        style="@style/SelectCardButton"
+        android:contentDescription="@string/card_river"
+        app:layout_constraintLeft_toRightOf="@id/guideline_2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/river_text" />
 
-        <TextView
-            android:id="@+id/playersremaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/players_remaining"
-            android:textSize="26sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/flop1"
-            app:layout_constraintBottom_toTopOf="@id/player_list" />
+    <TextView
+        android:id="@+id/playersremaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/players_remaining"
+        android:textSize="26sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flop1"
+        app:layout_constraintBottom_toTopOf="@id/player_list" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/player_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/playersremaining"
-            app:layout_constraintBottom_toTopOf="@id/res_desc" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/player_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/playersremaining"
+        app:layout_constraintBottom_toTopOf="@id/res_desc" />
 
-        <TextView
-            android:id="@+id/res_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="11sp"
-            app:layout_constraintTop_toBottomOf="@id/player_list"
-            app:layout_constraintBottom_toTopOf="@id/addplayer" />
+    <TextView
+        android:id="@+id/res_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="11sp"
+        app:layout_constraintTop_toBottomOf="@id/player_list"
+        app:layout_constraintBottom_toTopOf="@id/addplayer" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/addplayer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:maxLines="1"
-            android:text="@string/add_player"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/clear"
-            app:layout_constraintTop_toBottomOf="@id/res_desc"
-            app:layout_constraintBottom_toTopOf="@id/input_cards" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addplayer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:maxLines="1"
+        android:text="@string/add_player"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/clear"
+        app:layout_constraintTop_toBottomOf="@id/res_desc"
+        app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/clear"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="@string/clear"
-            app:layout_constraintLeft_toRightOf="@id/addplayer"
-            app:layout_constraintRight_toLeftOf="@id/button_unknown"
-            app:layout_constraintTop_toBottomOf="@id/res_desc"
-            app:layout_constraintBottom_toTopOf="@id/input_cards" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/clear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/clear"
+        app:layout_constraintLeft_toRightOf="@id/addplayer"
+        app:layout_constraintRight_toLeftOf="@id/button_unknown"
+        app:layout_constraintTop_toBottomOf="@id/res_desc"
+        app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-        <ImageButton
-            android:id="@+id/button_unknown"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:src="@drawable/unknown_button"
-            android:scaleType="fitCenter"
-            android:padding="1dp"
-            android:background="@null"
-            app:layout_constraintLeft_toRightOf="@id/clear"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/res_desc"
-            app:layout_constraintBottom_toTopOf="@id/input_cards"
-            android:contentDescription="@string/unknown" />
+    <ImageButton
+        android:id="@+id/button_unknown"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/unknown_button"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:background="@null"
+        app:layout_constraintLeft_toRightOf="@id/clear"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/res_desc"
+        app:layout_constraintBottom_toTopOf="@id/input_cards"
+        android:contentDescription="@string/unknown" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/input_cards"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/addplayer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_percent="0.24" >
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/input_cards"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/addplayer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.24" >
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.leslie.cjpokeroddscalculator.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
@@ -15,7 +18,6 @@ import com.leslie.cjpokeroddscalculator.adapter.TexasHoldemPlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
-import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
@@ -25,45 +27,21 @@ import java.util.Objects;
 import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment {
-    public RangeSelector rangeSelector;
     public int rangeCardSize;
+    private final Gson gson = new Gson();
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rangeSelector = new RangeSelector(this);
-        rangeSelector.rangeSelectorBinding = RangeSelectorBinding.inflate(LayoutInflater.from(requireActivity()), equityCalculatorBinding.fullscreenUi, true);
-
-        rangeSelector.initialiseVariables();
-        rangeSelector.addBackPressedCallback();
-        rangeSelector.generateRangeSelector();
-        rangeSelector.observeLiveData();
-        rangeSelector.setListeners();
-        rangeSelector.setFragmentResultListeners();
-    }
-
-    @Override
-    public void observeLiveData() {
-        super.observeLiveData();
-
-        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-
-        texasHoldemViewModel.selectedRangePosition.observe(getViewLifecycleOwner(), selectedRangePosition -> {
-            if (selectedRangePosition == null) {
-                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.GONE);
-                equityCalculatorBinding.mainUi.setVisibility(View.VISIBLE);
-            } else {
-                equityCalculatorBinding.mainUi.setVisibility(View.GONE);
-                rangeSelector.rangeSelectorBinding.rangeSelector.setVisibility(View.VISIBLE);
+        getParentFragmentManager().setFragmentResultListener("range_selector_result", getViewLifecycleOwner(), (requestKey, result) -> {
+            String matrixJson = result.getString("matrix");
+            if (matrixJson != null) {
+                List<List<Set<String>>> matrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
+                updateRange(matrix);
             }
         });
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        rangeSelector.rangeSelectorBinding = null;
     }
 
     @Override
@@ -81,6 +59,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
         rangeCardSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250) - (int) (10 * getResources().getDisplayMetrics().density);
         titleTextId = R.string.texas_hold_em_equity_calculator;
+
     }
 
     @Override
@@ -114,20 +93,22 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     @Override
     public void onShowRangeSelector(int rowIdx) {
+        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
+        texasHoldemViewModel.selectedRangePosition = rowIdx;
+
         RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.cardRows.getValue()).get(rowIdx);
 
-        rangeSelector.updateRangeSelector(rangeRow.matrix);
+        Bundle args = new Bundle();
+        args.putString("matrix", gson.toJson(rangeRow.matrix));
 
-        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-        texasHoldemViewModel.selectedRangePosition.setValue(rowIdx);
+        NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_RangeSelectorFragment, args);
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
         List<CardRow> newCardRows = viewModel.getCardRowsCopy();
 
         TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-        Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition.getValue();
-        assert selectedRangePosition != null;
+        Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition;
 
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
 
@@ -135,5 +116,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         viewModel.cardRows.setValue(newCardRows);
 
         calculateOdds();
+
+        texasHoldemViewModel.selectedRangePosition = null;
     }
 }

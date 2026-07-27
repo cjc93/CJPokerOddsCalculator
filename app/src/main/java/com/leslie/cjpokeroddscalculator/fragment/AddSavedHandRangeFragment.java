@@ -53,7 +53,7 @@ public class AddSavedHandRangeFragment extends DialogFragment {
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putString("range_name", rangeName);
-                    requireActivity().getSupportFragmentManager().setFragmentResult("add_saved_hand_range", bundle);
+                    getParentFragmentManager().setFragmentResult("add_saved_hand_range", bundle);
                     dialog.dismiss();
                 }
             });
