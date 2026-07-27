@@ -7,7 +7,6 @@ import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,10 +44,8 @@ public class OmahaHighViewModel extends EquityCalculatorViewModel {
     public Thread createMonteCarloThread() {
         return new Thread(() -> {
             try {
-                OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(cardsPerHand);
-                OmahaOutputResult omahaOutputResult = new OmahaLiveUpdate(this, calcObj);
-                calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-                calcObj.calculate(cardRows.getValue());
+                OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(new OmahaPoker(), cardsPerHand);
+                calcObj.calculate(cardRows.getValue(), new OmahaLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
@@ -57,10 +54,8 @@ public class OmahaHighViewModel extends EquityCalculatorViewModel {
     public Thread createExactCalcThread() {
         return new Thread(() -> {
             try {
-                OmahaExactCalc calcObj = new OmahaExactCalc(cardsPerHand);
-                OmahaOutputResult omahaOutputResult = new OmahaFinalUpdate(this, calcObj);
-                calcObj.setOmahaPokerObj(new OmahaPoker(omahaOutputResult));
-                calcObj.calculate(cardRows.getValue());
+                OmahaExactCalc calcObj = new OmahaExactCalc(new OmahaPoker(), cardsPerHand);
+                calcObj.calculate(cardRows.getValue(), new OmahaFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }

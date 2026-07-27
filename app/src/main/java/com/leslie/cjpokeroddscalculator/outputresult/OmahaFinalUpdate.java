@@ -2,7 +2,6 @@ package com.leslie.cjpokeroddscalculator.outputresult;
 
 import com.leslie.cjpokeroddscalculator.calculation.pet.EquityUtil;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
@@ -10,8 +9,8 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
     private long startTime;
     private boolean isStartingPeriod;
 
-    public OmahaFinalUpdate(EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
-        super(equityCalculatorViewModel, omahaCalc);
+    public OmahaFinalUpdate(EquityCalculatorViewModel equityCalculatorViewModel) {
+        super(equityCalculatorViewModel);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
             if (current_time - startTime > 300) {
                 isStartingPeriod = false;
 
-                if ((double) (current_time - startTime) / (double) count > 4000000 / (double) omahaCalc.totalSimulations) {
+                if ((double) (current_time - startTime) / (double) count > 4000000 / (double) totalSimulations) {
                     if (!equityCalculatorViewModel.monteCarloThread.isAlive()) {
                         updateResDesc(R.string.finished_checking_random_subset);
                     }
@@ -50,7 +49,7 @@ public class OmahaFinalUpdate extends OmahaOutputResult {
             }
 
             double [][] results = EquityUtil.convertEquitiesToMatrix(eqs);
-            results = omahaCalc.averageUnknownStats(results);
+            results = averageUnknownStats.apply(results);
             updateWinResults(results);
             updateResDesc(R.string.all_combinations_checked_result_is_exact);
         }

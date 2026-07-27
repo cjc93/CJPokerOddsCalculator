@@ -1,15 +1,16 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.calculation.OmahaCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
-public abstract class OmahaOutputResult extends OutputResult {
-    OmahaCalc omahaCalc;
+import java.util.function.Function;
 
-    public OmahaOutputResult(EquityCalculatorViewModel equityCalculatorViewModel, OmahaCalc omahaCalc) {
+public abstract class OmahaOutputResult extends OutputResult {
+    public int totalSimulations;
+    public Function<double[][], double[][]> averageUnknownStats;
+
+    public OmahaOutputResult(EquityCalculatorViewModel equityCalculatorViewModel) {
         super(equityCalculatorViewModel);
-        this.omahaCalc = omahaCalc;
     }
 
     public abstract void beforeAllSimulations();
