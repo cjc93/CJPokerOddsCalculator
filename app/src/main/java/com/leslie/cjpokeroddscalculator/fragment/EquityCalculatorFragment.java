@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -81,6 +82,16 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
         setButtonListeners();
 
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+            getViewLifecycleOwner(),
+            new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    requireActivity().finish();
+                }
+            }
+        );
+
         ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
     }
 
@@ -131,9 +142,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             List<CardRow> newCardRows = viewModel.getCardRowsCopy();
             if (newCardRows.size() - 1 < this.maxPlayers) {
                 newCardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand, null));
-                viewModel.cardRows.setValue(newCardRows);
-
-                calculateOdds();
+                calculateOdds(newCardRows);
             } else {
                 Toast.makeText(requireActivity(), "Max number of players is " + this.maxPlayers, Toast.LENGTH_SHORT).show();
             }
@@ -153,11 +162,9 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                 }
             }
 
-            viewModel.cardRows.setValue(newCardRows);
+            calculateOdds(newCardRows);
 
             equityCalculatorBinding.playerList.scrollToPosition(0);
-
-            calculateOdds();
         });
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
@@ -316,23 +323,19 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
         viewModel.setSelectedCardPositionInCardRows(newCardRows, newSelectedRowIdx, newSelectedCardIdx);
 
-        viewModel.cardRows.setValue(newCardRows);
+        calculateOdds(newCardRows);
 
         if (newSelectedRowIdx > 0) {
             equityCalculatorBinding.playerList.scrollToPosition(newSelectedRowIdx - 1);
         }
-
-        calculateOdds();
     }
 
-    public void calculateOdds() {
-        List<CardRow> newCardRows = viewModel.getCardRowsCopy();
-
-        for (CardRow cardRow : newCardRows) {
+    public void calculateOdds(List<CardRow> cardRows) {
+        for (CardRow cardRow : cardRows) {
             cardRow.stats = null;
         }
 
-        viewModel.cardRows.setValue(newCardRows);
+        viewModel.cardRows.setValue(cardRows);
 
         viewModel.resDesc.setValue(R.string.checking_random_subset);
         viewModel.calculateOdds();
@@ -357,9 +360,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
         }
 
-        viewModel.cardRows.setValue(newCardRows);
-
-        calculateOdds();
+        calculateOdds(newCardRows);
     }
 
     @Override
