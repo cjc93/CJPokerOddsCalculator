@@ -78,12 +78,12 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void onToggleRangeHand(int rowIdx) {
         List<CardRow> newCardRows = viewModel.getCardRowsCopy();
         if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
-            newCardRows.set(rowIdx, new RangeRow(null, newCardRows.get(rowIdx).isStatsVisible));
+            newCardRows.set(rowIdx, new RangeRow(newCardRows.get(rowIdx).isStatsVisible));
             viewModel.setSelectedCardPositionInCardRows(newCardRows, null, null);
             calculateOdds(newCardRows);
             onShowRangeSelector(rowIdx);
         } else {
-            newCardRows.set(rowIdx, new SpecificCardsRow(null, newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
+            newCardRows.set(rowIdx, new SpecificCardsRow(newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
             viewModel.setSelectedCardPositionInCardRows(newCardRows, rowIdx, 0);
             calculateOdds(newCardRows);
         }

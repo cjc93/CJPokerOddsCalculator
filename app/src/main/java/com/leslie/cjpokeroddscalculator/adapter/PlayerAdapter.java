@@ -23,7 +23,7 @@ public abstract class PlayerAdapter extends ListAdapter<CardRow, PlayerViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull PlayerViewHolder holder, int position) {
-        holder.bind(getItem(position), position + 1);
+        holder.bind(getItem(position));
     }
 
     public abstract PlayerViewHolder createPlayerViewHolder(ViewGroup parent);

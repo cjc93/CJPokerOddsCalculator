@@ -12,26 +12,26 @@ public class OmahaHigh5ViewModel extends OmahaHighViewModel {
         cardsPerHand = 5;
 
         List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(null, null, 5, null));
-
-        List<Double> initialStats = Arrays.asList(
-            0.5,
-            0.4898,
-            0.0204,
-            0.0078,
-            0.1668,
-            0.376,
-            0.0966,
-            0.1525,
-            0.0961,
-            0.0956,
-            0.0072,
-            0.0014
-        );
-
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, 0));
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, null));
-
+        cardRowList.add(new SpecificCardsRow(null, 5, null));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, 0));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, null));
         cardRows.setValue(cardRowList);
+
+        double[] initialStats = new double[]{
+                0.5,
+                0.4898,
+                0.0204,
+                0.0078,
+                0.1668,
+                0.376,
+                0.0966,
+                0.1525,
+                0.0961,
+                0.0956,
+                0.0072,
+                0.0014
+        };
+
+        stats.setValue(new double[][]{initialStats, initialStats});
     }
 }

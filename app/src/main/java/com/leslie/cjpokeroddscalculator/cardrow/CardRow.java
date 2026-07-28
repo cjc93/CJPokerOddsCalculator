@@ -12,9 +12,8 @@ public abstract class CardRow {
     public List<Double> stats;
     public Boolean isStatsVisible;
 
-    public CardRow(List<Double> stats, Boolean isStatsVisible) {
+    public CardRow(Boolean isStatsVisible) {
         this.id = ID_GENERATOR.getAndIncrement();
-        this.stats = stats;
         this.isStatsVisible = isStatsVisible;
     }
 

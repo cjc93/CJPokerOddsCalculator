@@ -12,8 +12,8 @@ import java.util.StringJoiner;
 public class RangeRow extends CardRow {
     public List<List<Set<String>>> matrix;
 
-    public RangeRow(List<Double> stats, Boolean isStatsVisible) {
-        super(stats, isStatsVisible);
+    public RangeRow(Boolean isStatsVisible) {
+        super(isStatsVisible);
 
         this.matrix = new ArrayList<>(13);
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
@@ -88,8 +88,9 @@ public class RangeRow extends CardRow {
 
     @Override
     public CardRow copy() {
-        RangeRow copy = new RangeRow(copyStats(), isStatsVisible);
+        RangeRow copy = new RangeRow(isStatsVisible);
         copy.id = this.id;
+        copy.stats = copyStats();
         copy.matrix = GlobalStatic.copyMatrix(this.matrix);
         return copy;
     }
