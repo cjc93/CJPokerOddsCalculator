@@ -39,6 +39,16 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     public abstract double[] getInitialStats();
 
     public void calculateOdds() {
+        killThreads();
+
+        monteCarloThread = createMonteCarloThread();
+        exactCalcThread = createExactCalcThread();
+
+        monteCarloThread.start();
+        exactCalcThread.start();
+    }
+
+    public void killThreads() {
         if (monteCarloThread != null) {
             monteCarloThread.interrupt();
         }
@@ -46,12 +56,6 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
         if (exactCalcThread != null) {
             exactCalcThread.interrupt();
         }
-
-        monteCarloThread = createMonteCarloThread();
-        exactCalcThread = createExactCalcThread();
-
-        monteCarloThread.start();
-        exactCalcThread.start();
     }
 
     public abstract Thread createMonteCarloThread();
@@ -105,11 +109,6 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (monteCarloThread != null) {
-            monteCarloThread.interrupt();
-        }
-        if (exactCalcThread != null) {
-            exactCalcThread.interrupt();
-        }
+        killThreads();
     }
 }
