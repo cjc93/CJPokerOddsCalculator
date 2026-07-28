@@ -10,6 +10,7 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
+import com.leslie.cjpokeroddscalculator.util.DataStoreSingleton;
 
 import java.util.Objects;
 

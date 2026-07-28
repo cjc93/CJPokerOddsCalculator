@@ -10,7 +10,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;

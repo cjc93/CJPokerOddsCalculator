@@ -1,11 +1,6 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
-import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 
 public abstract class OutputResult {

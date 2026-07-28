@@ -1,9 +1,9 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.navControllerNavigate;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitStrings;
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigate;
+import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.rankStrings;
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawableMap;
+import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.suitStrings;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -26,7 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.common.collect.HashBiMap;
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
@@ -126,7 +125,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             }
 
             SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
-            GlobalStatic.setCardRowImages(boardButtons, boardCards);
+            AndroidStatic.setCardRowImages(boardButtons, boardCards);
 
             playerAdapter.submitList(cardRows.subList(1, cardRows.size()));
 
@@ -209,7 +208,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     }
 
     public void initialiseVariables() {
-        displayMetrics = GlobalStatic.getDisplayMetrics(requireActivity());
+        displayMetrics = AndroidStatic.getDisplayMetrics(requireActivity());
         boardCardMaxHeight = (int) (displayMetrics.heightPixels * 0.12);
         boardCardMaxWidth = (int) (displayMetrics.widthPixels * 0.2);
     }
@@ -225,7 +224,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             equityCalculatorBinding.river
         );
 
-        GlobalStatic.initialiseCardButtons(boardButtons, boardCardMaxHeight, boardCardMaxWidth, 0, this);
+        AndroidStatic.initialiseCardButtons(boardButtons, boardCardMaxHeight, boardCardMaxWidth, 0, this);
 
         playerAdapter = createPlayerAdapter();
         equityCalculatorBinding.playerList.setLayoutManager(new LinearLayoutManager(requireActivity()));

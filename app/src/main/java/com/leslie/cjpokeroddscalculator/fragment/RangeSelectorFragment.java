@@ -1,7 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.rankStrings;
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.suitRankDrawableMap;
+import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.rankStrings;
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawableMap;
 
 import static java.lang.Math.min;
 
@@ -31,7 +31,8 @@ import com.google.android.material.slider.Slider;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
+import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
@@ -85,7 +86,7 @@ public class RangeSelectorFragment extends Fragment {
     }
 
     public void generateRangeSelector() {
-        DisplayMetrics displayMetrics = GlobalStatic.getDisplayMetrics(requireActivity());
+        DisplayMetrics displayMetrics = AndroidStatic.getDisplayMetrics(requireActivity());
 
         int squareLength = min(displayMetrics.widthPixels - 12, displayMetrics.heightPixels / 2)  / 13;
         this.inputMatrixMap = HashBiMap.create();

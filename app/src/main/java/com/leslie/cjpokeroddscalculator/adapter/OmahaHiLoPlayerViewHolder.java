@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
@@ -22,7 +22,7 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
 
     public OmahaHiLoPlayerViewHolder(OmahaHiloPlayerRowBinding binding, PlayerRowInteractionListener listener, int boardCardMaxHeight, int cardMaxWidth, int cardsPerHand) {
         super(binding.getRoot(), listener, boardCardMaxHeight, cardMaxWidth);
-        this.cardList = GlobalStatic.createOmahaCardButtons(binding, binding.getRoot(), binding.playerText, binding.statsButton, cardsPerHand);
+        this.cardList = AndroidStatic.createOmahaCardButtons(binding, binding.getRoot(), binding.playerText, binding.statsButton, cardsPerHand);
         this.binding = binding;
         this.binding.getRoot().setOnClickListener(v -> listener.onHideCardSelector());
 
@@ -73,10 +73,10 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
 
         binding.statsView.getRoot().setVisibility(cardRow.isStatsVisible ? View.VISIBLE : View.GONE);
 
-        GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
+        AndroidStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
 
         SpecificCardsRow specificCardRow = (SpecificCardsRow) cardRow;
-        GlobalStatic.setCardRowImages(cardList, specificCardRow);
+        AndroidStatic.setCardRowImages(cardList, specificCardRow);
 
         if (cardRow.stats != null && cardRow.stats.size() >= 15) {
             binding.equity.setText(binding.getRoot().getContext().getString(R.string.two_decimal_perc, cardRow.stats.get(0) * 100));

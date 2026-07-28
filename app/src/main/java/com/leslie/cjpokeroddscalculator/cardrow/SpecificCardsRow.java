@@ -1,6 +1,6 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
 
 import java.util.ArrayList;
 import java.util.Arrays;

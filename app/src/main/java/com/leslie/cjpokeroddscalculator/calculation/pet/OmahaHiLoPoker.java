@@ -38,7 +38,7 @@ public class OmahaHiLoPoker extends OmahaPoker {
 
             EquityUtil.updateEquitiesHiLo(eqs, hivals, lovals);
 
-            omahaOutputResult.duringSimulations(eqs, p + 1);
+            omahaProgressListener.duringSimulations(eqs, p + 1);
         }
 
         EquityUtil.summariseEquities(eqs, count);
