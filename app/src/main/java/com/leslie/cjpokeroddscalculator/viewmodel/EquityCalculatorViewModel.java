@@ -20,6 +20,24 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
 
     public int cardsPerHand;
 
+    public void init(int cardsPerHand) {
+        if (this.cardsPerHand != 0) {
+            return;
+        }
+
+        this.cardsPerHand = cardsPerHand;
+
+        List<CardRow> cardRowList = new ArrayList<>();
+        cardRowList.add(new SpecificCardsRow(null, 5, null));
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand, 0));
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand, null));
+        cardRows.setValue(cardRowList);
+
+        stats.setValue(new double[][]{getInitialStats(), getInitialStats()});
+    }
+
+    public abstract double[] getInitialStats();
+
     public void calculateOdds() {
         if (monteCarloThread != null) {
             monteCarloThread.interrupt();

@@ -41,7 +41,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
                 updateRange(matrix);
             }
         });
-
     }
 
     @Override
@@ -53,13 +52,14 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
+        viewModel.init(2);
+
         maxPlayers = 10;
         fragmentName = "TexasHoldem";
         fragmentId = R.id.TexasHoldemFragment;
         homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
         rangeCardSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250) - (int) (10 * getResources().getDisplayMetrics().density);
         titleTextId = R.string.texas_hold_em_equity_calculator;
-
     }
 
     @Override

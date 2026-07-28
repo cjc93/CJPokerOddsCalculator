@@ -26,12 +26,28 @@ public class OmahaHighFragment extends EquityCalculatorFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        maxPlayers = 10;
-        this.playerCardMaxWidth = this.boardCardMaxWidth;
-        fragmentName = "OmahaHigh";
+        assert getArguments() != null;
+        viewModel.init(getArguments().getInt("cardsPerHand"));
+
         fragmentId = R.id.OmahaHighFragment;
         homeButtonActionId = R.id.action_OmahaHighFragment_to_HomeFragment;
-        titleTextId = R.string.omaha_high_equity_calculator;
+
+        if (viewModel.cardsPerHand == 5) {
+            maxPlayers = 9;
+            this.playerCardMaxWidth = (int) (displayMetrics.widthPixels * 0.16);
+            fragmentName = "OmahaHigh5";
+            titleTextId = R.string.omaha_high_5_card_equity_calculator;
+        } else if (viewModel.cardsPerHand == 6) {
+            maxPlayers = 7;
+            this.playerCardMaxWidth = (int) (displayMetrics.widthPixels * 0.8 / 6.0);
+            fragmentName = "OmahaHigh6";
+            titleTextId = R.string.omaha_high_6_card_equity_calculator;
+        } else {
+            maxPlayers = 10;
+            this.playerCardMaxWidth = this.boardCardMaxWidth;
+            fragmentName = "OmahaHigh";
+            titleTextId = R.string.omaha_high_equity_calculator;
+        }
     }
 
     @Override

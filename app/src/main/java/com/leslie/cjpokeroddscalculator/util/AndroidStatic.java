@@ -1,6 +1,7 @@
 package com.leslie.cjpokeroddscalculator.util;
 
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowMetrics;
@@ -32,6 +33,13 @@ public class AndroidStatic {
         NavController navController = NavHostFragment.findNavController(fragment);
         if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
             navController.navigate(actionId);
+        }
+    }
+
+    public static void navControllerNavigateWithArgs(Fragment fragment, int currentFragmentId, int actionId, Bundle args) {
+        NavController navController = NavHostFragment.findNavController(fragment);
+        if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
+            navController.navigate(actionId, args);
         }
     }
 
