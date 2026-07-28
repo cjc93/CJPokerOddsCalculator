@@ -1,8 +1,9 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
+import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemProgressListener;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
-public abstract class TexasHoldemOutputResult extends OutputResult {
+public abstract class TexasHoldemOutputResult extends OutputResult implements TexasHoldemProgressListener {
     public Thread currentThread;
 
     public TexasHoldemOutputResult(EquityCalculatorViewModel equityCalculatorViewModel) {

@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.calculation;
 
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
-import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemOutputResult;
 
 import java.util.List;
 
@@ -10,11 +9,11 @@ public class TexasHoldemCalc extends Calculation{
         System.loadLibrary("cjpokeroddscalculator");
     }
 
-    public TexasHoldemOutputResult outputResultObj;
+    public TexasHoldemProgressListener texasHoldemProgressListener;
 
-    public void initialiseVariables(List<CardRow> cardRows, TexasHoldemOutputResult outputResultObj) {
+    public void initialiseVariables(List<CardRow> cardRows, TexasHoldemProgressListener texasHoldemProgressListener) {
         super.initialiseVariables(cardRows);
-        this.outputResultObj = outputResultObj;
+        this.texasHoldemProgressListener = texasHoldemProgressListener;
     }
 
     public String convertBoardCardsToStr(String[] cards) {

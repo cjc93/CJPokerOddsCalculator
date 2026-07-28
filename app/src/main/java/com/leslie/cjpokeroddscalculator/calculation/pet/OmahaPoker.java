@@ -1,13 +1,13 @@
 package com.leslie.cjpokeroddscalculator.calculation.pet;
 
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
+import com.leslie.cjpokeroddscalculator.calculation.OmahaProgressListener;
 
 /**
  * Omaha hand analysis, using a combinatorial number system.
  */
 public class OmahaPoker extends Poker {
 
-	public OmahaOutputResult omahaOutputResult;
+	public OmahaProgressListener omahaProgressListener;
 
 	/**
 	 * Calc exact omaha hand equity for each hand for given board
@@ -28,7 +28,7 @@ public class OmahaPoker extends Poker {
 
 			EquityUtil.updateEquities(eqs, vals);
 
-			omahaOutputResult.duringSimulations(eqs, p + 1);
+			omahaProgressListener.duringSimulations(eqs, p + 1);
         }
 
 		EquityUtil.summariseEquities(eqs, count);

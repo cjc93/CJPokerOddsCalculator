@@ -5,7 +5,8 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.leslie.cjpokeroddscalculator.GlobalStatic;
+import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
+import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
@@ -44,8 +45,8 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
             binding.handRangeButton.setText(R.string.range);
 
             List<ImageButton> cardList = Arrays.asList(binding.card1, binding.card2);
-            GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
-            GlobalStatic.setCardRowImages(cardList, specificCardRow);
+            AndroidStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
+            AndroidStatic.setCardRowImages(cardList, specificCardRow);
         } else {
             RangeRow rangeRow = (RangeRow) cardRow;
             binding.twoCards.setVisibility(View.GONE);

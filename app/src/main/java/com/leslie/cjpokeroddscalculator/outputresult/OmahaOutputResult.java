@@ -1,11 +1,12 @@
 package com.leslie.cjpokeroddscalculator.outputresult;
 
+import com.leslie.cjpokeroddscalculator.calculation.OmahaProgressListener;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
 import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 import java.util.function.Function;
 
-public abstract class OmahaOutputResult extends OutputResult {
+public abstract class OmahaOutputResult extends OutputResult implements OmahaProgressListener {
     public int totalSimulations;
     public Function<double[][], double[][]> averageUnknownStats;
 
@@ -18,4 +19,13 @@ public abstract class OmahaOutputResult extends OutputResult {
     public abstract void duringSimulations(Equity[] eqs, int count) throws InterruptedException;
 
     public abstract void afterAllSimulations(Equity[] eqs) throws InterruptedException;
+
+    public void setTotalSimulations(int totalSimulations) {
+        this.totalSimulations = totalSimulations;
+    }
+
+    public void setAverageUnknownStats(Function<double[][], double[][]> averageUnknownStats) {
+        this.averageUnknownStats = averageUnknownStats;
+    }
+
 }

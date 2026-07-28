@@ -1,4 +1,4 @@
-package com.leslie.cjpokeroddscalculator;
+package com.leslie.cjpokeroddscalculator.util;
 
 import android.content.Context;
 

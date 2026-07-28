@@ -6,7 +6,6 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.Poker;
 import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.calculation.pet.Equity;
-import com.leslie.cjpokeroddscalculator.outputresult.OmahaOutputResult;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public abstract class OmahaCalc extends Calculation{
         return playerCards;
     }
 
-    public void calculate(List<CardRow> cardRows, OmahaOutputResult omahaOutputResult) throws InterruptedException {
+    public void calculate(List<CardRow> cardRows, OmahaProgressListener omahaProgressListener) throws InterruptedException {
         initialiseVariables(cardRows);
 
         String[] boardCards = ((SpecificCardsRow) cardRows.get(0)).convertOmahaCardsToStr();
@@ -47,15 +46,15 @@ public abstract class OmahaCalc extends Calculation{
             throw new InterruptedException();
         }
 
-        this.omahaPokerObj.omahaOutputResult = omahaOutputResult;
-        this.omahaPokerObj.omahaOutputResult.totalSimulations = totalSimulations;
-        this.omahaPokerObj.omahaOutputResult.averageUnknownStats = this::averageUnknownStats;
+        this.omahaPokerObj.omahaProgressListener = omahaProgressListener;
+        this.omahaPokerObj.omahaProgressListener.setTotalSimulations(totalSimulations);
+        this.omahaPokerObj.omahaProgressListener.setAverageUnknownStats(this::averageUnknownStats);
 
-        this.omahaPokerObj.omahaOutputResult.beforeAllSimulations();
+        this.omahaPokerObj.omahaProgressListener.beforeAllSimulations();
 
         Equity[] eqs = this.omahaPokerObj.equityImpl(cards);
 
-        this.omahaPokerObj.omahaOutputResult.afterAllSimulations(eqs);
+        this.omahaPokerObj.omahaProgressListener.afterAllSimulations(eqs);
     }
 
     public abstract Cards createCards(String[] deck, String[] boardCards, String[][] playerCards);

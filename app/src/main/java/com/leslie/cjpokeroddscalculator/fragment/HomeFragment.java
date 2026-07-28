@@ -1,6 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
-import static com.leslie.cjpokeroddscalculator.GlobalStatic.navControllerNavigate;
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigate;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
