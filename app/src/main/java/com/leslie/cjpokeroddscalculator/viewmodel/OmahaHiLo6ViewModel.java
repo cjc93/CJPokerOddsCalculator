@@ -12,9 +12,12 @@ public class OmahaHiLo6ViewModel extends OmahaHiLoViewModel {
         cardsPerHand = 6;
 
         List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(null, null, 5, null));
+        cardRowList.add(new SpecificCardsRow(null, 5, null));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, 0));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, null));
+        cardRows.setValue(cardRowList);
 
-        List<Double> initialStats = Arrays.asList(
+        double[] initialStats = new double[]{
             0.5,
             0.4862,
             0.2725,
@@ -30,11 +33,8 @@ public class OmahaHiLo6ViewModel extends OmahaHiLoViewModel {
             0.0101,
             0.0022,
             0.4889
-        );
+        };
 
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, 0));
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, null));
-
-        cardRows.setValue(cardRowList);
+        stats.setValue(new double[][]{initialStats, initialStats});
     }
 }

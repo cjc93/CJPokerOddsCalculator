@@ -5,6 +5,7 @@ import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public abstract class OutputResult {
@@ -19,19 +20,23 @@ public abstract class OutputResult {
     }
 
     public void updateWinResults(double[][] results) {
-        List<CardRow> newCardRows = equityCalculatorViewModel.getCardRowsCopy();
+        double[][] transposedResults;
 
-        try {
-            for (int playerIdx = 1; playerIdx < newCardRows.size(); playerIdx++) {
-                CardRow cardRow = newCardRows.get(playerIdx);
-                List<Double> stats = new ArrayList<>();
-                for (double[] result : results) {
-                    stats.add(result[playerIdx - 1]);
+        if (results.length == 0) {
+            transposedResults = null;
+        } else {
+            int rows = results.length;
+            int cols = results[0].length;
+
+            transposedResults = new double[cols][rows];
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    transposedResults[j][i] = results[i][j];
                 }
-                cardRow.stats = stats;
             }
+        }
 
-            equityCalculatorViewModel.cardRows.postValue(newCardRows);
-        } catch (IndexOutOfBoundsException ignored) { }
+        equityCalculatorViewModel.stats.postValue(transposedResults);
     }
 }

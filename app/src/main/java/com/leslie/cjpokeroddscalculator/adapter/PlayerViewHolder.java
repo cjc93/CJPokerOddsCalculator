@@ -19,5 +19,5 @@ public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
         this.cardMaxWidth = cardMaxWidth;
     }
 
-    public abstract void bind(CardRow cardRow, int rowIdx);
+    public abstract void bind(CardRow cardRow);
 }

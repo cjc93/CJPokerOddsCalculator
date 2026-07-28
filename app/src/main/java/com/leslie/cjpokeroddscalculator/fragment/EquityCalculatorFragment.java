@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -132,6 +133,18 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
         });
 
+        viewModel.stats.observe(getViewLifecycleOwner(), results -> {
+            List<CardRow> newCardRows = viewModel.getCardRowsCopy();
+            for (int rowIdx = 1; rowIdx < newCardRows.size(); rowIdx++) {
+                if (results != null && rowIdx - 1 < results.length) {
+                    newCardRows.get(rowIdx).stats = Arrays.stream(results[rowIdx - 1]).boxed().toList();
+                } else {
+                    newCardRows.get(rowIdx).stats = null;
+                }
+            }
+            viewModel.cardRows.setValue(newCardRows);
+        });
+
         viewModel.resDesc.observe(getViewLifecycleOwner(), stringId -> equityCalculatorBinding.resDesc.setText(stringId));
     }
 
@@ -141,7 +154,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             List<CardRow> newCardRows = viewModel.getCardRowsCopy();
             if (newCardRows.size() - 1 < this.maxPlayers) {
-                newCardRows.add(new SpecificCardsRow(null, false, viewModel.cardsPerHand, null));
+                newCardRows.add(new SpecificCardsRow(false, viewModel.cardsPerHand, null));
                 calculateOdds(newCardRows);
             } else {
                 Toast.makeText(requireActivity(), "Max number of players is " + this.maxPlayers, Toast.LENGTH_SHORT).show();
@@ -331,13 +344,10 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     }
 
     public void calculateOdds(List<CardRow> cardRows) {
-        for (CardRow cardRow : cardRows) {
-            cardRow.stats = null;
-        }
-
         viewModel.cardRows.setValue(cardRows);
-
+        viewModel.stats.setValue(null);
         viewModel.resDesc.setValue(R.string.checking_random_subset);
+
         viewModel.calculateOdds();
     }
 

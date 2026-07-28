@@ -12,6 +12,7 @@ import java.util.List;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
     public MutableLiveData<List<CardRow>> cardRows = new MutableLiveData<>();
+    public MutableLiveData<double[][]> stats = new MutableLiveData<>();
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
 
     public Thread monteCarloThread = null;

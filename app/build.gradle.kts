@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.leslie.cjpokeroddscalculator"
-        minSdk = 30
+        minSdk = 34
         targetSdk = 37
         versionCode = 33
         versionName = "2.19"

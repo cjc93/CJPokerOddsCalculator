@@ -18,9 +18,12 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
         cardsPerHand = 2;
 
         List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(null, null, 5, null));
+        cardRowList.add(new SpecificCardsRow(null, 5, null));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, 0));
+        cardRowList.add(new SpecificCardsRow(false, cardsPerHand, null));
+        cardRows.setValue(cardRowList);
 
-        List<Double> initialStats = Arrays.asList(
+        double[] initialStats = new double[]{
             0.5,
             0.4797,
             0.0407,
@@ -33,12 +36,9 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
             0.026,
             0.0017,
             0.0003
-        );
+        };
 
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, 0));
-        cardRowList.add(new SpecificCardsRow(new ArrayList<>(initialStats), false, cardsPerHand, null));
-
-        cardRows.setValue(cardRowList);
+        stats.setValue(new double[][]{initialStats, initialStats});
     }
 
     @Override

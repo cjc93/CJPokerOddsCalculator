@@ -65,15 +65,15 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
     }
 
     @Override
-    public void bind(CardRow cardRow, int rowIdx) {
-        binding.playerText.setText(binding.getRoot().getContext().getString(R.string.player, rowIdx));
+    public void bind(CardRow cardRow) {
+        binding.playerText.setText(binding.getRoot().getContext().getString(R.string.player, getBindingAdapterPosition() + 1));
 
-        binding.remove.setOnClickListener(v -> listener.onRemovePlayer(rowIdx));
-        binding.statsButton.setOnClickListener(v -> listener.onToggleStats(rowIdx));
+        binding.remove.setOnClickListener(v -> listener.onRemovePlayer(getBindingAdapterPosition() + 1));
+        binding.statsButton.setOnClickListener(v -> listener.onToggleStats(getBindingAdapterPosition() + 1));
 
         binding.statsView.getRoot().setVisibility(cardRow.isStatsVisible ? View.VISIBLE : View.GONE);
 
-        GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, rowIdx, listener);
+        GlobalStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
 
         SpecificCardsRow specificCardRow = (SpecificCardsRow) cardRow;
         GlobalStatic.setCardRowImages(cardList, specificCardRow);
