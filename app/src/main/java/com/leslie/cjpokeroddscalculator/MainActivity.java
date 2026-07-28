@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         navGraph.setStartDestination(startFragmentId);
 
-        navController.setGraph(navGraph);
+        Bundle startArgs = getStartArgs(startFragmentStr);
+
+        navController.setGraph(navGraph, startArgs);
     }
 
     private int getFragmentId(String startFragmentStr) {
@@ -47,21 +49,25 @@ public class MainActivity extends AppCompatActivity {
 
         if (Objects.equals(startFragmentStr, "TexasHoldem")) {
             startFragmentId = R.id.TexasHoldemFragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHigh")) {
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh") || Objects.equals(startFragmentStr, "OmahaHigh5") || Objects.equals(startFragmentStr, "OmahaHigh6")) {
             startFragmentId = R.id.OmahaHighFragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHiLo")) {
+        } else if (Objects.equals(startFragmentStr, "OmahaHiLo") || Objects.equals(startFragmentStr, "OmahaHiLo5") || Objects.equals(startFragmentStr, "OmahaHiLo6")) {
             startFragmentId = R.id.OmahaHiLoFragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHigh5")) {
-            startFragmentId = R.id.OmahaHigh5Fragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHiLo5")) {
-            startFragmentId = R.id.OmahaHiLo5Fragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHigh6")) {
-            startFragmentId = R.id.OmahaHigh6Fragment;
-        } else if (Objects.equals(startFragmentStr, "OmahaHiLo6")) {
-            startFragmentId = R.id.OmahaHiLo6Fragment;
         } else {
             startFragmentId = R.id.TexasHoldemFragment;
         }
         return startFragmentId;
+    }
+
+    private Bundle getStartArgs(String startFragmentStr) {
+        Bundle args = new Bundle();
+        if (Objects.equals(startFragmentStr, "OmahaHigh5") || Objects.equals(startFragmentStr, "OmahaHiLo5")) {
+            args.putInt("cardsPerHand", 5);
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh6") || Objects.equals(startFragmentStr, "OmahaHiLo6")) {
+            args.putInt("cardsPerHand", 6);
+        } else if (Objects.equals(startFragmentStr, "OmahaHigh") || Objects.equals(startFragmentStr, "OmahaHiLo")) {
+            args.putInt("cardsPerHand", 4);
+        }
+        return args;
     }
 }

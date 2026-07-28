@@ -24,10 +24,19 @@ public class OmahaHiLoFragment extends OmahaHighFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        fragmentName = "OmahaHiLo";
         fragmentId = R.id.OmahaHiLoFragment;
         homeButtonActionId = R.id.action_OmahaHiLoFragment_to_HomeFragment;
-        titleTextId = R.string.omaha_high_low_equity_calculator;
+
+        if (viewModel.cardsPerHand == 5) {
+            fragmentName = "OmahaHiLo5";
+            titleTextId = R.string.omaha_high_low_5_equity_calculator;
+        } else if (viewModel.cardsPerHand == 6) {
+            fragmentName = "OmahaHiLo6";
+            titleTextId = R.string.omaha_hi_lo_6_card_equity_calculator;
+        } else {
+            fragmentName = "OmahaHiLo";
+            titleTextId = R.string.omaha_high_low_equity_calculator;
+        }
     }
 
     @Override

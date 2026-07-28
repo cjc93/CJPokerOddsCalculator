@@ -1,6 +1,7 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigate;
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigateWithArgs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -34,32 +35,44 @@ public class HomeFragment extends Fragment {
 
         binding.omahaHighButton.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 4);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment, args);
         });
 
         binding.omahaHiLoButton.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLoFragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 4);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLoFragment, args);
         });
 
         binding.omahaHi5Button.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHigh5Fragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 5);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment, args);
         });
 
         binding.omahaHiLo5Button.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLo5Fragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 5);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLoFragment, args);
         });
 
         binding.omahaHi6Button.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHigh6Fragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 6);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHighFragment, args);
         });
 
         binding.omahaHiLo6Button.setOnClickListener(v -> {
             binding.progressBar.setVisibility(View.VISIBLE);
-            navControllerNavigate(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLo6Fragment);
+            Bundle args = new Bundle();
+            args.putInt("cardsPerHand", 6);
+            navControllerNavigateWithArgs(this, R.id.HomeFragment, R.id.action_HomeFragment_to_OmahaHiLoFragment, args);
         });
     }
 
