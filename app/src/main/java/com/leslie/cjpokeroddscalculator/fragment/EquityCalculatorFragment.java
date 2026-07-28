@@ -148,7 +148,11 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     }
 
     private void setButtonListeners () {
-        equityCalculatorBinding.homeButton.setOnClickListener(v -> navControllerNavigate(this, fragmentId, homeButtonActionId));
+        equityCalculatorBinding.homeButton.setOnClickListener(v -> {
+            viewModel.killThreads();
+            viewModel.resDesc.setValue(R.string.space);
+            navControllerNavigate(this, fragmentId, homeButtonActionId);
+        });
 
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             List<CardRow> newCardRows = viewModel.getCardRowsCopy();
