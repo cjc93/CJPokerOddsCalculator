@@ -80,15 +80,13 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
             newCardRows.set(rowIdx, new RangeRow(null, newCardRows.get(rowIdx).isStatsVisible));
             viewModel.setSelectedCardPositionInCardRows(newCardRows, null, null);
-            viewModel.cardRows.setValue(newCardRows);
+            calculateOdds(newCardRows);
             onShowRangeSelector(rowIdx);
         } else {
             newCardRows.set(rowIdx, new SpecificCardsRow(null, newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
             viewModel.setSelectedCardPositionInCardRows(newCardRows, rowIdx, 0);
-            viewModel.cardRows.setValue(newCardRows);
+            calculateOdds(newCardRows);
         }
-
-        calculateOdds();
     }
 
     @Override
@@ -113,9 +111,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
 
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
-        viewModel.cardRows.setValue(newCardRows);
 
-        calculateOdds();
+        calculateOdds(newCardRows);
 
         texasHoldemViewModel.selectedRangePosition = null;
     }

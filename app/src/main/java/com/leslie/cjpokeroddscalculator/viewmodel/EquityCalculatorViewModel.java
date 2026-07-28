@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
-    // TODO: split board cards out of cardRows
     public MutableLiveData<List<CardRow>> cardRows = new MutableLiveData<>();
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
 
