@@ -1,15 +1,19 @@
 package com.leslie.cjpokeroddscalculator.util;
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowMetrics;
-import android.widget.ImageButton;
+import com.google.android.material.imageview.ShapeableImageView;
+
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -17,6 +21,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
@@ -52,9 +57,9 @@ public class AndroidStatic {
         return displayMetrics;
     }
 
-    public static void initialiseCardButtons(List<ImageButton> cardButtons, int boardCardMaxHeight, int cardMaxWidth, int rowIdx, PlayerRowInteractionListener listener) {
+    public static void initialiseCardButtons(List<ShapeableImageView> cardButtons, int boardCardMaxHeight, int cardMaxWidth, int rowIdx, PlayerRowInteractionListener listener) {
         for (int i = 0; i < cardButtons.size(); i++) {
-            ImageButton card = cardButtons.get(i);
+            ShapeableImageView card = cardButtons.get(i);
             card.setMaxHeight(boardCardMaxHeight);
             card.setMaxWidth(cardMaxWidth);
 
@@ -63,12 +68,22 @@ public class AndroidStatic {
         }
     }
 
-    public static List<ImageButton> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton, int cardsPerHand) {
-        List<ImageButton> cardList = new ArrayList<>();
+    public static int dpToPx(Context context, int dp) {
+        return Math.round(dp * context.getResources().getDisplayMetrics().density);
+    }
+
+    public static List<ShapeableImageView> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton, int cardsPerHand) {
+        List<ShapeableImageView> cardList = new ArrayList<>();
 
         for (int i = 0; i < cardsPerHand; i++) {
-            ImageButton card = new ImageButton(binding.getRoot().getContext(), null, 0, R.style.SelectCardButton);
+            ShapeableImageView card = new ShapeableImageView(binding.getRoot().getContext(), null, 0);
             card.setId(View.generateViewId());
+            card.setScaleType(ShapeableImageView.ScaleType.FIT_CENTER);
+            card.setAdjustViewBounds(true);
+            int dp5 = dpToPx(binding.getRoot().getContext(), 5);
+            card.setPadding(dp5, dp5, dp5, dp5);
+            card.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(card.getContext(), R.color.card_selected)));
+            card.setShapeAppearanceModel(new ShapeAppearanceModel.Builder().setAllCornerSizes(dp5).build());
             cardList.add(card);
         }
 
@@ -104,7 +119,7 @@ public class AndroidStatic {
         return cardList;
     }
 
-    public static void setCardRowImages(List<ImageButton> cardList, SpecificCardsRow specificCardsRow) {
+    public static void setCardRowImages(List<ShapeableImageView> cardList, SpecificCardsRow specificCardsRow) {
         for (int cardIdx = 0; cardIdx < specificCardsRow.cards.length; cardIdx++) {
             String cardStr = specificCardsRow.cards[cardIdx];
             Integer id = suitRankDrawableMap.get(cardStr);
@@ -113,9 +128,9 @@ public class AndroidStatic {
             }
 
             if (specificCardsRow.selectedCard != null && specificCardsRow.selectedCard == cardIdx) {
-                cardList.get(cardIdx).setBackgroundResource(R.drawable.selected_border);
+                cardList.get(cardIdx).setStrokeWidth(dpToPx(cardList.get(cardIdx).getContext(), 5));
             } else {
-                cardList.get(cardIdx).setBackgroundResource(0);
+                cardList.get(cardIdx).setStrokeWidth(0);
             }
         }
     }

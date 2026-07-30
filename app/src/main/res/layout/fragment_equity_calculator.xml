@@ -85,7 +85,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/home_button" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop1"
         style="@style/SelectCardButton"
         android:contentDescription="@string/flop1"
@@ -93,7 +93,7 @@
         app:layout_constraintRight_toLeftOf="@id/flop2"
         app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop2"
         style="@style/SelectCardButton"
         android:contentDescription="@string/flop2"
@@ -101,7 +101,7 @@
         app:layout_constraintRight_toLeftOf="@id/flop3"
         app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop3"
         style="@style/SelectCardButton"
         android:contentDescription="@string/flop3"
@@ -110,7 +110,7 @@
         app:layout_constraintTop_toBottomOf="@id/flop_text" />
 
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/turn"
         style="@style/SelectCardButton"
         android:contentDescription="@string/card_turn"
@@ -118,7 +118,7 @@
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
         app:layout_constraintTop_toBottomOf="@id/turn_text" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/river"
         style="@style/SelectCardButton"
         android:contentDescription="@string/card_river"
@@ -171,23 +171,39 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/clear"
         app:layout_constraintLeft_toRightOf="@id/addplayer"
-        app:layout_constraintRight_toLeftOf="@id/button_unknown"
+        app:layout_constraintRight_toLeftOf="@id/button_unknown_spacer"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
         app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-    <ImageButton
-        android:id="@+id/button_unknown"
+    <View
+        android:id="@+id/button_unknown_spacer"
         android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toRightOf="@id/clear"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/res_desc"
+        app:layout_constraintBottom_toTopOf="@id/input_cards" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/button_unknown"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:src="@drawable/unknown_button"
         android:scaleType="fitCenter"
         android:padding="1dp"
-        android:background="@null"
+        android:adjustViewBounds="true"
+        app:shapeAppearanceOverlay="@style/RoundedImage"
         app:layout_constraintLeft_toRightOf="@id/clear"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
         app:layout_constraintBottom_toTopOf="@id/input_cards"
         android:contentDescription="@string/unknown" />
+
+    <androidx.constraintlayout.widget.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="button_unknown_spacer,button_unknown"
+        android:id="@+id/button_unknown_group" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_cards"

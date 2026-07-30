@@ -1,17 +1,20 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.dpToPx;
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigate;
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.suitStrings;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -24,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.common.collect.HashBiMap;
 import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
@@ -46,8 +50,8 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
     public EquityCalculatorViewModel viewModel;
 
-    public List<ImageButton> boardButtons = new ArrayList<>();
-    public HashBiMap<ImageButton, String> inputSuitRankMap;
+    public List<ShapeableImageView> boardButtons = new ArrayList<>();
+    public HashBiMap<ShapeableImageView, String> inputSuitRankMap;
 
     public DisplayMetrics displayMetrics = new DisplayMetrics();
     public int boardCardMaxHeight;
@@ -99,17 +103,19 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
     public void observeLiveData() {
         viewModel.cardRows.observe(getViewLifecycleOwner(), cardRows -> {
-            for (ImageButton inputButton : inputSuitRankMap.keySet()) {
-                inputButton.setVisibility(View.VISIBLE);
+            for (ShapeableImageView inputButton : inputSuitRankMap.keySet()) {
+                inputButton.setEnabled(true);
+                inputButton.setImageAlpha(255);
             }
 
             for (CardRow cardRow : cardRows) {
                 if (cardRow instanceof SpecificCardsRow specificCardRow) {
                     for (String cardStr : specificCardRow.cards) {
                         if (!cardStr.isEmpty()) {
-                            ImageButton cardButton = inputSuitRankMap.inverse().get(cardStr);
-                            if (cardButton != null) {
-                                cardButton.setVisibility(View.INVISIBLE);
+                            ShapeableImageView inputButton = inputSuitRankMap.inverse().get(cardStr);
+                            if (inputButton != null) {
+                                inputButton.setEnabled(false);
+                                inputButton.setImageAlpha(110);
                             }
                         }
                     }
@@ -118,10 +124,10 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
 
             if (viewModel.getSelectedCardPosition() != null) {
                 equityCalculatorBinding.inputCards.setVisibility(View.VISIBLE);
-                equityCalculatorBinding.buttonUnknown.setVisibility(View.VISIBLE);
+                equityCalculatorBinding.buttonUnknownGroup.setVisibility(View.VISIBLE);
             } else {
                 equityCalculatorBinding.inputCards.setVisibility(View.GONE);
-                equityCalculatorBinding.buttonUnknown.setVisibility(View.GONE);
+                equityCalculatorBinding.buttonUnknownGroup.setVisibility(View.GONE);
             }
 
             SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
@@ -238,18 +244,18 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
         inputSuitRankMap = HashBiMap.create();
         for (String suit : suitStrings) {
             for (String rank : rankStrings) {
-                ImageButton b = new ImageButton(requireActivity());
+                ShapeableImageView b = new ShapeableImageView(requireActivity());
                 b.setId(View.generateViewId());
-                b.setBackgroundResource(0);
                 Integer id = suitRankDrawableMap.get(rank + suit);
                 assert id != null;
                 b.setImageResource(id);
-                b.setScaleType(ImageButton.ScaleType.FIT_XY);
+                b.setScaleType(ShapeableImageView.ScaleType.FIT_XY);
                 b.setPadding(1, 1, 1, 1);
+                b.setShapeAppearanceModel(new ShapeAppearanceModel.Builder().setAllCornerSizes(dpToPx(b.getContext(), 5)).build());
+                b.setStrokeColor(ColorStateList.valueOf(Color.WHITE));
 
                 b.setOnClickListener(v -> {
-                    ImageButton cardInput = (ImageButton) v;
-                    cardInput.setVisibility(View.INVISIBLE);
+                    ShapeableImageView cardInput = (ShapeableImageView) v;
                     String cardStr = inputSuitRankMap.get(cardInput);
                     setValueToSelectedCard(cardStr);
                 });
@@ -289,7 +295,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
                     layoutParams.rightToLeft = Objects.requireNonNull(this.inputSuitRankMap.inverse().get(rankStrings[j + 1] + suitStrings[i])).getId();
                 }
 
-                ImageButton button = this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i]);
+                ShapeableImageView button = this.inputSuitRankMap.inverse().get(rankStrings[j] + suitStrings[i]);
                 assert button != null;
                 button.setLayoutParams(layoutParams);
             }

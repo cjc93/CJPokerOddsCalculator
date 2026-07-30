@@ -36,21 +36,23 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintWidth_percent="0.4" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/range"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@null"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:contentDescription="@string/card1"
         android:padding="5dp"
         android:visibility="gone"
+        app:strokeWidth="1dp"
+        app:strokeColor="@android:color/white"
+        app:shapeAppearanceOverlay="@style/RoundedImage"
         app:layout_constraintTop_toBottomOf="@id/player_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@id/player_text"/>
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card1"
         android:contentDescription="@string/card1"
         app:layout_constraintTop_toBottomOf="@id/player_text"
@@ -58,7 +60,7 @@
         app:layout_constraintRight_toLeftOf="@id/card2"
         style="@style/SelectCardButton" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card2"
         android:contentDescription="@string/card2"
         app:layout_constraintTop_toBottomOf="@id/player_text"

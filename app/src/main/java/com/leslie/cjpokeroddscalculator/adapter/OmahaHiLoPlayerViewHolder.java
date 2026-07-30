@@ -1,7 +1,7 @@
 package com.leslie.cjpokeroddscalculator.adapter;
 
 import android.view.View;
-import android.widget.ImageButton;
+import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
     private final OmahaHiloPlayerRowBinding binding;
-    private final List<ImageButton> cardList;
+    private final List<ShapeableImageView> cardList;
     private final TextView lowPercent;
 
     public OmahaHiLoPlayerViewHolder(OmahaHiloPlayerRowBinding binding, PlayerRowInteractionListener listener, int boardCardMaxHeight, int cardMaxWidth, int cardsPerHand) {

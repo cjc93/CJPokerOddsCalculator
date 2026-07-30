@@ -3,7 +3,10 @@ package com.leslie.cjpokeroddscalculator.adapter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.View;
-import android.widget.ImageButton;
+
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.imageview.ShapeableImageView;
 
 import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
@@ -44,7 +47,7 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
             binding.range.setVisibility(View.GONE);
             binding.handRangeButton.setText(R.string.range);
 
-            List<ImageButton> cardList = Arrays.asList(binding.card1, binding.card2);
+            List<ShapeableImageView> cardList = Arrays.asList(binding.card1, binding.card2);
             AndroidStatic.initialiseCardButtons(cardList, boardCardMaxHeight, cardMaxWidth, getBindingAdapterPosition() + 1, listener);
             AndroidStatic.setCardRowImages(cardList, specificCardRow);
         } else {
@@ -58,11 +61,11 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
                 for (int j = 0; j < 13; j++)  {
                     Set<String> suits = rangeRow.matrix.get(i).get(j);
                     if (GlobalStatic.isAllSuits(suits, i, j)) {
-                        matrixBitmap.setPixel(j, i, Color.YELLOW);
+                        matrixBitmap.setPixel(j, i, ContextCompat.getColor(binding.getRoot().getContext(), R.color.all_suits));
                     } else if (suits.isEmpty()) {
-                        matrixBitmap.setPixel(j, i, Color.LTGRAY);
+                        matrixBitmap.setPixel(j, i, Color.DKGRAY);
                     } else {
-                        matrixBitmap.setPixel(j, i, Color.CYAN);
+                        matrixBitmap.setPixel(j, i, ContextCompat.getColor(binding.getRoot().getContext(), R.color.partial_suits));
                     }
                 }
             }
