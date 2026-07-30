@@ -107,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits1"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -116,7 +116,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits2"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits2"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -125,7 +125,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits3"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits3"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -134,7 +134,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits4"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits4"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -143,7 +143,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits5"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits5"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -152,7 +152,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits6"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits6"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
@@ -161,7 +161,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits7"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits1"
@@ -170,7 +170,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits8"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits8"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits2"
@@ -179,7 +179,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits9"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits9"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits3"
@@ -188,7 +188,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits10"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits10"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits4"
@@ -197,7 +197,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits11"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits11"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits5"
@@ -206,7 +206,7 @@
         app:layout_constraintRight_toLeftOf="@id/suits12"
         android:contentDescription="@string/suits" />
 
-    <ImageButton
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/suits12"
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits6"
@@ -215,7 +215,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:contentDescription="@string/suits" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

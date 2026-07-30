@@ -1,5 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
+import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.dpToPx;
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawableMap;
 
@@ -15,7 +16,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -53,9 +54,9 @@ public class RangeSelectorFragment extends Fragment {
 
     private MaterialButton selectedMatrixButton = null;
     HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
-    Map<ImageButton, String> pairButtonSuitsMap = new HashMap<>();
-    Map<ImageButton, String> suitedButtonSuitsMap = new HashMap<>();
-    Map<ImageButton, String> offsuitButtonSuitsMap = new HashMap<>();
+    Map<ShapeableImageView, String> pairButtonSuitsMap = new HashMap<>();
+    Map<ShapeableImageView, String> suitedButtonSuitsMap = new HashMap<>();
+    Map<ShapeableImageView, String> offsuitButtonSuitsMap = new HashMap<>();
     Map<String, MaterialButton> savedHandRangeMap = new HashMap<>();
     Gson gson = new Gson();
 
@@ -100,7 +101,6 @@ public class RangeSelectorFragment extends Fragment {
                 b.setMinimumHeight(squareLength);
                 b.setMinimumWidth(squareLength);
                 b.setMinWidth(squareLength);
-                b.setBackgroundColor(Color.LTGRAY);
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
                 b.setTextSize(11);
@@ -170,7 +170,7 @@ public class RangeSelectorFragment extends Fragment {
             }
         }
 
-        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+        for (ShapeableImageView b : offsuitButtonSuitsMap.keySet()) {
             b.setOnClickListener(suitsListener);
         }
     }
@@ -236,7 +236,7 @@ public class RangeSelectorFragment extends Fragment {
     }
 
     private final View.OnClickListener suitsListener = v -> {
-        ImageButton suitsButton = (ImageButton) v;
+        ShapeableImageView suitsButton = (ShapeableImageView) v;
 
         int[] selectedMatrixPosition = viewModel.selectedMatrixPosition.getValue();
         assert selectedMatrixPosition != null;
@@ -265,8 +265,8 @@ public class RangeSelectorFragment extends Fragment {
         viewModel.matrixInput.setValue(matrixInput);
     };
 
-    private void setSuitSelectorUIGivenRankSuit(Map<ImageButton, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
-        for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+    private void setSuitSelectorUIGivenRankSuit(Map<ShapeableImageView, String> buttonSuitsMap, String highRank, String lowRank, Set<String> suits) {
+        for (ShapeableImageView b : offsuitButtonSuitsMap.keySet()) {
             String currentSuit = buttonSuitsMap.get(b);
             if (currentSuit == null) {
                 b.setVisibility(View.INVISIBLE);
@@ -288,9 +288,9 @@ public class RangeSelectorFragment extends Fragment {
                 b.setImageDrawable(combinedDrawable);
 
                 if (suits.contains(currentSuit)) {
-                    b.setBackgroundResource(R.drawable.selected_border);
+                    b.setStrokeWidth(dpToPx(b.getContext(), 3));
                 } else {
-                    b.setBackgroundResource(0);
+                    b.setStrokeWidth(0);
                 }
 
                 b.setVisibility(View.VISIBLE);
@@ -510,11 +510,11 @@ public class RangeSelectorFragment extends Fragment {
                 for (int col_idx = 0; col_idx < 13; col_idx++) {
                     Set<String> suits = matrixInput.get(row_idx).get(col_idx);
                     if (GlobalStatic.isAllSuits(suits, row_idx, col_idx)) {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.YELLOW);
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.all_suits));
                     } else if (suits.isEmpty()) {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.LTGRAY);
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.parseColor("#E3E2E6"));
                     } else {
-                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(Color.CYAN);
+                        Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(row_idx, col_idx))).setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.partial_suits));
                     }
 
                     handCount += suits.size();
@@ -538,7 +538,7 @@ public class RangeSelectorFragment extends Fragment {
             }
 
             if (selectedMatrixPosition == null) {
-                for (ImageButton b : offsuitButtonSuitsMap.keySet()) {
+                for (ShapeableImageView b : offsuitButtonSuitsMap.keySet()) {
                     b.setVisibility(View.INVISIBLE);
                 }
 

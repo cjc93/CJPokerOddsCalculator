@@ -7,30 +7,36 @@
         <item name="layout_constraintHorizontal_chainStyle">spread_inside</item>
     </style>
 
-    <style name="SelectCardButton" parent="Widget.AppCompat.ImageButton">
+    <style name="SelectCardButton" parent="Widget.MaterialComponents.ShapeableImageView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@null</item>
-        <item name="android:src">@drawable/unknown_button</item>
         <item name="android:scaleType">fitCenter</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:padding">5dp</item>
+        <item name="strokeColor">@color/card_selected</item>
+        <item name="shapeAppearanceOverlay">@style/RoundedImage</item>
     </style>
 
-    <style name="SuitSelectorButton" parent="Widget.AppCompat.ImageButton">
+    <style name="SuitSelectorButton" parent="Widget.MaterialComponents.ShapeableImageView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
-        <item name="android:background">@null</item>
         <item name="android:layout_margin">3dp</item>
         <item name="layout_constraintDimensionRatio">500:350</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:padding">5dp</item>
+        <item name="strokeColor">@color/card_selected</item>
+        <item name="shapeAppearanceOverlay">@style/RoundedImage</item>
     </style>
 
     <style name="HomePageButtons" parent="Widget.Material3.Button">
         <item name="android:layout_height">70dp</item>
         <item name="android:layout_marginHorizontal">30dp</item>
         <item name="cornerRadius">20dp</item>
+    </style>
+
+    <style name="RoundedImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
     </style>
 </resources>

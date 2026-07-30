@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="all_suits">#E5C44A</color>
+    <color name="partial_suits">#FF00FFFF</color>
+    <color name="card_selected">#FFA500</color>
+</resources>

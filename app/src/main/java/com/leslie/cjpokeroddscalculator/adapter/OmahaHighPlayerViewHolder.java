@@ -1,7 +1,7 @@
 package com.leslie.cjpokeroddscalculator.adapter;
 
 import android.view.View;
-import android.widget.ImageButton;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.R;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class OmahaHighPlayerViewHolder extends PlayerViewHolder {
     protected final OmahaHighPlayerRowBinding binding;
-    protected final List<ImageButton> cardList;
+    protected final List<ShapeableImageView> cardList;
 
     public OmahaHighPlayerViewHolder(OmahaHighPlayerRowBinding binding, PlayerRowInteractionListener listener, int boardCardMaxHeight, int cardMaxWidth, int cardsPerHand) {
         super(binding.getRoot(), listener, boardCardMaxHeight, cardMaxWidth);
