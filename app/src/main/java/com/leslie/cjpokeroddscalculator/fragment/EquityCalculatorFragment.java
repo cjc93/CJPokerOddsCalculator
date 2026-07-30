@@ -133,22 +133,10 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             SpecificCardsRow boardCards = (SpecificCardsRow) cardRows.get(0);
             AndroidStatic.setCardRowImages(boardButtons, boardCards);
 
-            playerAdapter.submitList(cardRows.subList(1, cardRows.size()));
-
             equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size() - 1));
         });
 
-        viewModel.stats.observe(getViewLifecycleOwner(), results -> {
-            List<CardRow> newCardRows = viewModel.getCardRowsCopy();
-            for (int rowIdx = 1; rowIdx < newCardRows.size(); rowIdx++) {
-                if (results != null && rowIdx - 1 < results.length) {
-                    newCardRows.get(rowIdx).stats = Arrays.stream(results[rowIdx - 1]).boxed().toList();
-                } else {
-                    newCardRows.get(rowIdx).stats = null;
-                }
-            }
-            viewModel.cardRows.setValue(newCardRows);
-        });
+        viewModel.recyclerViewData.observe(getViewLifecycleOwner(), recyclerViewData -> playerAdapter.submitList(recyclerViewData.subList(1, recyclerViewData.size())));
 
         viewModel.resDesc.observe(getViewLifecycleOwner(), stringId -> equityCalculatorBinding.resDesc.setText(stringId));
     }
@@ -234,7 +222,11 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
             equityCalculatorBinding.river
         );
 
-        AndroidStatic.initialiseCardButtons(boardButtons, boardCardMaxHeight, boardCardMaxWidth, 0, this);
+        AndroidStatic.setCardSize(boardButtons, boardCardMaxHeight, boardCardMaxWidth);
+        for (int i = 0; i < boardButtons.size(); i++) {
+            int cardIdx = i;
+            boardButtons.get(i).setOnClickListener(v -> onSelectCard(0, cardIdx));
+        }
 
         playerAdapter = createPlayerAdapter();
         equityCalculatorBinding.playerList.setLayoutManager(new LinearLayoutManager(requireActivity()));
