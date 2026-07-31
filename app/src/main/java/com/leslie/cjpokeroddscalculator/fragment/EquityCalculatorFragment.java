@@ -45,10 +45,10 @@ import java.util.List;
 import java.util.Objects;
 
 
-public abstract class EquityCalculatorFragment extends Fragment implements PlayerRowInteractionListener {
+public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewModel> extends Fragment implements PlayerRowInteractionListener {
 
     public FragmentEquityCalculatorBinding equityCalculatorBinding;
-    public EquityCalculatorViewModel viewModel;
+    public VM viewModel;
 
     public List<ShapeableImageView> boardButtons = new ArrayList<>();
     public HashBiMap<ShapeableImageView, String> inputSuitRankMap;
@@ -99,7 +99,7 @@ public abstract class EquityCalculatorFragment extends Fragment implements Playe
         ((MainActivity) requireActivity()).dataStore.writeToDataStore(PreferencesKeys.stringKey("start_fragment"), fragmentName);
     }
 
-    protected abstract Class<? extends EquityCalculatorViewModel> getViewModelClass();
+    protected abstract Class<? extends VM> getViewModelClass();
 
     public void observeLiveData() {
         viewModel.playerCardRows.observe(getViewLifecycleOwner(), cardRows -> equityCalculatorBinding.playersremaining.setText(getString(R.string.players_remaining, cardRows.size())));

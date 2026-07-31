@@ -21,14 +21,13 @@ import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class TexasHoldemFragment extends EquityCalculatorFragment {
+public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemViewModel> {
     public int rangeCardSize;
     private final Gson gson = new Gson();
 
@@ -46,7 +45,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     }
 
     @Override
-    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+    protected Class<? extends TexasHoldemViewModel> getViewModelClass() {
         return TexasHoldemViewModel.class;
     }
 
@@ -95,8 +94,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
     @Override
     public void onShowRangeSelector(int rowIdx) {
-        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-        texasHoldemViewModel.selectedRangePosition = rowIdx;
+        viewModel.selectedRangePosition = rowIdx;
 
         RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.playerCardRows.getValue()).get(rowIdx);
 
@@ -109,8 +107,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
     public void updateRange(List<List<Set<String>>> matrixInput) {
         List<CardRow> newCardRows = viewModel.getPlayerCardRowsCopy();
 
-        TexasHoldemViewModel texasHoldemViewModel = (TexasHoldemViewModel) viewModel;
-        Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition;
+        Integer selectedRangePosition = viewModel.selectedRangePosition;
 
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
@@ -119,6 +116,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
 
         calculateOdds();
 
-        texasHoldemViewModel.selectedRangePosition = null;
+        viewModel.selectedRangePosition = null;
     }
 }
