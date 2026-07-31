@@ -5,6 +5,8 @@ import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 
+import java.util.Objects;
+
 public class TexasHoldemViewModel extends EquityCalculatorViewModel {
     public Integer selectedRangePosition;
 
@@ -31,7 +33,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 TexasHoldemMonteCarloCalc calcObj = new TexasHoldemMonteCarloCalc();
-                calcObj.calculate(cardRows.getValue(), new TexasHoldemLiveUpdate(this));
+                calcObj.calculate(Objects.requireNonNull(boardCardRow.getValue()), playerCardRows.getValue(), new TexasHoldemLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
@@ -41,7 +43,7 @@ public class TexasHoldemViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 TexasHoldemExactCalc calcObj = new TexasHoldemExactCalc();
-                calcObj.calculate(cardRows.getValue(), new TexasHoldemFinalUpdate(this));
+                calcObj.calculate(Objects.requireNonNull(boardCardRow.getValue()), playerCardRows.getValue(), new TexasHoldemFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }

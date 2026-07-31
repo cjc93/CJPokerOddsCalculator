@@ -35,11 +35,11 @@ public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
 
         for (int i = 0; i < cardList.size(); i++) {
             int cardIdx = i;
-            cardList.get(i).setOnClickListener(v -> listener.onSelectCard(getBindingAdapterPosition() + 1, cardIdx));
+            cardList.get(i).setOnClickListener(v -> listener.onSelectCard(getBindingAdapterPosition(), cardIdx));
         }
 
-        removeButton.setOnClickListener(v -> listener.onRemovePlayer(getBindingAdapterPosition() + 1));
-        statsButton.setOnClickListener(v -> listener.onToggleStats(getBindingAdapterPosition() + 1));
+        removeButton.setOnClickListener(v -> listener.onRemovePlayer(getBindingAdapterPosition()));
+        statsButton.setOnClickListener(v -> listener.onToggleStats(getBindingAdapterPosition()));
     }
 
     public void bind(CardRow cardRow) {

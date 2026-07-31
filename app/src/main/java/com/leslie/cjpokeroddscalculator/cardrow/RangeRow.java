@@ -87,7 +87,7 @@ public class RangeRow extends CardRow {
     }
 
     @Override
-    public CardRow copy() {
+    public RangeRow copy() {
         RangeRow copy = new RangeRow(isStatsVisible);
         copy.id = this.id;
         copy.stats = copyStats();

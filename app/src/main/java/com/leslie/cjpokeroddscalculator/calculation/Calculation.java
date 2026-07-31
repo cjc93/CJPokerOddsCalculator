@@ -8,14 +8,14 @@ public class Calculation {
     protected boolean[] knownPlayers;
     protected int numOfUnknownPlayers;
 
-    public void initialiseVariables(List<CardRow> cardRows) {
-        this.knownPlayers = new boolean[cardRows.size() - 1];
+    public void initialiseVariables(List<CardRow> playerCardRows) {
+        this.knownPlayers = new boolean[playerCardRows.size()];
         this.numOfUnknownPlayers = 0;
 
-        for(int player = 1; player < cardRows.size(); player++) {
-            CardRow cardRow = cardRows.get(player);
+        for(int player = 0; player < playerCardRows.size(); player++) {
+            CardRow cardRow = playerCardRows.get(player);
             if (cardRow.isKnownPlayer()) {
-                knownPlayers[player - 1] = true;
+                knownPlayers[player] = true;
             } else {
                 numOfUnknownPlayers++;
             }

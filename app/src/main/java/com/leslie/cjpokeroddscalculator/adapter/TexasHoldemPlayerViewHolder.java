@@ -69,8 +69,8 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
     @Override
     public void initialiseViews(int boardCardMaxHeight, int cardMaxWidth) {
         super.initialiseViews(boardCardMaxHeight, cardMaxWidth);
-        rangeButton.setOnClickListener(v -> listener.onShowRangeSelector(getBindingAdapterPosition() + 1));
-        handRangeButton.setOnClickListener(v -> listener.onToggleRangeHand(getBindingAdapterPosition() + 1));
+        rangeButton.setOnClickListener(v -> listener.onShowRangeSelector(getBindingAdapterPosition()));
+        handRangeButton.setOnClickListener(v -> listener.onToggleRangeHand(getBindingAdapterPosition()));
     }
 
     @Override

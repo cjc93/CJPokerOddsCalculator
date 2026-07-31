@@ -23,7 +23,6 @@ import androidx.viewbinding.ViewBinding;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
 import java.util.ArrayList;

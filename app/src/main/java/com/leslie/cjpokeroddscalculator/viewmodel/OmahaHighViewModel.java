@@ -6,6 +6,8 @@ import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaFinalUpdate;
 import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 
+import java.util.Objects;
+
 public class OmahaHighViewModel extends EquityCalculatorViewModel {
     @Override
     public double[] getInitialStats() {
@@ -62,7 +64,7 @@ public class OmahaHighViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 OmahaMonteCarloCalc calcObj = new OmahaMonteCarloCalc(new OmahaPoker(), cardsPerHand);
-                calcObj.calculate(cardRows.getValue(), new OmahaLiveUpdate(this));
+                calcObj.calculate(Objects.requireNonNull(boardCardRow.getValue()), playerCardRows.getValue(), new OmahaLiveUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }
@@ -72,7 +74,7 @@ public class OmahaHighViewModel extends EquityCalculatorViewModel {
         return new Thread(() -> {
             try {
                 OmahaExactCalc calcObj = new OmahaExactCalc(new OmahaPoker(), cardsPerHand);
-                calcObj.calculate(cardRows.getValue(), new OmahaFinalUpdate(this));
+                calcObj.calculate(Objects.requireNonNull(boardCardRow.getValue()), playerCardRows.getValue(), new OmahaFinalUpdate(this));
             } catch (InterruptedException ignored) { }
         });
     }

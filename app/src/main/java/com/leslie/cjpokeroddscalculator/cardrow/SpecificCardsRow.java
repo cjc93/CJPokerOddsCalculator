@@ -70,7 +70,7 @@ public class SpecificCardsRow extends CardRow {
     }
 
     @Override
-    public CardRow copy() {
+    public SpecificCardsRow copy() {
         SpecificCardsRow copy = new SpecificCardsRow(isStatsVisible, cards.length);
         copy.id = this.id;
         copy.stats = copyStats();

@@ -10,13 +10,18 @@ import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
-    public MutableLiveData<List<CardRow>> cardRows = new MutableLiveData<>();
+    public MutableLiveData<SpecificCardsRow> boardCardRow = new MutableLiveData<>();
+    public MutableLiveData<List<CardRow>> playerCardRows = new MutableLiveData<>();
     public MutableLiveData<double[][]> stats = new MutableLiveData<>();
-    public MutableLiveData<int[]> selectedCard = new MutableLiveData<>(new int[]{1, 0});
+    public MutableLiveData<int[]> selectedCard = new MutableLiveData<>();
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
-    public MediatorLiveData<List<CardRow>> allCardsData = new MediatorLiveData<>();
+
+    public MediatorLiveData<List<CardRow>> recyclerViewData = new MediatorLiveData<>();
+    public MediatorLiveData<SpecificCardsRow> boardData = new MediatorLiveData<>();
+    public MediatorLiveData<List<CardRow>> inputCardsViewData = new MediatorLiveData<>();
 
     public Thread monteCarloThread = null;
     public Thread exactCalcThread = null;
@@ -28,33 +33,93 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             return;
         }
 
-        allCardsData.addSource(cardRows, value -> updateAllCardsData());
-        allCardsData.addSource(stats, value -> updateAllCardsData());
-        allCardsData.addSource(selectedCard, value -> updateAllCardsData());
+        recyclerViewData.addSource(playerCardRows, value -> updateRecyclerViewData());
+        recyclerViewData.addSource(stats, value -> updateRecyclerViewData());
+        recyclerViewData.addSource(selectedCard, value -> updateRecyclerViewData());
+
+        boardData.addSource(boardCardRow, value -> updateBoardData());
+        boardData.addSource(selectedCard, value -> updateBoardData());
+
+        inputCardsViewData.addSource(boardCardRow, value -> updateInputCardsViewData());
+        inputCardsViewData.addSource(playerCardRows, value -> updateInputCardsViewData());
 
         this.cardsPerHand = cardsPerHand;
 
-        List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(null, 5));
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
-        cardRows.setValue(cardRowList);
+        boardCardRow.setValue(new SpecificCardsRow(null, 5));
 
+        List<CardRow> cardRowList = new ArrayList<>();
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
+        playerCardRows.setValue(cardRowList);
+
+        setSelectedCardPosition(0, 0);
         stats.setValue(new double[][]{getInitialStats(), getInitialStats()});
     }
 
     public abstract double[] getInitialStats();
 
-    private void updateAllCardsData() {
+
+    public int[] getSelectedCardPosition() {
+        int[] selectedCard = this.selectedCard.getValue();
+
+        if (selectedCard == null) {
+            return null;
+        }
+
+        if (Objects.requireNonNull(boardCardRow.getValue()).id == selectedCard[0]) {
+            return new int[]{-1, selectedCard[1]};
+        }
+
+        List<CardRow> cardRows = this.playerCardRows.getValue();
+        for (int rowIdx = 0; rowIdx < Objects.requireNonNull(cardRows).size(); rowIdx++) {
+            if (cardRows.get(rowIdx).id == selectedCard[0]) {
+                return new int[]{rowIdx, selectedCard[1]};
+            }
+        }
+
+        return null;
+    }
+
+    public void setSelectedCardPosition(Integer selectedRowIdx, Integer selectedCardIdx) {
+        if (selectedRowIdx == null) {
+            selectedCard.setValue(null);
+        } else if (selectedRowIdx == -1) {
+            selectedCard.setValue(new int[]{Objects.requireNonNull(boardCardRow.getValue()).id, selectedCardIdx});
+        } else {
+            selectedCard.setValue(new int[]{Objects.requireNonNull(this.playerCardRows.getValue()).get(selectedRowIdx).id, selectedCardIdx});
+        }
+    }
+
+    private void updateInputCardsViewData() {
+        List<CardRow> newCardRows = getPlayerCardRowsCopy();
+        SpecificCardsRow newCardRow = Objects.requireNonNull(boardCardRow.getValue()).copy();
+        newCardRows.add(newCardRow);
+        inputCardsViewData.setValue(newCardRows);
+    }
+
+    private void updateBoardData() {
+        int[] selectedCardArray = getSelectedCardPosition();
+        SpecificCardsRow newCardRow = Objects.requireNonNull(boardCardRow.getValue()).copy();
+
+        if (selectedCardArray != null && selectedCardArray[0] == -1) {
+            newCardRow.selectedCard = selectedCardArray[1];
+        } else {
+            newCardRow.selectedCard = null;
+        }
+
+        boardData.setValue(newCardRow);
+    }
+
+    private void updateRecyclerViewData() {
         double[][] statsMatrix = stats.getValue();
-        int[] selectedCardArray = selectedCard.getValue();
-        List<CardRow> newCardRows = getCardRowsCopy();
+        int[] selectedCardArray = getSelectedCardPosition();
+        List<CardRow> newCardRows = getPlayerCardRowsCopy();
 
         for (int rowIdx = 0; rowIdx < newCardRows.size(); rowIdx++) {
             CardRow newCardRow = newCardRows.get(rowIdx);
 
-            if (statsMatrix != null && rowIdx > 0 && rowIdx - 1 < statsMatrix.length) {
-                newCardRow.stats = statsMatrix[rowIdx - 1];
+            if (statsMatrix != null && rowIdx < statsMatrix.length) {
+                newCardRow.stats = statsMatrix[rowIdx];
             } else {
                 newCardRow.stats = null;
             }
@@ -68,7 +133,7 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             }
         }
 
-        allCardsData.setValue(newCardRows);
+        recyclerViewData.setValue(newCardRows);
     }
 
     public void calculateOdds() {
@@ -94,8 +159,8 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
     public abstract Thread createMonteCarloThread();
     public abstract Thread createExactCalcThread();
 
-    public List<CardRow> getCardRowsCopy() {
-        List<CardRow> cardRows = this.cardRows.getValue();
+    public List<CardRow> getPlayerCardRowsCopy() {
+        List<CardRow> cardRows = this.playerCardRows.getValue();
         assert cardRows != null;
 
         List<CardRow> newCardRows = new ArrayList<>();

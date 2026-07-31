@@ -18,22 +18,22 @@ public abstract class OmahaCalc extends Calculation{
         this.cardsPerHand = cardsPerHand;
     }
 
-    public String[][] convertPlayerCardsToStr(List<CardRow> cardRows) {
-        String[][] playerCards = new String[cardRows.size() - 1][];
+    public String[][] convertPlayerCardsToStr(List<CardRow> playerCardRows) {
+        String[][] playerCards = new String[playerCardRows.size()][];
 
-        for (int i = 1; i < cardRows.size(); i++) {
-            playerCards[i - 1] = ((SpecificCardsRow) cardRows.get(i)).convertOmahaCardsToStr();
+        for (int i = 0; i < playerCardRows.size(); i++) {
+            playerCards[i] = ((SpecificCardsRow) playerCardRows.get(i)).convertOmahaCardsToStr();
         }
 
         return playerCards;
     }
 
-    public void calculate(List<CardRow> cardRows, OmahaProgressListener omahaProgressListener) throws InterruptedException {
-        initialiseVariables(cardRows);
+    public void calculate(SpecificCardsRow boardCardRow, List<CardRow> playerCardRows, OmahaProgressListener omahaProgressListener) throws InterruptedException {
+        initialiseVariables(playerCardRows);
 
-        String[] boardCards = ((SpecificCardsRow) cardRows.get(0)).convertOmahaCardsToStr();
+        String[] boardCards = boardCardRow.convertOmahaCardsToStr();
 
-        String[][] playerCards = convertPlayerCardsToStr(cardRows);
+        String[][] playerCards = convertPlayerCardsToStr(playerCardRows);
 
         String[] deck = Poker.remdeck(playerCards, boardCards);
 
