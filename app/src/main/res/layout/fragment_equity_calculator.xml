@@ -50,40 +50,14 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
-    <TextView
-        android:id="@+id/flop_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#696969"
-        android:gravity="center_horizontal"
-        android:text="@string/flop"
+    <Space
+        android:id="@+id/space_above_board"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/guideline_1"
-        app:layout_constraintTop_toBottomOf="@id/home_button" />
-
-    <TextView
-        android:id="@+id/turn_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#696969"
-        android:gravity="center_horizontal"
-        android:text="@string/turn"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintLeft_toRightOf="@id/guideline_1"
-        app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        app:layout_constraintTop_toBottomOf="@id/home_button" />
-
-    <TextView
-        android:id="@+id/river_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#696969"
-        android:gravity="center_horizontal"
-        android:text="@string/river"
-        app:layout_constraintLeft_toRightOf="@id/guideline_2"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_button" />
+        app:layout_constraintTop_toBottomOf="@id/home_button"
+        app:layout_constraintBottom_toTopOf="@id/flop1" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop1"
@@ -91,7 +65,7 @@
         android:contentDescription="@string/flop1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/flop2"
-        app:layout_constraintTop_toBottomOf="@id/flop_text" />
+        app:layout_constraintTop_toBottomOf="@id/space_above_board" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop2"
@@ -99,7 +73,7 @@
         android:contentDescription="@string/flop2"
         app:layout_constraintLeft_toRightOf="@id/flop1"
         app:layout_constraintRight_toLeftOf="@id/flop3"
-        app:layout_constraintTop_toBottomOf="@id/flop_text" />
+        app:layout_constraintTop_toBottomOf="@id/space_above_board" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop3"
@@ -107,7 +81,7 @@
         android:contentDescription="@string/flop3"
         app:layout_constraintLeft_toRightOf="@id/flop2"
         app:layout_constraintRight_toLeftOf="@id/guideline_1"
-        app:layout_constraintTop_toBottomOf="@id/flop_text" />
+        app:layout_constraintTop_toBottomOf="@id/space_above_board" />
 
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -116,7 +90,7 @@
         android:contentDescription="@string/card_turn"
         app:layout_constraintLeft_toRightOf="@id/guideline_1"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
-        app:layout_constraintTop_toBottomOf="@id/turn_text" />
+        app:layout_constraintTop_toBottomOf="@id/space_above_board" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/river"
@@ -124,7 +98,7 @@
         android:contentDescription="@string/card_river"
         app:layout_constraintLeft_toRightOf="@id/guideline_2"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/river_text" />
+        app:layout_constraintTop_toBottomOf="@id/space_above_board" />
 
     <TextView
         android:id="@+id/playersremaining"
@@ -175,7 +149,7 @@
         app:layout_constraintTop_toBottomOf="@id/res_desc"
         app:layout_constraintBottom_toTopOf="@id/input_cards" />
 
-    <View
+    <Space
         android:id="@+id/button_unknown_spacer"
         android:layout_width="0dp"
         android:layout_height="0dp"

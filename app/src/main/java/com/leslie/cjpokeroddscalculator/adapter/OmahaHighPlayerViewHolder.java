@@ -17,9 +17,8 @@ public class OmahaHighPlayerViewHolder extends PlayerViewHolder {
         OmahaHighPlayerRowBinding omahaHighBinding = (OmahaHighPlayerRowBinding) binding;
         omahaHighBinding.getRoot().setOnClickListener(v -> listener.onHideCardSelector());
 
-        this.cardList = AndroidStatic.createOmahaCardButtons(omahaHighBinding, omahaHighBinding.getRoot(), omahaHighBinding.playerText, omahaHighBinding.statsButton, cardsPerHand);
+        this.cardList = AndroidStatic.createOmahaCardButtons(omahaHighBinding, omahaHighBinding.getRoot(), omahaHighBinding.spaceAboveCards, omahaHighBinding.spaceBelowCards, omahaHighBinding.statsButton, cardsPerHand);
 
-        this.playerText = omahaHighBinding.playerText;
         this.removeButton = omahaHighBinding.remove;
         this.statsButton = omahaHighBinding.statsButton;
         this.statsView = omahaHighBinding.statsView.getRoot();

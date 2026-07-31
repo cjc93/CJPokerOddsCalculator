@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.WindowMetrics;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import android.widget.Space;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -67,7 +69,7 @@ public class AndroidStatic {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);
     }
 
-    public static List<ShapeableImageView> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, TextView playerText, MaterialButton statsButton, int cardsPerHand) {
+    public static List<ShapeableImageView> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, Space spaceAboveCards, Space spaceBelowCards, MaterialButton statsButton, int cardsPerHand) {
         List<ShapeableImageView> cardList = new ArrayList<>();
 
         for (int i = 0; i < cardsPerHand; i++) {
@@ -89,15 +91,15 @@ public class AndroidStatic {
             );
 
             if (i == 0) {
-                layoutParams.topToBottom = playerText.getId();
+                layoutParams.topToBottom = spaceAboveCards.getId();
                 layoutParams.leftToLeft = ConstraintSet.PARENT_ID;
                 layoutParams.rightToLeft = cardList.get(i + 1).getId();
             } else if (i == cardsPerHand - 1) {
-                layoutParams.topToBottom = playerText.getId();
+                layoutParams.topToBottom = spaceAboveCards.getId();
                 layoutParams.leftToRight = cardList.get(i - 1).getId();
-                layoutParams.rightToRight = playerText.getId();
+                layoutParams.rightToRight = spaceAboveCards.getId();
             } else {
-                layoutParams.topToBottom = playerText.getId();
+                layoutParams.topToBottom = spaceAboveCards.getId();
                 layoutParams.leftToRight = cardList.get(i - 1).getId();
                 layoutParams.rightToLeft = cardList.get(i + 1).getId();
             }
@@ -107,9 +109,13 @@ public class AndroidStatic {
             playerRow.addView(cardList.get(i));
         }
 
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) statsButton.getLayoutParams();
-        layoutParams.bottomToBottom = cardList.get(0).getId();
-        statsButton.setLayoutParams(layoutParams);
+        ConstraintLayout.LayoutParams spaceLayoutParams = (ConstraintLayout.LayoutParams) spaceBelowCards.getLayoutParams();
+        spaceLayoutParams.topToBottom = cardList.get(0).getId();
+        spaceBelowCards.setLayoutParams(spaceLayoutParams);
+
+        ConstraintLayout.LayoutParams statsLayoutParams = (ConstraintLayout.LayoutParams) statsButton.getLayoutParams();
+        statsLayoutParams.bottomToBottom = spaceBelowCards.getId();
+        statsButton.setLayoutParams(statsLayoutParams);
 
         return cardList;
     }
