@@ -12,16 +12,20 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/player_text"
-        android:text="@string/player"
-        android:gravity="center_horizontal"
+    <Space
+        android:id="@+id/space_above_cards"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#696969"
+        android:layout_height="8dp"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintWidth_percent="0.8"/>
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Space
+        android:id="@+id/space_below_cards"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintWidth_percent="0.8" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove"
@@ -38,7 +42,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintBottom_toTopOf="@id/stats_button"
-        app:layout_constraintLeft_toRightOf="@id/player_text"
+        app:layout_constraintLeft_toRightOf="@id/space_above_cards"
         app:layout_constraintRight_toRightOf="parent" />
 
     <com.google.android.material.button.MaterialButton
@@ -54,7 +58,7 @@
         app:cornerRadius="10dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@id/remove"
-        app:layout_constraintLeft_toRightOf="@id/player_text"
+        app:layout_constraintLeft_toRightOf="@id/space_above_cards"
         app:layout_constraintRight_toRightOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView

@@ -39,7 +39,6 @@ public class TexasHoldemPlayerViewHolder extends PlayerViewHolder {
 
         this.cardList = Arrays.asList(texasHoldemBinding.card1, texasHoldemBinding.card2);
 
-        this.playerText = texasHoldemBinding.playerText;
         this.removeButton = texasHoldemBinding.remove;
         this.statsButton = texasHoldemBinding.statsButton;
         this.statsView = texasHoldemBinding.statsView.getRoot();

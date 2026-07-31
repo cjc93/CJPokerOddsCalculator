@@ -18,7 +18,6 @@ import java.util.List;
 public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
     public PlayerRowInteractionListener listener;
 
-    public TextView playerText;
     public List<ShapeableImageView> cardList;
     public MaterialButton removeButton;
     public MaterialButton statsButton;
@@ -43,9 +42,6 @@ public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(CardRow cardRow) {
-        // TODO: this doesn't get updated sometimes
-        playerText.setText(playerText.getContext().getString(R.string.player, getBindingAdapterPosition() + 1));
-
         statsView.setVisibility(cardRow.isStatsVisible ? View.VISIBLE : View.GONE);
 
         for (int statsIdx = 0; statsIdx < statsTextViewList.size(); statsIdx++) {
