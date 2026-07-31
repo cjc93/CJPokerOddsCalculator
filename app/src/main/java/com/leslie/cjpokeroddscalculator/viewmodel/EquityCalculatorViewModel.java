@@ -14,8 +14,9 @@ import java.util.List;
 public abstract class EquityCalculatorViewModel extends ViewModel {
     public MutableLiveData<List<CardRow>> cardRows = new MutableLiveData<>();
     public MutableLiveData<double[][]> stats = new MutableLiveData<>();
+    public MutableLiveData<int[]> selectedCard = new MutableLiveData<>(new int[]{1, 0});
     public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
-    public MediatorLiveData<List<CardRow>> recyclerViewData = new MediatorLiveData<>();
+    public MediatorLiveData<List<CardRow>> allCardsData = new MediatorLiveData<>();
 
     public Thread monteCarloThread = null;
     public Thread exactCalcThread = null;
@@ -27,15 +28,16 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             return;
         }
 
-        recyclerViewData.addSource(cardRows, value -> updateRecyclerViewData());
-        recyclerViewData.addSource(stats, value -> updateRecyclerViewData());
+        allCardsData.addSource(cardRows, value -> updateAllCardsData());
+        allCardsData.addSource(stats, value -> updateAllCardsData());
+        allCardsData.addSource(selectedCard, value -> updateAllCardsData());
 
         this.cardsPerHand = cardsPerHand;
 
         List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(null, 5, null));
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand, 0));
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand, null));
+        cardRowList.add(new SpecificCardsRow(null, 5));
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
+        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
         cardRows.setValue(cardRowList);
 
         stats.setValue(new double[][]{getInitialStats(), getInitialStats()});
@@ -43,19 +45,30 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
 
     public abstract double[] getInitialStats();
 
-    private void updateRecyclerViewData() {
+    private void updateAllCardsData() {
         double[][] statsMatrix = stats.getValue();
-
+        int[] selectedCardArray = selectedCard.getValue();
         List<CardRow> newCardRows = getCardRowsCopy();
-        for (int rowIdx = 1; rowIdx < newCardRows.size(); rowIdx++) {
-            if (statsMatrix != null && rowIdx - 1 < statsMatrix.length) {
-                newCardRows.get(rowIdx).stats = statsMatrix[rowIdx - 1];
+
+        for (int rowIdx = 0; rowIdx < newCardRows.size(); rowIdx++) {
+            CardRow newCardRow = newCardRows.get(rowIdx);
+
+            if (statsMatrix != null && rowIdx > 0 && rowIdx - 1 < statsMatrix.length) {
+                newCardRow.stats = statsMatrix[rowIdx - 1];
             } else {
-                newCardRows.get(rowIdx).stats = null;
+                newCardRow.stats = null;
+            }
+
+            if (newCardRow instanceof SpecificCardsRow specificCardsRow) {
+                if (selectedCardArray != null && rowIdx == selectedCardArray[0]) {
+                    specificCardsRow.selectedCard = selectedCardArray[1];
+                } else {
+                    specificCardsRow.selectedCard = null;
+                }
             }
         }
 
-        recyclerViewData.setValue(newCardRows);
+        allCardsData.setValue(newCardRows);
     }
 
     public void calculateOdds() {
@@ -91,39 +104,6 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
             newCardRows.add(copy);
         }
         return newCardRows;
-    }
-
-    public int[] getSelectedCardPosition() {
-        List<CardRow> cardRows = this.cardRows.getValue();
-        if (cardRows != null) {
-            for (int rowIdx = 0; rowIdx < cardRows.size(); rowIdx++) {
-                if (cardRows.get(rowIdx) instanceof SpecificCardsRow specificCardsRow) {
-                    if (specificCardsRow.selectedCard != null) {
-                        return new int[]{rowIdx, specificCardsRow.selectedCard};
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public void setSelectedCardPosition(Integer selectedRowIdx, Integer selectedCardIdx) {
-        List<CardRow> newCardRows = getCardRowsCopy();
-        setSelectedCardPositionInCardRows(newCardRows, selectedRowIdx, selectedCardIdx);
-        this.cardRows.setValue(newCardRows);
-    }
-
-    public void setSelectedCardPositionInCardRows(List<CardRow> cardRows, Integer selectedRowIdx, Integer selectedCardIdx) {
-        for (int rowIdx = 0; rowIdx < cardRows.size(); rowIdx++) {
-            if (cardRows.get(rowIdx) instanceof SpecificCardsRow specificCardsRow) {
-                if (selectedRowIdx != null && rowIdx == selectedRowIdx) {
-                    specificCardsRow.selectedCard = selectedCardIdx;
-                } else {
-                    specificCardsRow.selectedCard = null;
-                }
-            }
-        }
     }
 
     @Override

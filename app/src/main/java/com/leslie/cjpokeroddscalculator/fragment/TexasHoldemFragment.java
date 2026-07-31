@@ -81,13 +81,15 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         List<CardRow> newCardRows = viewModel.getCardRowsCopy();
         if (newCardRows.get(rowIdx) instanceof SpecificCardsRow) {
             newCardRows.set(rowIdx, new RangeRow(newCardRows.get(rowIdx).isStatsVisible));
-            viewModel.setSelectedCardPositionInCardRows(newCardRows, null, null);
-            calculateOdds(newCardRows);
+            viewModel.cardRows.setValue(newCardRows);
+            viewModel.selectedCard.setValue(null);
+            calculateOdds();
             onShowRangeSelector(rowIdx);
         } else {
-            newCardRows.set(rowIdx, new SpecificCardsRow(newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand, 0));
-            viewModel.setSelectedCardPositionInCardRows(newCardRows, rowIdx, 0);
-            calculateOdds(newCardRows);
+            newCardRows.set(rowIdx, new SpecificCardsRow(newCardRows.get(rowIdx).isStatsVisible, viewModel.cardsPerHand));
+            viewModel.cardRows.setValue(newCardRows);
+            viewModel.selectedCard.setValue(new int[]{rowIdx, 0});
+            calculateOdds();
         }
     }
 
@@ -111,10 +113,11 @@ public class TexasHoldemFragment extends EquityCalculatorFragment {
         Integer selectedRangePosition = texasHoldemViewModel.selectedRangePosition;
 
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
-
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 
-        calculateOdds(newCardRows);
+        viewModel.cardRows.setValue(newCardRows);
+
+        calculateOdds();
 
         texasHoldemViewModel.selectedRangePosition = null;
     }

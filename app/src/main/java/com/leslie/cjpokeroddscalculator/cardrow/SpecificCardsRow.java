@@ -12,10 +12,8 @@ public class SpecificCardsRow extends CardRow {
     public String[] cards;
     public Integer selectedCard;
 
-    public SpecificCardsRow(Boolean isStatsVisible, int numOfCards, Integer selectedCard) {
+    public SpecificCardsRow(Boolean isStatsVisible, int numOfCards) {
         super(isStatsVisible);
-
-        this.selectedCard = selectedCard;
 
         cards = new String[numOfCards];
 
@@ -73,9 +71,10 @@ public class SpecificCardsRow extends CardRow {
 
     @Override
     public CardRow copy() {
-        SpecificCardsRow copy = new SpecificCardsRow(isStatsVisible, cards.length, selectedCard);
+        SpecificCardsRow copy = new SpecificCardsRow(isStatsVisible, cards.length);
         copy.id = this.id;
         copy.stats = copyStats();
+        copy.selectedCard = this.selectedCard;
         System.arraycopy(this.cards, 0, copy.cards, 0, this.cards.length);
         return copy;
     }
