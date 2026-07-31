@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,7 +8,7 @@ public abstract class CardRow {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1);
 
     public int id;
-    public List<Double> stats;
+    public double[] stats;
     public Boolean isStatsVisible;
 
     public CardRow(Boolean isStatsVisible) {
@@ -27,10 +26,10 @@ public abstract class CardRow {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CardRow cardRow = (CardRow) o;
-        return Objects.equals(stats, cardRow.stats) && Objects.equals(isStatsVisible, cardRow.isStatsVisible);
+        return Arrays.equals(stats, cardRow.stats) && Objects.equals(isStatsVisible, cardRow.isStatsVisible);
     }
 
-    protected List<Double> copyStats() {
-        return stats == null ? null : new ArrayList<>(stats);
+    protected double[] copyStats() {
+        return stats == null ? null : stats.clone();
     }
 }

@@ -7,12 +7,12 @@ import java.util.List;
 
 public class TexasHoldemExactCalc extends TexasHoldemCalc {
 
-    public void calculate(List<CardRow> cardRows, TexasHoldemProgressListener texasHoldemProgressListener) throws InterruptedException {
-        initialiseVariables(cardRows, texasHoldemProgressListener);
+    public void calculate(SpecificCardsRow boardCardRow, List<CardRow> playerCardRows, TexasHoldemProgressListener texasHoldemProgressListener) throws InterruptedException {
+        initialiseVariables(playerCardRows, texasHoldemProgressListener);
 
-        String boardCards = convertBoardCardsToStr(((SpecificCardsRow) cardRows.get(0)).cards);
+        String boardCards = convertBoardCardsToStr(boardCardRow.cards);
 
-        String[] playerCards = convertPlayerCardsToStr(cardRows);
+        String[] playerCards = convertPlayerCardsToStr(playerCardRows);
 
         nativeExactCalc(playerCards, boardCards);
     }

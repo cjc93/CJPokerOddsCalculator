@@ -23,7 +23,6 @@ import androidx.viewbinding.ViewBinding;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.leslie.cjpokeroddscalculator.R;
-import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
 import java.util.ArrayList;
@@ -57,14 +56,10 @@ public class AndroidStatic {
         return displayMetrics;
     }
 
-    public static void initialiseCardButtons(List<ShapeableImageView> cardButtons, int boardCardMaxHeight, int cardMaxWidth, int rowIdx, PlayerRowInteractionListener listener) {
+    public static void setCardSize(List<ShapeableImageView> cardButtons, int boardCardMaxHeight, int cardMaxWidth) {
         for (int i = 0; i < cardButtons.size(); i++) {
-            ShapeableImageView card = cardButtons.get(i);
-            card.setMaxHeight(boardCardMaxHeight);
-            card.setMaxWidth(cardMaxWidth);
-
-            int cardIdx = i;
-            card.setOnClickListener(v -> listener.onSelectCard(rowIdx, cardIdx));
+            cardButtons.get(i).setMaxHeight(boardCardMaxHeight);
+            cardButtons.get(i).setMaxWidth(cardMaxWidth);
         }
     }
 

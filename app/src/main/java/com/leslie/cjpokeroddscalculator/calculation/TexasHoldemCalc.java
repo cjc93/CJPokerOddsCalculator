@@ -11,8 +11,8 @@ public class TexasHoldemCalc extends Calculation{
 
     public TexasHoldemProgressListener texasHoldemProgressListener;
 
-    public void initialiseVariables(List<CardRow> cardRows, TexasHoldemProgressListener texasHoldemProgressListener) {
-        super.initialiseVariables(cardRows);
+    public void initialiseVariables(List<CardRow> playerCardRows, TexasHoldemProgressListener texasHoldemProgressListener) {
+        super.initialiseVariables(playerCardRows);
         this.texasHoldemProgressListener = texasHoldemProgressListener;
     }
 
@@ -24,11 +24,11 @@ public class TexasHoldemCalc extends Calculation{
         return String.valueOf(boardCards);
     }
 
-    public String[] convertPlayerCardsToStr(List<CardRow> cardRows) {
-        String[] playerCards = new String[cardRows.size() - 1];
+    public String[] convertPlayerCardsToStr(List<CardRow> playerCardRows) {
+        String[] playerCards = new String[playerCardRows.size()];
 
-        for (int i = 1; i < cardRows.size(); i++) {
-            playerCards[i - 1] = cardRows.get(i).convertTexasHoldemPlayerCardsToStr();
+        for (int i = 0; i < playerCardRows.size(); i++) {
+            playerCards[i] = playerCardRows.get(i).convertTexasHoldemPlayerCardsToStr();
         }
 
         return playerCards;
