@@ -10,13 +10,13 @@ import com.leslie.cjpokeroddscalculator.adapter.OmahaHiLoPlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.databinding.OmahaHiloPlayerRowBinding;
-import com.leslie.cjpokeroddscalculator.viewmodel.EquityCalculatorViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHiLoViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.OmahaHighViewModel;
 
 public class OmahaHiLoFragment extends OmahaHighFragment {
 
     @Override
-    protected Class<? extends EquityCalculatorViewModel> getViewModelClass() {
+    protected Class<? extends OmahaHighViewModel> getViewModelClass() {
         return OmahaHiLoViewModel.class;
     }
 
