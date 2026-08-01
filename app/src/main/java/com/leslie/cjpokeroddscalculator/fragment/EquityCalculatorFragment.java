@@ -60,7 +60,6 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
     public int boardCardMaxWidth;
 
     public String fragmentName;
-    public int fragmentId;
 
     public int maxPlayers;
 

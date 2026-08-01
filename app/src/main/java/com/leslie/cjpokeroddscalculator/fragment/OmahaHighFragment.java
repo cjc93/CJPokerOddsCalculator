@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.OmahaHighPlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;
@@ -27,8 +26,6 @@ public class OmahaHighFragment extends EquityCalculatorFragment<OmahaHighViewMod
 
         assert getArguments() != null;
         viewModel.init(getArguments().getInt("cardsPerHand"));
-
-        fragmentId = R.id.OmahaHighFragment;
 
         if (viewModel.cardsPerHand == 5) {
             maxPlayers = 9;

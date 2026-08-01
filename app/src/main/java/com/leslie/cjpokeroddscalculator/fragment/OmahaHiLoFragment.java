@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.OmahaHiLoPlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;
@@ -23,8 +22,6 @@ public class OmahaHiLoFragment extends OmahaHighFragment {
     @Override
     public void initialiseVariables() {
         super.initialiseVariables();
-
-        fragmentId = R.id.OmahaHiLoFragment;
 
         if (viewModel.cardsPerHand == 5) {
             fragmentName = "OmahaHiLo5";

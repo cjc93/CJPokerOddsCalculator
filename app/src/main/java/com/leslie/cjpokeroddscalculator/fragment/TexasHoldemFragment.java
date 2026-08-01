@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.dpToPx;
-import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigateWithArgs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -57,7 +57,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
 
         maxPlayers = 10;
         fragmentName = "TexasHoldem";
-        fragmentId = R.id.TexasHoldemFragment;
         rangeCardSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250) - dpToPx(requireContext(), 10);
     }
 
@@ -99,7 +98,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
         Bundle args = new Bundle();
         args.putString("matrix", gson.toJson(rangeRow.matrix));
 
-        navControllerNavigateWithArgs(this, fragmentId, R.id.action_TexasHoldemFragment_to_RangeSelectorFragment, args);
+        NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_RangeSelectorFragment, args);
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
