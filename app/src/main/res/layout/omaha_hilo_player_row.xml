@@ -29,38 +29,21 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="@string/remove_player"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_margin="1dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:padding="0dp"
-        app:cornerRadius="10dp"
-        app:layout_constraintDimensionRatio="1:1"
+        app:icon="@drawable/outline_close_24"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintBottom_toTopOf="@id/stats_button"
         app:layout_constraintLeft_toRightOf="@id/space_above_cards"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/SideOmahaIconButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/stats_button"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="@string/stats"
-        android:textSize="13sp"
-        android:layout_margin="1dp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:padding="0dp"
-        app:cornerRadius="10dp"
-        app:layout_constraintDimensionRatio="1:1"
+        app:icon="@drawable/outline_expand_more_24"
         app:layout_constraintTop_toBottomOf="@id/remove"
         app:layout_constraintBottom_toBottomOf="@id/space_below_cards"
         app:layout_constraintLeft_toRightOf="@id/space_above_cards"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/SideOmahaIconButton" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/win_text"

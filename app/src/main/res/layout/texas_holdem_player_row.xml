@@ -166,50 +166,30 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:text="@string/remove_player"
-        android:minWidth="0dp"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:padding="0dp"
-        app:cornerRadius="5dp"
-        android:insetBottom="0dp"
-        android:insetTop="0dp"
-        android:layout_margin="1dp"
+        app:icon="@drawable/outline_close_24"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintBottom_toTopOf="@id/hand_range_button"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/SideTexasHoldemIconButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/hand_range_button"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
         android:text="@string/range"
         android:textSize="11sp"
-        android:padding="0dp"
-        app:cornerRadius="5dp"
-        android:insetBottom="0dp"
-        android:insetTop="0dp"
-        android:layout_margin="1dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/remove"
         app:layout_constraintBottom_toTopOf="@id/stats_button"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/SideTexasHoldemButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/stats_button"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:text="@string/stats"
-        android:textSize="11sp"
-        android:padding="0dp"
-        app:cornerRadius="5dp"
-        android:insetBottom="0dp"
-        android:insetTop="0dp"
-        android:layout_margin="1dp"
+        app:icon="@drawable/outline_expand_more_24"
         app:layout_constraintTop_toBottomOf="@id/hand_range_button"
         app:layout_constraintBottom_toBottomOf="@id/space_below_cards"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        style="@style/SideTexasHoldemIconButton" />
 
     <include
         android:id="@+id/stats_view"
