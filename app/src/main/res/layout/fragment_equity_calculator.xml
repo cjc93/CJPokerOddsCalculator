@@ -135,25 +135,22 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addplayer"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:maxLines="1"
-        android:text="@string/add_player"
+        app:icon="@drawable/baseline_person_add_35"
         app:layout_constraintLeft_toRightOf="@id/playerremaining_spacer"
         app:layout_constraintRight_toLeftOf="@id/clear"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
-        app:layout_constraintBottom_toTopOf="@id/input_cards" />
+        app:layout_constraintBottom_toTopOf="@id/input_cards"
+        style="@style/BorderedIconButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/clear"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="@string/clear"
+        app:icon="@drawable/outline_refresh_35"
         app:layout_constraintLeft_toRightOf="@id/addplayer"
         app:layout_constraintRight_toLeftOf="@id/button_unknown_spacer"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
-        app:layout_constraintBottom_toTopOf="@id/input_cards" />
+        app:layout_constraintBottom_toTopOf="@id/input_cards"
+        style="@style/BorderedIconButton" />
 
     <Space
         android:id="@+id/button_unknown_spacer"
