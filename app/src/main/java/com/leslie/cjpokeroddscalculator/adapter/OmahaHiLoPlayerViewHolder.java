@@ -1,7 +1,9 @@
 package com.leslie.cjpokeroddscalculator.adapter;
 
+import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.widget.TextView;
+
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -31,11 +33,11 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
 
         initialiseViews(boardCardMaxHeight, cardMaxWidth);
 
-        TextView lowText = new TextView(omahaHiloBinding.getRoot().getContext(), null, 0, R.style.StatsText);
+        MaterialTextView lowText = new MaterialTextView(new ContextThemeWrapper(omahaHiloBinding.getRoot().getContext(), R.style.StatsText));
         lowText.setId(View.generateViewId());
         lowText.setText(R.string.low);
 
-        TextView lowPercent = new TextView(omahaHiloBinding.getRoot().getContext(), null, 0, R.style.StatsText);
+        MaterialTextView lowPercent = new MaterialTextView(new ContextThemeWrapper(omahaHiloBinding.getRoot().getContext(), R.style.StatsText));
         lowPercent.setId(View.generateViewId());
 
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(

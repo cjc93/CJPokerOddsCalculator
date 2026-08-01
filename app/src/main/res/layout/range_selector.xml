@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/hands_perc"
         android:text="@string/_0_0"
         android:layout_width="0dp"
@@ -29,7 +29,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:labelBehavior="gone" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/saved_hand_range_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/saved_hand_range_initial_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
         app:layout_constraintBottom_toTopOf="@id/done"
         android:background="@android:color/darker_gray"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/suit_selector_text"
         android:text="@string/select_a_hand_to_choose_suits"
         app:layout_constraintTop_toBottomOf="@id/saved_hand_range_divider"

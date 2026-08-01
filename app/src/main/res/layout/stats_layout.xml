@@ -33,7 +33,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/high_card_text"
         android:text="@string/high_card"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,14 +41,14 @@
         app:layout_constraintRight_toLeftOf="@id/high_card"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/high_card"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/high_card_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/flush_text"
         android:text="@string/flush"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,14 +56,14 @@
         app:layout_constraintRight_toLeftOf="@id/flush"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/flush"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/flush_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/one_pair_text"
         android:text="@string/one_pair"
         app:layout_constraintTop_toBottomOf="@id/high_card_text"
@@ -71,14 +71,14 @@
         app:layout_constraintRight_toLeftOf="@id/one_pair"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/one_pair"
         app:layout_constraintTop_toBottomOf="@id/high_card"
         app:layout_constraintLeft_toRightOf="@id/one_pair_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/full_house_text"
         android:text="@string/full_house"
         app:layout_constraintTop_toBottomOf="@id/flush_text"
@@ -86,14 +86,14 @@
         app:layout_constraintRight_toLeftOf="@id/full_house"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/full_house"
         app:layout_constraintTop_toBottomOf="@id/flush"
         app:layout_constraintLeft_toRightOf="@id/full_house_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/two_pair_text"
         android:text="@string/two_pair"
         app:layout_constraintTop_toBottomOf="@id/one_pair_text"
@@ -101,14 +101,14 @@
         app:layout_constraintRight_toLeftOf="@id/two_pair"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/two_pair"
         app:layout_constraintTop_toBottomOf="@id/one_pair"
         app:layout_constraintLeft_toRightOf="@id/two_pair_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/four_of_a_kind_text"
         android:text="@string/_4_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/full_house_text"
@@ -116,14 +116,14 @@
         app:layout_constraintRight_toLeftOf="@id/four_of_a_kind"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/four_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/full_house"
         app:layout_constraintLeft_toRightOf="@id/four_of_a_kind_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/three_of_a_kind_text"
         android:text="@string/_3_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/two_pair_text"
@@ -131,14 +131,14 @@
         app:layout_constraintRight_toLeftOf="@id/three_of_a_kind"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/three_of_a_kind"
         app:layout_constraintTop_toBottomOf="@id/two_pair"
         app:layout_constraintLeft_toRightOf="@id/three_of_a_kind_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_2"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/straight_flush_text"
         android:text="@string/straight_flush"
         app:layout_constraintTop_toBottomOf="@id/four_of_a_kind_text"
@@ -147,14 +147,14 @@
         app:layout_constraintRight_toLeftOf="@id/straight_flush"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/straight_flush"
         app:layout_constraintTop_toBottomOf="@id/four_of_a_kind"
         app:layout_constraintLeft_toRightOf="@id/straight_flush_text"
         app:layout_constraintRight_toLeftOf="@id/guideline_4"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/straight_text"
         android:text="@string/straight"
         app:layout_constraintTop_toBottomOf="@id/three_of_a_kind_text"
@@ -162,7 +162,7 @@
         app:layout_constraintRight_toLeftOf="@id/straight"
         style="@style/StatsText"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/straight"
         app:layout_constraintTop_toBottomOf="@id/three_of_a_kind"
         app:layout_constraintLeft_toRightOf="@id/straight_text"
