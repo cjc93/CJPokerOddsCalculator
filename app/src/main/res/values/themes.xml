@@ -1,9 +1,7 @@
 <resources>
-    <!-- Base application theme. -->
     <style name="Base.Theme.CJPokerOddsCalculator" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">#449DEF</item>
-        <item name="colorOnPrimary">#000080</item>
-        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorPrimary">#FFFFFF</item>
+        <item name="colorOnPrimary">#000000</item>
     </style>
 
     <style name="Theme.CJPokerOddsCalculator" parent="Base.Theme.CJPokerOddsCalculator" />

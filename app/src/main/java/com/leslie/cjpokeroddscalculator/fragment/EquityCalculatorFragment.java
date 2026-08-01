@@ -1,7 +1,6 @@
 package com.leslie.cjpokeroddscalculator.fragment;
 
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.dpToPx;
-import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.navControllerNavigate;
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.rankStrings;
 import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawableMap;
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.suitStrings;
@@ -14,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.Toast;
 
@@ -59,10 +60,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
 
     public String fragmentName;
     public int fragmentId;
-    public int homeButtonActionId;
 
     public int maxPlayers;
-    public int titleTextId;
 
     public PlayerAdapter playerAdapter;
 
@@ -79,6 +78,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
         viewModel = new ViewModelProvider(this).get(getViewModelClass());
 
         initialiseVariables();
+
+        setupGameSelector();
 
         generateMainLayout();
 
@@ -143,12 +144,6 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
     }
 
     private void setButtonListeners () {
-        equityCalculatorBinding.homeButton.setOnClickListener(v -> {
-            viewModel.killThreads();
-            viewModel.resDesc.setValue(R.string.space);
-            navControllerNavigate(this, fragmentId, homeButtonActionId);
-        });
-
         equityCalculatorBinding.addplayer.setOnClickListener(v -> {
             List<CardRow> newCardRows = viewModel.getPlayerCardRowsCopy();
             if (newCardRows.size() < this.maxPlayers) {
@@ -219,8 +214,6 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
     }
 
     public void generateMainLayout() {
-        equityCalculatorBinding.title.setText(this.titleTextId);
-
         boardButtons = Arrays.asList(
             equityCalculatorBinding.flop1,
             equityCalculatorBinding.flop2,
@@ -417,4 +410,93 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
 
 
     public abstract PlayerAdapter createPlayerAdapter();
+
+    private void setupGameSelector() {
+        String[] gameTypes = new String[]{
+            getString(R.string.texas_hold_em_equity_calculator),
+            getString(R.string.omaha_high_equity_calculator),
+            getString(R.string.omaha_high_5_card_equity_calculator),
+            getString(R.string.omaha_high_6_card_equity_calculator),
+            getString(R.string.omaha_high_low_equity_calculator),
+            getString(R.string.omaha_high_low_5_equity_calculator),
+            getString(R.string.omaha_hi_lo_6_card_equity_calculator)
+        };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, gameTypes) {
+            @NonNull
+            @Override
+            public Filter getFilter() {
+                return new Filter() {
+                    @Override
+                    protected FilterResults performFiltering(CharSequence constraint) {
+                        FilterResults results = new FilterResults();
+                        results.values = gameTypes;
+                        results.count = gameTypes.length;
+                        return results;
+                    }
+
+                    @Override
+                    protected void publishResults(CharSequence constraint, FilterResults results) {
+                        notifyDataSetChanged();
+                    }
+                };
+            }
+        };
+
+        equityCalculatorBinding.gameSelector.setAdapter(adapter);
+        equityCalculatorBinding.gameSelector.setText(getGameTitle(), false);
+        equityCalculatorBinding.gameSelector.setOnDismissListener(() -> equityCalculatorBinding.gameSelector.clearFocus());
+
+        equityCalculatorBinding.gameSelector.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedGame = (String) parent.getItemAtPosition(position);
+            if (selectedGame.equals(getGameTitle())) {
+                return;
+            }
+
+            viewModel.killThreads();
+            viewModel.resDesc.setValue(R.string.space);
+
+            Bundle args = new Bundle();
+            int destinationId;
+
+            if (selectedGame.equals(getString(R.string.texas_hold_em_equity_calculator))) {
+                destinationId = R.id.TexasHoldemFragment;
+            } else if (selectedGame.equals(getString(R.string.omaha_high_equity_calculator))) {
+                destinationId = R.id.OmahaHighFragment;
+                args.putInt("cardsPerHand", 4);
+            } else if (selectedGame.equals(getString(R.string.omaha_high_5_card_equity_calculator))) {
+                destinationId = R.id.OmahaHighFragment;
+                args.putInt("cardsPerHand", 5);
+            } else if (selectedGame.equals(getString(R.string.omaha_high_6_card_equity_calculator))) {
+                destinationId = R.id.OmahaHighFragment;
+                args.putInt("cardsPerHand", 6);
+            } else if (selectedGame.equals(getString(R.string.omaha_high_low_equity_calculator))) {
+                destinationId = R.id.OmahaHiLoFragment;
+                args.putInt("cardsPerHand", 4);
+            } else if (selectedGame.equals(getString(R.string.omaha_high_low_5_equity_calculator))) {
+                destinationId = R.id.OmahaHiLoFragment;
+                args.putInt("cardsPerHand", 5);
+            } else if (selectedGame.equals(getString(R.string.omaha_hi_lo_6_card_equity_calculator))) {
+                destinationId = R.id.OmahaHiLoFragment;
+                args.putInt("cardsPerHand", 6);
+            } else {
+                return;
+            }
+
+            androidx.navigation.fragment.NavHostFragment.findNavController(this).navigate(destinationId, args);
+        });
+    }
+
+    private String getGameTitle() {
+        return switch (fragmentName) {
+            case "TexasHoldem" -> getString(R.string.texas_hold_em_equity_calculator);
+            case "OmahaHigh" -> getString(R.string.omaha_high_equity_calculator);
+            case "OmahaHigh5" -> getString(R.string.omaha_high_5_card_equity_calculator);
+            case "OmahaHigh6" -> getString(R.string.omaha_high_6_card_equity_calculator);
+            case "OmahaHiLo" -> getString(R.string.omaha_high_low_equity_calculator);
+            case "OmahaHiLo5" -> getString(R.string.omaha_high_low_5_equity_calculator);
+            case "OmahaHiLo6" -> getString(R.string.omaha_hi_lo_6_card_equity_calculator);
+            default -> "";
+        };
+    }
 }

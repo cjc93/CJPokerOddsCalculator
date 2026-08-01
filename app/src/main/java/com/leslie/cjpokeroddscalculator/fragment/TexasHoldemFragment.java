@@ -58,9 +58,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
         maxPlayers = 10;
         fragmentName = "TexasHoldem";
         fragmentId = R.id.TexasHoldemFragment;
-        homeButtonActionId = R.id.action_TexasHoldemFragment_to_HomeFragment;
         rangeCardSize = Math.min(boardCardMaxHeight, boardCardMaxWidth * 350 / 250) - dpToPx(requireContext(), 10);
-        titleTextId = R.string.texas_hold_em_equity_calculator;
     }
 
     @Override

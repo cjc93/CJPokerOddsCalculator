@@ -23,7 +23,7 @@ public class OmahaHiLoPlayerViewHolder extends PlayerViewHolder {
         OmahaHiloPlayerRowBinding omahaHiloBinding = (OmahaHiloPlayerRowBinding) binding;
         omahaHiloBinding.getRoot().setOnClickListener(v -> listener.onHideCardSelector());
 
-        this.cardList = AndroidStatic.createOmahaCardButtons(omahaHiloBinding, omahaHiloBinding.getRoot(), omahaHiloBinding.spaceAboveCards, omahaHiloBinding.spaceBelowCards, omahaHiloBinding.statsButton, cardsPerHand);
+        this.cardList = AndroidStatic.createOmahaCardButtons(omahaHiloBinding, omahaHiloBinding.getRoot(), omahaHiloBinding.spaceAboveCards, omahaHiloBinding.spaceBelowCards, cardsPerHand);
 
         this.removeButton = omahaHiloBinding.remove;
         this.statsButton = omahaHiloBinding.statsButton;
