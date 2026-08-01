@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +43,13 @@ public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(CardRow cardRow) {
-        statsView.setVisibility(cardRow.isStatsVisible ? View.VISIBLE : View.GONE);
+        if (cardRow.isStatsVisible) {
+            statsView.setVisibility(View.VISIBLE);
+            statsButton.setIcon(AppCompatResources.getDrawable(statsButton.getContext(), R.drawable.outline_expand_less_24));
+        } else {
+            statsView.setVisibility(View.GONE);
+            statsButton.setIcon(AppCompatResources.getDrawable(statsButton.getContext(), R.drawable.outline_expand_more_24));
+        }
 
         for (int statsIdx = 0; statsIdx < statsTextViewList.size(); statsIdx++) {
             if (cardRow.stats == null) {

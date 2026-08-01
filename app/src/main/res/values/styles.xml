@@ -39,4 +39,40 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">5dp</item>
     </style>
+
+    <style name="SideButton" parent="Widget.Material3.Button">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:layout_margin">1dp</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <style name="SideTexasHoldemButton" parent="SideButton">
+        <item name="android:layout_width">50dp</item>
+        <item name="cornerRadius">5dp</item>
+    </style>
+
+    <style name="SideOmahaButton" parent="SideButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="layout_constraintDimensionRatio">1:1</item>
+    </style>
+
+    <style name="SideTexasHoldemIconButton" parent="SideTexasHoldemButton">
+        <item name="iconGravity">textTop</item>
+        <item name="iconTint">@android:color/white</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="SideOmahaIconButton" parent="SideOmahaButton">
+        <item name="iconGravity">textTop</item>
+        <item name="iconTint">@android:color/white</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+
 </resources>
