@@ -446,7 +446,6 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
 
         equityCalculatorBinding.calculatorSelector.setAdapter(adapter);
         equityCalculatorBinding.calculatorSelector.setText(getCalculatorTitle(), false);
-        equityCalculatorBinding.calculatorSelector.setOnDismissListener(() -> equityCalculatorBinding.calculatorSelector.clearFocus());
 
         equityCalculatorBinding.calculatorSelector.setOnItemClickListener((parent, view, position, id) -> {
             String selectedCalculator = (String) parent.getItemAtPosition(position);
