@@ -1,7 +1,8 @@
 package com.leslie.cjpokeroddscalculator.adapter;
 
 import android.view.View;
-import android.widget.TextView;
+
+import com.google.android.material.textview.MaterialTextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -23,7 +24,7 @@ public abstract class PlayerViewHolder extends RecyclerView.ViewHolder {
     public MaterialButton removeButton;
     public MaterialButton statsButton;
     public ConstraintLayout statsView;
-    public List<TextView> statsTextViewList;
+    public List<MaterialTextView> statsTextViewList;
 
     public PlayerViewHolder(@NonNull View itemView, PlayerRowInteractionListener listener) {
         super(itemView);

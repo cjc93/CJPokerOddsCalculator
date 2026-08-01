@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.WindowMetrics;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -16,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewbinding.ViewBinding;
 
-import com.google.android.material.shape.ShapeAppearanceModel;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 
@@ -51,21 +51,16 @@ public class AndroidStatic {
         List<ShapeableImageView> cardList = new ArrayList<>();
 
         for (int i = 0; i < cardsPerHand; i++) {
-            ShapeableImageView card = new ShapeableImageView(binding.getRoot().getContext(), null, 0);
+            ShapeableImageView card = new ShapeableImageView(new ContextThemeWrapper(binding.getRoot().getContext(), R.style.SelectCardButton));
             card.setId(View.generateViewId());
-            card.setScaleType(ShapeableImageView.ScaleType.FIT_CENTER);
-            card.setAdjustViewBounds(true);
-            int dp5 = dpToPx(binding.getRoot().getContext(), 5);
-            card.setPadding(dp5, dp5, dp5, dp5);
             card.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(card.getContext(), R.color.card_selected)));
-            card.setShapeAppearanceModel(new ShapeAppearanceModel.Builder().setAllCornerSizes(dp5).build());
             cardList.add(card);
         }
 
         for (int i = 0; i < cardsPerHand; i++) {
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
             );
 
             if (i == 0) {

@@ -99,7 +99,7 @@
         app:layout_constraintTop_toBottomOf="@id/flop1"
         app:layout_constraintBottom_toTopOf="@id/res_desc" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/res_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
