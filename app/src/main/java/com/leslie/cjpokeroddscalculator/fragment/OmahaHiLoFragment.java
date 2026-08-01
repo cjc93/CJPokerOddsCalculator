@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
-import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.OmahaHiLoPlayerViewHolder;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerViewHolder;
@@ -24,18 +23,12 @@ public class OmahaHiLoFragment extends OmahaHighFragment {
     public void initialiseVariables() {
         super.initialiseVariables();
 
-        fragmentId = R.id.OmahaHiLoFragment;
-        homeButtonActionId = R.id.action_OmahaHiLoFragment_to_HomeFragment;
-
         if (viewModel.cardsPerHand == 5) {
             fragmentName = "OmahaHiLo5";
-            titleTextId = R.string.omaha_high_low_5_equity_calculator;
         } else if (viewModel.cardsPerHand == 6) {
             fragmentName = "OmahaHiLo6";
-            titleTextId = R.string.omaha_hi_lo_6_card_equity_calculator;
         } else {
             fragmentName = "OmahaHiLo";
-            titleTextId = R.string.omaha_high_low_equity_calculator;
         }
     }
 

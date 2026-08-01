@@ -3,26 +3,19 @@ package com.leslie.cjpokeroddscalculator.util;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowMetrics;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import android.widget.Space;
-import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Guideline;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.viewbinding.ViewBinding;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
@@ -31,23 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class AndroidStatic {
-
-    public static void navControllerNavigate(Fragment fragment, int currentFragmentId, int actionId) {
-        NavController navController = NavHostFragment.findNavController(fragment);
-        if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
-            navController.navigate(actionId);
-        }
-    }
-
-    public static void navControllerNavigateWithArgs(Fragment fragment, int currentFragmentId, int actionId, Bundle args) {
-        NavController navController = NavHostFragment.findNavController(fragment);
-        if (Objects.requireNonNull(navController.getCurrentDestination()).getId() == currentFragmentId) {
-            navController.navigate(actionId, args);
-        }
-    }
 
     public static DisplayMetrics getDisplayMetrics(FragmentActivity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -69,7 +47,7 @@ public class AndroidStatic {
         return Math.round(dp * context.getResources().getDisplayMetrics().density);
     }
 
-    public static List<ShapeableImageView> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, Space spaceAboveCards, Space spaceBelowCards, MaterialButton statsButton, int cardsPerHand) {
+    public static List<ShapeableImageView> createOmahaCardButtons(ViewBinding binding, ConstraintLayout playerRow, Space spaceAboveCards, Space spaceBelowCards, int cardsPerHand) {
         List<ShapeableImageView> cardList = new ArrayList<>();
 
         for (int i = 0; i < cardsPerHand; i++) {
