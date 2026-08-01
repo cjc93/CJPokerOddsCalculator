@@ -2,7 +2,7 @@
     <string name="app_name">Poker Calculator</string>
     <!-- Strings used for fragments for navigation -->
 
-    <string name="players_remaining">Players remaining: %d</string>
+    <string name="players_remaining">x%d</string>
     <string name="two_decimal_perc">%.2f%%</string>
     <string name="hands_perc">%.1f%%</string>
     <string name="flop">Flop</string>
