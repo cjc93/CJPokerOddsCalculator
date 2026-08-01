@@ -25,6 +25,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -79,7 +80,7 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
 
         initialiseVariables();
 
-        setupGameSelector();
+        setupCalculatorSelector();
 
         generateMainLayout();
 
@@ -411,8 +412,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
 
     public abstract PlayerAdapter createPlayerAdapter();
 
-    private void setupGameSelector() {
-        String[] gameTypes = new String[]{
+    private void setupCalculatorSelector() {
+        String[] calculatorTypes = new String[]{
             getString(R.string.texas_hold_em_equity_calculator),
             getString(R.string.omaha_high_equity_calculator),
             getString(R.string.omaha_high_5_card_equity_calculator),
@@ -422,7 +423,7 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
             getString(R.string.omaha_hi_lo_6_card_equity_calculator)
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, gameTypes) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, calculatorTypes) {
             @NonNull
             @Override
             public Filter getFilter() {
@@ -430,8 +431,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
                     @Override
                     protected FilterResults performFiltering(CharSequence constraint) {
                         FilterResults results = new FilterResults();
-                        results.values = gameTypes;
-                        results.count = gameTypes.length;
+                        results.values = calculatorTypes;
+                        results.count = calculatorTypes.length;
                         return results;
                     }
 
@@ -443,13 +444,13 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
             }
         };
 
-        equityCalculatorBinding.gameSelector.setAdapter(adapter);
-        equityCalculatorBinding.gameSelector.setText(getGameTitle(), false);
-        equityCalculatorBinding.gameSelector.setOnDismissListener(() -> equityCalculatorBinding.gameSelector.clearFocus());
+        equityCalculatorBinding.calculatorSelector.setAdapter(adapter);
+        equityCalculatorBinding.calculatorSelector.setText(getCalculatorTitle(), false);
+        equityCalculatorBinding.calculatorSelector.setOnDismissListener(() -> equityCalculatorBinding.calculatorSelector.clearFocus());
 
-        equityCalculatorBinding.gameSelector.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedGame = (String) parent.getItemAtPosition(position);
-            if (selectedGame.equals(getGameTitle())) {
+        equityCalculatorBinding.calculatorSelector.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedCalculator = (String) parent.getItemAtPosition(position);
+            if (selectedCalculator.equals(getCalculatorTitle())) {
                 return;
             }
 
@@ -459,35 +460,35 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
             Bundle args = new Bundle();
             int destinationId;
 
-            if (selectedGame.equals(getString(R.string.texas_hold_em_equity_calculator))) {
+            if (selectedCalculator.equals(getString(R.string.texas_hold_em_equity_calculator))) {
                 destinationId = R.id.TexasHoldemFragment;
-            } else if (selectedGame.equals(getString(R.string.omaha_high_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_high_equity_calculator))) {
                 destinationId = R.id.OmahaHighFragment;
                 args.putInt("cardsPerHand", 4);
-            } else if (selectedGame.equals(getString(R.string.omaha_high_5_card_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_high_5_card_equity_calculator))) {
                 destinationId = R.id.OmahaHighFragment;
                 args.putInt("cardsPerHand", 5);
-            } else if (selectedGame.equals(getString(R.string.omaha_high_6_card_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_high_6_card_equity_calculator))) {
                 destinationId = R.id.OmahaHighFragment;
                 args.putInt("cardsPerHand", 6);
-            } else if (selectedGame.equals(getString(R.string.omaha_high_low_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_high_low_equity_calculator))) {
                 destinationId = R.id.OmahaHiLoFragment;
                 args.putInt("cardsPerHand", 4);
-            } else if (selectedGame.equals(getString(R.string.omaha_high_low_5_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_high_low_5_equity_calculator))) {
                 destinationId = R.id.OmahaHiLoFragment;
                 args.putInt("cardsPerHand", 5);
-            } else if (selectedGame.equals(getString(R.string.omaha_hi_lo_6_card_equity_calculator))) {
+            } else if (selectedCalculator.equals(getString(R.string.omaha_hi_lo_6_card_equity_calculator))) {
                 destinationId = R.id.OmahaHiLoFragment;
                 args.putInt("cardsPerHand", 6);
             } else {
                 return;
             }
 
-            androidx.navigation.fragment.NavHostFragment.findNavController(this).navigate(destinationId, args);
+            NavHostFragment.findNavController(this).navigate(destinationId, args);
         });
     }
 
-    private String getGameTitle() {
+    private String getCalculatorTitle() {
         return switch (fragmentName) {
             case "TexasHoldem" -> getString(R.string.texas_hold_em_equity_calculator);
             case "OmahaHigh" -> getString(R.string.omaha_high_equity_calculator);
