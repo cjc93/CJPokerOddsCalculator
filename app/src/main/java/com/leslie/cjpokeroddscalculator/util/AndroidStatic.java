@@ -113,10 +113,6 @@ public class AndroidStatic {
         spaceLayoutParams.topToBottom = cardList.get(0).getId();
         spaceBelowCards.setLayoutParams(spaceLayoutParams);
 
-        ConstraintLayout.LayoutParams statsLayoutParams = (ConstraintLayout.LayoutParams) statsButton.getLayoutParams();
-        statsLayoutParams.bottomToBottom = spaceBelowCards.getId();
-        statsButton.setLayoutParams(statsLayoutParams);
-
         return cardList;
     }
 
