@@ -233,6 +233,7 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
         equityCalculatorBinding.playerList.setItemAnimator(null);
         equityCalculatorBinding.playerList.setAdapter(playerAdapter);
 
+        int padding = dpToPx(requireContext(), 1);
         inputSuitRankMap = HashBiMap.create();
         for (String suit : suitStrings) {
             for (String rank : rankStrings) {
@@ -242,8 +243,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
                 assert id != null;
                 b.setImageResource(id);
                 b.setScaleType(ShapeableImageView.ScaleType.FIT_XY);
-                b.setPadding(1, 1, 1, 1);
-                b.setShapeAppearanceModel(new ShapeAppearanceModel.Builder().setAllCornerSizes(dpToPx(b.getContext(), 5)).build());
+                b.setPadding(padding, padding, padding, padding);
+                b.setShapeAppearanceModel(new ShapeAppearanceModel.Builder().setAllCornerSizes(dpToPx(b.getContext(), 3)).build());
                 b.setStrokeColor(ColorStateList.valueOf(Color.WHITE));
 
                 b.setOnClickListener(v -> {

@@ -1,7 +1,7 @@
 <resources>
     <style name="Base.Theme.CJPokerOddsCalculator" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">#449DEF</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimary">#A9C7FF</item>
+        <item name="colorOnPrimary">#000000</item>
         <item name="android:colorBackground">#1A1B1E</item>
     </style>
 

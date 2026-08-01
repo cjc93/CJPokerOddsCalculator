@@ -22,7 +22,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/button_border"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Space
@@ -42,7 +42,7 @@
         android:padding="5dp"
         android:visibility="gone"
         app:strokeWidth="1dp"
-        app:strokeColor="@android:color/white"
+        app:strokeColor="@color/stats_text"
         app:shapeAppearanceOverlay="@style/RoundedImage"
         app:layout_constraintTop_toBottomOf="@id/space_above_cards"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -176,8 +176,9 @@
         android:id="@+id/hand_range_button"
         android:text="@string/range"
         android:textSize="11sp"
+        android:textColor="@color/button_content"
         app:strokeWidth="1dp"
-        app:strokeColor="@android:color/white"
+        app:strokeColor="@color/button_border"
         app:layout_constraintTop_toBottomOf="@id/remove"
         app:layout_constraintBottom_toTopOf="@id/stats_button"
         app:layout_constraintRight_toRightOf="parent"

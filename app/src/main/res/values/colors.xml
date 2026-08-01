@@ -3,4 +3,7 @@
     <color name="all_suits">#E5C44A</color>
     <color name="partial_suits">#FF00FFFF</color>
     <color name="card_selected">#FFA500</color>
+    <color name="button_border">#44474E</color>
+    <color name="button_content">#E3E2E6</color>
+    <color name="stats_text">#C4C6CF</color>
 </resources>

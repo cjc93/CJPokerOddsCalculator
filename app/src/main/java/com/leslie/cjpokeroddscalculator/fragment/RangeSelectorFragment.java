@@ -89,8 +89,12 @@ public class RangeSelectorFragment extends Fragment {
     public void generateRangeSelector() {
         DisplayMetrics displayMetrics = AndroidStatic.getDisplayMetrics(requireActivity());
 
-        int squareLength = min(displayMetrics.widthPixels - 12, displayMetrics.heightPixels / 2)  / 13;
+        int margin = dpToPx(requireContext(), 2);
+
+        int squareLength = min(displayMetrics.widthPixels - 12 * margin, displayMetrics.heightPixels / 2)  / 13;
         this.inputMatrixMap = HashBiMap.create();
+
+        int cornerRadius = dpToPx(requireContext(), 4);
 
         for (int rowIdx = 0; rowIdx < 13; rowIdx++) {
             for (int colIdx = 0; colIdx < 13; colIdx++) {
@@ -104,7 +108,7 @@ public class RangeSelectorFragment extends Fragment {
                 b.setTextColor(Color.BLACK);
                 b.setAllCaps(false);
                 b.setTextSize(11);
-                b.setCornerRadius(0);
+                b.setCornerRadius(cornerRadius);
                 b.setInsetBottom(0);
                 b.setInsetTop(0);
                 b.setStrokeColor(ColorStateList.valueOf(Color.RED));
@@ -135,7 +139,7 @@ public class RangeSelectorFragment extends Fragment {
                     layoutParams.topToTop = ConstraintSet.PARENT_ID;
                 } else {
                     layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx - 1, colIdx))).getId();
-                    layoutParams.topMargin = 1;
+                    layoutParams.topMargin = margin;
                 }
 
                 if (colIdx == 0) {
@@ -144,11 +148,11 @@ public class RangeSelectorFragment extends Fragment {
                 } else if (colIdx == 12) {
                     layoutParams.rightToRight = ConstraintSet.PARENT_ID;
                     layoutParams.leftToRight = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, 11))).getId();
-                    layoutParams.leftMargin = 1;
+                    layoutParams.leftMargin = margin;
                 } else {
                     layoutParams.leftToRight = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx - 1))).getId();
                     layoutParams.rightToLeft = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx + 1))).getId();
-                    layoutParams.leftMargin = 1;
+                    layoutParams.leftMargin = margin;
                 }
 
                 MaterialButton button = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(rowIdx, colIdx)));
@@ -203,12 +207,16 @@ public class RangeSelectorFragment extends Fragment {
         b.setId(View.generateViewId());
         b.setText(rangeName);
         b.setTextSize(12);
+        b.setTextColor(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.button_content)));
         b.setCornerRadius(20);
         b.setPadding(40, 30, 40, 30);
         b.setMinimumHeight(0);
         b.setMinHeight(0);
         b.setMinWidth(0);
         b.setMinimumWidth(0);
+        b.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+        b.setStrokeColor(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.button_content)));
+        b.setStrokeWidth(dpToPx(requireContext(), 1));
 
         b.setOnClickListener(v -> {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
@@ -548,7 +556,7 @@ public class RangeSelectorFragment extends Fragment {
                 int col = selectedMatrixPosition[1];
 
                 selectedMatrixButton = Objects.requireNonNull(inputMatrixMap.inverse().get(Arrays.asList(row, col)));
-                selectedMatrixButton.setStrokeWidth(2);
+                selectedMatrixButton.setStrokeWidth(dpToPx(requireContext(), 2));
 
                 rangeSelectorBinding.suitSelectorText.setText(R.string.choose_suits);
 
