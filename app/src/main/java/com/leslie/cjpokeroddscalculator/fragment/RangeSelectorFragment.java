@@ -75,7 +75,7 @@ public class RangeSelectorFragment extends Fragment {
             String matrixJson = getArguments().getString("matrix");
             if (matrixJson != null) {
                 List<List<Set<String>>> matrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
-                updateRangeSelector(matrix);
+                viewModel.initializeMatrix(matrix);
             }
         }
 
@@ -91,7 +91,16 @@ public class RangeSelectorFragment extends Fragment {
 
         int margin = dpToPx(requireContext(), 2);
 
-        int squareLength = min(displayMetrics.widthPixels - 12 * margin, displayMetrics.heightPixels / 2)  / 13;
+        int squareLength, longSidePixels, shortSidePixels;
+        if (displayMetrics.heightPixels > displayMetrics.widthPixels) {
+            longSidePixels = displayMetrics.heightPixels;
+            shortSidePixels = displayMetrics.widthPixels;
+        } else {
+            longSidePixels = displayMetrics.widthPixels;
+            shortSidePixels = displayMetrics.heightPixels;
+        }
+        squareLength = (min(shortSidePixels, longSidePixels / 2) - 12 * margin) / 13;
+
         this.inputMatrixMap = HashBiMap.create();
 
         int cornerRadius = dpToPx(requireContext(), 4);
@@ -122,7 +131,8 @@ public class RangeSelectorFragment extends Fragment {
                     b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
                 }
 
-                rangeSelectorBinding.rangeSelector.addView(b);
+                assert rangeSelectorBinding.matrix != null;
+                rangeSelectorBinding.matrix.addView(b);
                 this.inputMatrixMap.put(b, Arrays.asList(rowIdx, colIdx));
             }
         }
@@ -159,10 +169,6 @@ public class RangeSelectorFragment extends Fragment {
                 button.setLayoutParams(layoutParams);
             }
         }
-
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) rangeSelectorBinding.rangeSlider.getLayoutParams();
-        layoutParams.topToBottom = Objects.requireNonNull(this.inputMatrixMap.inverse().get(Arrays.asList(12, 0))).getId();
-        rangeSelectorBinding.rangeSlider.setLayoutParams(layoutParams);
 
         String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names"));
 
@@ -227,7 +233,7 @@ public class RangeSelectorFragment extends Fragment {
 
             List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
 
-            updateRangeSelector(savedMatrix);
+            viewModel.updateRangeSelector(savedMatrix);
         });
 
         b.setOnLongClickListener(v -> {
@@ -321,16 +327,6 @@ public class RangeSelectorFragment extends Fragment {
             String lowRank = rankStrings[row];
             setSuitSelectorUIGivenRankSuit(offsuitButtonSuitsMap, highRank, lowRank, suits);
         }
-    }
-
-    public void updateRangeSelector(List<List<Set<String>>> matrix) {
-        List<List<Set<String>>> copiedMatrix = GlobalStatic.copyMatrix(matrix);
-
-        if (copiedMatrix != null) {
-            viewModel.matrixInput.setValue(copiedMatrix);
-        }
-
-        viewModel.selectedMatrixPosition.setValue(null);
     }
 
     public void setListeners() {
