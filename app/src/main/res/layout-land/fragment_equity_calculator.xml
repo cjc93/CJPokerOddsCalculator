@@ -4,19 +4,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_ui"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
 
     <View
         android:id="@+id/hide_card_selector_area"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/control_guideline"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/input_cards" />
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/control_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/calculator_selector_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
@@ -24,7 +34,7 @@
         app:boxBackgroundColor="#1A1B1E"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="@id/control_guideline">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/calculator_selector"
@@ -41,14 +51,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.3" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.4" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop1"
@@ -88,31 +98,35 @@
         style="@style/SelectCardButton"
         android:contentDescription="@string/card_river"
         app:layout_constraintLeft_toRightOf="@id/guideline_2"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toRightOf="@id/control_guideline"
         app:layout_constraintTop_toBottomOf="@id/calculator_selector_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/player_list"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/control_guideline"
         app:layout_constraintTop_toBottomOf="@id/flop1"
-        app:layout_constraintBottom_toTopOf="@id/res_desc" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/res_desc"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="11sp"
-        app:layout_constraintTop_toBottomOf="@id/player_list"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/addplayer" />
 
     <Space
         android:id="@+id/playerremaining_spacer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         app:layout_constraintRight_toLeftOf="@id/addplayer"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
         app:layout_constraintBottom_toTopOf="@id/input_cards" />
@@ -128,7 +142,7 @@
         android:gravity="bottom"
         app:drawableStartCompat="@drawable/baseline_person_35"
         app:drawableTint="@color/button_content"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         app:layout_constraintRight_toLeftOf="@id/addplayer"
         app:layout_constraintTop_toBottomOf="@id/res_desc"
         app:layout_constraintBottom_toTopOf="@id/input_cards" />
@@ -140,8 +154,8 @@
         app:icon="@drawable/baseline_person_add_35"
         app:layout_constraintLeft_toRightOf="@id/playerremaining_spacer"
         app:layout_constraintRight_toLeftOf="@id/clear"
-        app:layout_constraintTop_toBottomOf="@id/res_desc"
-        app:layout_constraintBottom_toTopOf="@id/input_cards"
+        app:layout_constraintTop_toTopOf="@id/clear"
+        app:layout_constraintBottom_toBottomOf="@id/clear"
         style="@style/BorderedIconButton" />
 
     <com.google.android.material.button.MaterialButton
@@ -175,8 +189,8 @@
         app:shapeAppearanceOverlay="@style/RoundedImage"
         app:layout_constraintLeft_toRightOf="@id/clear"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/res_desc"
-        app:layout_constraintBottom_toTopOf="@id/input_cards"
+        app:layout_constraintTop_toTopOf="@id/clear"
+        app:layout_constraintBottom_toBottomOf="@id/clear"
         android:contentDescription="@string/unknown" />
 
     <androidx.constraintlayout.widget.Group
@@ -187,11 +201,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_cards"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layout_constraintLeft_toRightOf="@id/control_guideline"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/addplayer"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_percent="0.24" >
+        app:layout_constraintBottom_toBottomOf="parent" >
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

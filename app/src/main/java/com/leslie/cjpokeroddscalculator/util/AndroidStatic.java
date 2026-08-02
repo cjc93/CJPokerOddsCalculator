@@ -2,10 +2,12 @@ package com.leslie.cjpokeroddscalculator.util;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Insets;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowMetrics;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -31,8 +33,12 @@ public class AndroidStatic {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowMetrics windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
         Rect bounds = windowMetrics.getBounds();
-        displayMetrics.widthPixels = bounds.width();
-        displayMetrics.heightPixels = bounds.height();
+
+        WindowInsets windowInsets = windowMetrics.getWindowInsets();
+        Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+
+        displayMetrics.widthPixels = bounds.width() - insets.left - insets.right;
+        displayMetrics.heightPixels = bounds.height() - insets.top - insets.bottom;
         return displayMetrics;
     }
 

@@ -5,12 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/control_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/matrix"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/range_slider" >
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/control_guideline" >
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -22,9 +29,9 @@
         android:textSize="17sp"
         app:layout_constraintTop_toTopOf="@id/range_slider"
         app:layout_constraintBottom_toBottomOf="@id/range_slider"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         app:layout_constraintRight_toLeftOf="@id/range_slider"
-        app:layout_constraintWidth_percent="0.2"
+        app:layout_constraintWidth_percent="0.1"
         android:gravity="center" />
 
     <com.google.android.material.slider.Slider
@@ -38,7 +45,7 @@
         app:thumbColor="#A9C7FF"
         app:trackColorActive="#A9C7FF"
         app:tickColor="#A9C7FF"
-        app:layout_constraintTop_toBottomOf="@id/matrix"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/hands_perc"
         app:layout_constraintRight_toRightOf="parent"
         app:labelBehavior="gone" />
@@ -52,7 +59,7 @@
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="@id/add_range_button"
         app:layout_constraintBottom_toBottomOf="@id/add_range_button"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         android:text="@string/saved_hand_range" />
 
     <com.google.android.material.button.MaterialButton
@@ -67,14 +74,16 @@
     <ScrollView
         android:id="@+id/saved_hand_range_scroll_view"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toRightOf="@id/control_guideline"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_range_button"
-        app:layout_constraintBottom_toTopOf="@id/saved_hand_range_divider"
-        android:layout_height="0dp" >
+        app:layout_constraintBottom_toTopOf="@id/saved_hand_range_divider" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/saved_hand_range_layout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textview.MaterialTextView
@@ -104,8 +113,10 @@
 
     <View
         android:id="@+id/saved_hand_range_divider"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="1dp"
+        app:layout_constraintLeft_toRightOf="@id/control_guideline"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/saved_hand_range_scroll_view"
         app:layout_constraintBottom_toTopOf="@id/done"
         android:background="@color/button_border"/>
@@ -117,7 +128,7 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/saved_hand_range_divider"
         app:layout_constraintBottom_toTopOf="@id/suits1"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -126,7 +137,7 @@
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suit_selector_text"
         app:layout_constraintBottom_toTopOf="@id/suits7"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         app:layout_constraintRight_toLeftOf="@id/suits2"
         android:contentDescription="@string/suits" />
 
@@ -180,7 +191,7 @@
         style="@style/SuitSelectorButton"
         app:layout_constraintTop_toBottomOf="@id/suits1"
         app:layout_constraintBottom_toTopOf="@id/done"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/control_guideline"
         app:layout_constraintRight_toLeftOf="@id/suits8"
         android:contentDescription="@string/suits" />
 
@@ -231,8 +242,10 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/done"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         app:icon="@drawable/baseline_done_35"
+        app:layout_constraintLeft_toRightOf="@id/control_guideline"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         style="@style/BorderedIconButton" />
 
