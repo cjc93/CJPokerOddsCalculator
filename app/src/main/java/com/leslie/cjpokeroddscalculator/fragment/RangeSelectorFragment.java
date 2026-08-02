@@ -131,7 +131,6 @@ public class RangeSelectorFragment extends Fragment {
                     b.setText(getString(R.string.matrix_str, GlobalStatic.rankStrings[colIdx], GlobalStatic.rankStrings[rowIdx], "o"));
                 }
 
-                assert rangeSelectorBinding.matrix != null;
                 rangeSelectorBinding.matrix.addView(b);
                 this.inputMatrixMap.put(b, Arrays.asList(rowIdx, colIdx));
             }
