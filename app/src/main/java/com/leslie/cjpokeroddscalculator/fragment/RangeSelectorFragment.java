@@ -227,9 +227,6 @@ public class RangeSelectorFragment extends Fragment {
             Preferences.Key<String> RANGE_NAME_KEY = PreferencesKeys.stringKey("thec_" + b.getText());
             String matrixJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(RANGE_NAME_KEY);
 
-            // TODO: Fix bug if app crashes here
-            assert matrixJson != null;
-
             List<List<Set<String>>> savedMatrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
 
             viewModel.updateRangeSelector(savedMatrix);
@@ -420,9 +417,6 @@ public class RangeSelectorFragment extends Fragment {
 
             String matrixJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(OLD_RANGE_NAME_KEY);
 
-            // TODO: Fix bug if app crashes here
-            assert matrixJson != null;
-
             ((MainActivity) requireActivity()).dataStore.deleteKeyFromDataStore(OLD_RANGE_NAME_KEY);
 
             ((MainActivity) requireActivity()).dataStore.writeToDataStore(
@@ -433,9 +427,6 @@ public class RangeSelectorFragment extends Fragment {
             Preferences.Key<String> ALL_NAMES_KEY = PreferencesKeys.stringKey("texas_holdem_equity_calculator_range_names");
 
             String rangeNamesJson = ((MainActivity) requireActivity()).dataStore.getDataFromDataStoreIfExist(ALL_NAMES_KEY);
-
-            // TODO: Fix bug if app crashes here
-            assert rangeNamesJson != null;
 
             List<String> rangeNameList = gson.fromJson(rangeNamesJson, new TypeToken<List<String>>(){}.getType());
             if (Collections.replaceAll(rangeNameList, oldRangeName, newRangeName)) {
