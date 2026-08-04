@@ -121,7 +121,7 @@ public class EquityUtil {
 	}
 
 	/**
-	 * summarise equities (convert counts to percentages)
+	 * summarize equities (convert counts to percentages)
 	 */
 	public static void summariseEquities(Equity[] eqs, int count) {
 		for (Equity eq : eqs) {
