@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:paddingTop="32dp" >
 
     <androidx.constraintlayout.widget.Group
         android:layout_width="wrap_content"
@@ -50,7 +52,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card1"
-        android:contentDescription="@string/card1"
+        android:contentDescription="@string/card"
         app:layout_constraintTop_toBottomOf="@id/space_above_cards"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/card2"
@@ -58,7 +60,7 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/card2"
-        android:contentDescription="@string/card2"
+        android:contentDescription="@string/card"
         app:layout_constraintTop_toBottomOf="@id/space_above_cards"
         app:layout_constraintLeft_toRightOf="@id/card1"
         app:layout_constraintRight_toRightOf="@id/space_above_cards"
@@ -70,7 +72,8 @@
         android:layout_height="10dp"
         app:layout_constraintTop_toBottomOf="@id/barrier"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintWidth_percent="0.4" />
+        app:layout_constraintWidth_percent="0.4"
+        tools:layout_marginTop="130dp" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/equity_text"
@@ -166,6 +169,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/remove"
+        android:contentDescription="@string/remove_player"
         app:icon="@drawable/outline_close_24"
         app:layout_constraintTop_toBottomOf="@id/divider"
         app:layout_constraintBottom_toTopOf="@id/hand_range_button"
@@ -186,6 +190,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/stats_button"
+        android:contentDescription="@string/stats"
         app:icon="@drawable/outline_expand_more_24"
         app:layout_constraintTop_toBottomOf="@id/hand_range_button"
         app:layout_constraintBottom_toBottomOf="@id/space_below_cards"

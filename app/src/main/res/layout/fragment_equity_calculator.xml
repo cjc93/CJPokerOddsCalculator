@@ -2,9 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_ui"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:paddingTop="32dp" >
 
     <View
         android:id="@+id/hide_card_selector_area"
@@ -55,7 +57,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop1"
         style="@style/SelectCardButton"
-        android:contentDescription="@string/flop1"
+        android:contentDescription="@string/flop"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/flop2"
         app:layout_constraintTop_toBottomOf="@id/calculator_selector_layout" />
@@ -63,7 +65,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop2"
         style="@style/SelectCardButton"
-        android:contentDescription="@string/flop2"
+        android:contentDescription="@string/flop"
         app:layout_constraintLeft_toRightOf="@id/flop1"
         app:layout_constraintRight_toLeftOf="@id/flop3"
         app:layout_constraintTop_toBottomOf="@id/calculator_selector_layout" />
@@ -71,7 +73,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/flop3"
         style="@style/SelectCardButton"
-        android:contentDescription="@string/flop3"
+        android:contentDescription="@string/flop"
         app:layout_constraintLeft_toRightOf="@id/flop2"
         app:layout_constraintRight_toLeftOf="@id/guideline_1"
         app:layout_constraintTop_toBottomOf="@id/calculator_selector_layout" />
