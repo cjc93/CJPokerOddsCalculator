@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "513070725435",
+    "project_id": "cj-poker-odds-calculator",
+    "storage_bucket": "cj-poker-odds-calculator.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513070725435:android:1337a1d34443afa52e1f1e",
+        "android_client_info": {
+          "package_name": "com.leslie.cjpokeroddscalculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_-dmzUBasLqH3iE_PYZdjkb6h8uk7FzQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

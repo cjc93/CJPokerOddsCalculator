@@ -1,5 +1,9 @@
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.android.application)
+
+    // Apply Firebase plugins using version catalog aliases
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 android {
@@ -23,7 +27,20 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
+            // Disables runtime crash collection for debug builds
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
+
+            // Optional: Speeds up debug build time by skipping Crashlytics tasks
+            configure<com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension> {
+                mappingFileUploadEnabled = false
+            }
+        }
+
+        getByName("release") {
+            // Enables runtime crash collection for release builds
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+
             optimization {
                 enable = true
             }
@@ -61,6 +78,9 @@ dependencies {
     implementation(libs.androidx.datastore.preferences.rxjava3)
     implementation(libs.gson)
     implementation(libs.kotlinx.serialization.json)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
