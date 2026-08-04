@@ -38,6 +38,7 @@ import com.leslie.cjpokeroddscalculator.MainActivity;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.databinding.RangeSelectorBinding;
 import com.leslie.cjpokeroddscalculator.viewmodel.RangeSelectorViewModel;
+import com.leslie.cjpokeroddscalculator.viewmodel.RangeSharedViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ import java.util.Set;
 public class RangeSelectorFragment extends Fragment {
     public RangeSelectorBinding rangeSelectorBinding;
     public RangeSelectorViewModel viewModel;
+    private RangeSharedViewModel rangeSharedViewModel;
 
     private MaterialButton selectedMatrixButton = null;
     HashBiMap<MaterialButton, List<Integer>> inputMatrixMap;
@@ -70,13 +72,11 @@ public class RangeSelectorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(RangeSelectorViewModel.class);
+        rangeSharedViewModel = new ViewModelProvider(requireActivity()).get(RangeSharedViewModel.class);
 
-        if (getArguments() != null) {
-            String matrixJson = getArguments().getString("matrix");
-            if (matrixJson != null) {
-                List<List<Set<String>>> matrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
-                viewModel.initializeMatrix(matrix);
-            }
+        if (rangeSharedViewModel.matrix != null) {
+            viewModel.updateRangeSelector(rangeSharedViewModel.matrix);
+            rangeSharedViewModel.matrix = null;
         }
 
         initialiseVariables();
@@ -374,9 +374,7 @@ public class RangeSelectorFragment extends Fragment {
         });
 
         rangeSelectorBinding.done.setOnClickListener(v -> {
-            Bundle result = new Bundle();
-            result.putString("matrix", gson.toJson(viewModel.matrixInput.getValue()));
-            getParentFragmentManager().setFragmentResult("range_selector_result", result);
+            rangeSharedViewModel.matrix = viewModel.matrixInput.getValue();
             getParentFragmentManager().popBackStack();
         });
     }

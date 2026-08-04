@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.leslie.cjpokeroddscalculator.util.GlobalStatic;
 import com.leslie.cjpokeroddscalculator.R;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
@@ -21,6 +19,7 @@ import com.leslie.cjpokeroddscalculator.cardrow.CardRow;
 import com.leslie.cjpokeroddscalculator.cardrow.RangeRow;
 import com.leslie.cjpokeroddscalculator.cardrow.SpecificCardsRow;
 import com.leslie.cjpokeroddscalculator.databinding.TexasHoldemPlayerRowBinding;
+import com.leslie.cjpokeroddscalculator.viewmodel.RangeSharedViewModel;
 import com.leslie.cjpokeroddscalculator.viewmodel.TexasHoldemViewModel;
 
 import java.util.List;
@@ -29,19 +28,18 @@ import java.util.Set;
 
 public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemViewModel> {
     public int rangeCardSize;
-    private final Gson gson = new Gson();
+    private RangeSharedViewModel rangeSharedViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager().setFragmentResultListener("range_selector_result", getViewLifecycleOwner(), (requestKey, result) -> {
-            String matrixJson = result.getString("matrix");
-            if (matrixJson != null) {
-                List<List<Set<String>>> matrix = gson.fromJson(matrixJson, new TypeToken<List<List<Set<String>>>>(){}.getType());
-                updateRange(matrix);
-            }
-        });
+        rangeSharedViewModel = new androidx.lifecycle.ViewModelProvider(requireActivity()).get(RangeSharedViewModel.class);
+
+        if (rangeSharedViewModel.matrix != null) {
+            updateRange(rangeSharedViewModel.matrix);
+            rangeSharedViewModel.matrix = null;
+        }
     }
 
     @Override
@@ -95,10 +93,9 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
 
         RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.playerCardRows.getValue()).get(rowIdx);
 
-        Bundle args = new Bundle();
-        args.putString("matrix", gson.toJson(rangeRow.matrix));
+        rangeSharedViewModel.matrix = GlobalStatic.copyMatrix(rangeRow.matrix);
 
-        NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_RangeSelectorFragment, args);
+        NavHostFragment.findNavController(this).navigate(R.id.action_TexasHoldemFragment_to_RangeSelectorFragment);
     }
 
     public void updateRange(List<List<Set<String>>> matrixInput) {
