@@ -8,4 +8,4 @@ build/ clean project + build/ rebuild project + file/ Invalidate caches / restar
 
 Download app from Google Play store:
 
-https://play.google.com/store/apps/details?id=com.leslie.cjpokeroddscalculator
+[Get Poker Calculator on Google Play](https://play.google.com/store/apps/details?id=com.leslie.cjpokeroddscalculator&referrer=utm_source%3Dgithub%26utm_medium%3Dreadme%26utm_campaign%3Dportfolio)
