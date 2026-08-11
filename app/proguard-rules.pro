@@ -12,13 +12,12 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve source file names and line numbers for Crashlytics stack trace de-obfuscation
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Prevent custom exceptions from being obfuscated so Crashlytics can group them correctly
+-keep public class * extends java.lang.Exception
 
 # 1. Keep generic type signatures
 # If this is removed, R8 will erase the <List<List<Set<String>>>> part,

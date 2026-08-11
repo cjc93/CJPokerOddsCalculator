@@ -41,14 +41,21 @@ android {
             // Enables runtime crash collection for release builds
             manifestPlaceholders["crashlyticsCollectionEnabled"] = true
 
+            // Enables R8 code shrinking, obfuscation, and resource shrinking
             optimization {
                 enable = true
             }
 
+            // Includes default Android optimization rules and your custom proguard rules
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            // Ensures Crashlytics uploads the R8 mapping.txt file during release builds
+            configure<com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+            }
         }
     }
     compileOptions {
