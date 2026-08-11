@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.viewmodel;
 
+import androidx.lifecycle.SavedStateHandle;
+
 import com.leslie.cjpokeroddscalculator.calculation.OmahaExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.OmahaMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.calculation.pet.OmahaPoker;
@@ -9,6 +11,10 @@ import com.leslie.cjpokeroddscalculator.outputresult.OmahaLiveUpdate;
 import java.util.Objects;
 
 public class OmahaHighViewModel extends EquityCalculatorViewModel {
+    public OmahaHighViewModel(SavedStateHandle savedStateHandle) {
+        super(savedStateHandle);
+    }
+
     @Override
     public double[] getInitialStats() {
         if (cardsPerHand == 5) {

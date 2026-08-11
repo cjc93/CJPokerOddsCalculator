@@ -89,7 +89,7 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
 
     @Override
     public void onShowRangeSelector(int rowIdx) {
-        viewModel.selectedRangePosition = rowIdx;
+        viewModel.savedStateHandle.set("selectedRangePosition", rowIdx);
 
         RangeRow rangeRow = (RangeRow) Objects.requireNonNull(viewModel.playerCardRows.getValue()).get(rowIdx);
 
@@ -101,8 +101,8 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
     public void updateRange(List<List<Set<String>>> matrixInput) {
         List<CardRow> newCardRows = viewModel.getPlayerCardRowsCopy();
 
-        Integer selectedRangePosition = viewModel.selectedRangePosition;
-
+        Integer selectedRangePosition = viewModel.savedStateHandle.get("selectedRangePosition");
+        assert selectedRangePosition != null;
         RangeRow rangeRow = (RangeRow) newCardRows.get(selectedRangePosition);
         rangeRow.matrix = GlobalStatic.copyMatrix(matrixInput);
 
@@ -110,6 +110,6 @@ public class TexasHoldemFragment extends EquityCalculatorFragment<TexasHoldemVie
 
         calculateOdds();
 
-        viewModel.selectedRangePosition = null;
+        viewModel.savedStateHandle.set("selectedRangePosition", null);
     }
 }

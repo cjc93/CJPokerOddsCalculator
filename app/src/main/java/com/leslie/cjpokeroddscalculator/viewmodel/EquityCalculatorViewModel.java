@@ -2,6 +2,7 @@ package com.leslie.cjpokeroddscalculator.viewmodel;
 
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import com.leslie.cjpokeroddscalculator.R;
@@ -13,11 +14,13 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract class EquityCalculatorViewModel extends ViewModel {
-    public MutableLiveData<SpecificCardsRow> boardCardRow = new MutableLiveData<>();
-    public MutableLiveData<List<CardRow>> playerCardRows = new MutableLiveData<>();
-    public MutableLiveData<double[][]> stats = new MutableLiveData<>();
-    public MutableLiveData<int[]> selectedCard = new MutableLiveData<>();
-    public MutableLiveData<Integer> resDesc = new MutableLiveData<>(R.string.all_combinations_checked_result_is_exact);
+    public SavedStateHandle savedStateHandle;
+
+    public MutableLiveData<SpecificCardsRow> boardCardRow;
+    public MutableLiveData<List<CardRow>> playerCardRows;
+    public MutableLiveData<double[][]> stats;
+    public MutableLiveData<int[]> selectedCard;
+    public MutableLiveData<Integer> resDesc;
 
     public MediatorLiveData<List<CardRow>> recyclerViewData = new MediatorLiveData<>();
     public MediatorLiveData<SpecificCardsRow> boardData = new MediatorLiveData<>();
@@ -28,10 +31,22 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
 
     public int cardsPerHand;
 
+    public EquityCalculatorViewModel(SavedStateHandle savedStateHandle) {
+        this.savedStateHandle = savedStateHandle;
+
+        this.boardCardRow = savedStateHandle.getLiveData("boardCardRow");
+        this.playerCardRows = savedStateHandle.getLiveData("playerCardRows");
+        this.stats = savedStateHandle.getLiveData("stats");
+        this.selectedCard = savedStateHandle.getLiveData("selectedCard");
+        this.resDesc = savedStateHandle.getLiveData("resDesc", R.string.all_combinations_checked_result_is_exact);
+    }
+
     public void init(int cardsPerHand) {
         if (this.cardsPerHand != 0) {
             return;
         }
+
+        this.cardsPerHand = cardsPerHand;
 
         recyclerViewData.addSource(playerCardRows, value -> updateRecyclerViewData());
         recyclerViewData.addSource(stats, value -> updateRecyclerViewData());
@@ -43,17 +58,24 @@ public abstract class EquityCalculatorViewModel extends ViewModel {
         inputCardsViewData.addSource(boardCardRow, value -> updateInputCardsViewData());
         inputCardsViewData.addSource(playerCardRows, value -> updateInputCardsViewData());
 
-        this.cardsPerHand = cardsPerHand;
+        if (boardCardRow.getValue() == null) {
+            boardCardRow.setValue(new SpecificCardsRow(null, 5));
+        }
 
-        boardCardRow.setValue(new SpecificCardsRow(null, 5));
+        if (playerCardRows.getValue() == null) {
+            List<CardRow> cardRowList = new ArrayList<>();
+            cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
+            cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
+            playerCardRows.setValue(cardRowList);
+        }
 
-        List<CardRow> cardRowList = new ArrayList<>();
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
-        cardRowList.add(new SpecificCardsRow(false, this.cardsPerHand));
-        playerCardRows.setValue(cardRowList);
+        if (selectedCard.getValue() == null) {
+            setSelectedCardPosition(0, 0);
+        }
 
-        setSelectedCardPosition(0, 0);
-        stats.setValue(new double[][]{getInitialStats(), getInitialStats()});
+        if (stats.getValue() == null) {
+            stats.setValue(new double[][]{getInitialStats(), getInitialStats()});
+        }
     }
 
     public abstract double[] getInitialStats();

@@ -1,10 +1,11 @@
 package com.leslie.cjpokeroddscalculator.cardrow;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class CardRow {
+public abstract class CardRow implements Serializable {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1);
 
     public int id;

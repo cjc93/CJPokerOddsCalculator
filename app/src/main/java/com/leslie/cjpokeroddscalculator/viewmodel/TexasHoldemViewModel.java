@@ -1,5 +1,7 @@
 package com.leslie.cjpokeroddscalculator.viewmodel;
 
+import androidx.lifecycle.SavedStateHandle;
+
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemExactCalc;
 import com.leslie.cjpokeroddscalculator.calculation.TexasHoldemMonteCarloCalc;
 import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemFinalUpdate;
@@ -8,7 +10,9 @@ import com.leslie.cjpokeroddscalculator.outputresult.TexasHoldemLiveUpdate;
 import java.util.Objects;
 
 public class TexasHoldemViewModel extends EquityCalculatorViewModel {
-    public Integer selectedRangePosition;
+    public TexasHoldemViewModel(SavedStateHandle savedStateHandle) {
+        super(savedStateHandle);
+    }
 
     @Override
     public double[] getInitialStats() {
