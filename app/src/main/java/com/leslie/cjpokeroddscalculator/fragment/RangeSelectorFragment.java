@@ -8,6 +8,7 @@ import static java.lang.Math.min;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -212,6 +213,7 @@ public class RangeSelectorFragment extends Fragment {
         b.setId(View.generateViewId());
         b.setText(rangeName);
         b.setTextSize(12);
+        b.setTypeface(b.getTypeface(), Typeface.BOLD);
         b.setTextColor(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.button_content)));
         b.setCornerRadius(20);
         b.setPadding(40, 30, 40, 30);
