@@ -12,6 +12,9 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.leslie.cjpokeroddscalculator.databinding.ActivityMainBinding;
 import com.leslie.cjpokeroddscalculator.util.DataStoreSingleton;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.perf.FirebasePerformance;
 
 import java.util.Objects;
 
@@ -28,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         dataStore = DataStoreSingleton.getInstance(this);
+
+        Preferences.Key<Boolean> FIREBASE_DATA_COLLECTION_KEY = PreferencesKeys.booleanKey("firebase_data_collection");
+        boolean isFirebaseEnabled = dataStore.getBooleanDataFromDataStore(FIREBASE_DATA_COLLECTION_KEY, true);
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(isFirebaseEnabled);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(isFirebaseEnabled);
+        FirebasePerformance.getInstance().setPerformanceCollectionEnabled(isFirebaseEnabled);
 
         Preferences.Key<String> START_FRAGMENT_KEY = PreferencesKeys.stringKey("start_fragment");
 

@@ -52,4 +52,6 @@
     <string name="omaha_hi_lo_6_card_equity_calculator">Omaha Hi/Lo 6 Card Equity Calculator</string>
     <string name="space"> </string>
     <string name="card">Card</string>
+    <string name="share_app">Share App</string>
+    <string name="firebase_data_collection">Share Diagnostic Data</string>
 </resources>

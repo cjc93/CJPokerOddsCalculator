@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/share_app"
+        android:title="@string/share_app" />
+    <item
+        android:id="@+id/firebase_data_collection"
+        android:title="@string/firebase_data_collection"
+        android:checkable="true" />
+</menu>

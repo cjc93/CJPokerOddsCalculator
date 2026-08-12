@@ -29,6 +29,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:endIconMinSize="1dp"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:endIconTint="#928E95"
@@ -36,7 +37,8 @@
         app:layout_constraintWidth_max="488dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="@id/control_guideline">
+        app:layout_constraintRight_toLeftOf="@id/menu_button"
+        app:layout_constraintHorizontal_chainStyle="packed">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/calculator_selector"
@@ -46,9 +48,27 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/button_content"
+            android:paddingHorizontal="0dp"
             android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menu_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="17dp"
+        android:minWidth="0dp"
+        android:backgroundTint="@android:color/transparent"
+        app:iconGravity="textStart"
+        app:iconSize="24dp"
+        app:iconPadding="0dp"
+        app:iconTint="@color/button_content"
+        app:icon="@drawable/baseline_more_vert_24"
+        app:layout_constraintTop_toTopOf="@id/calculator_selector_layout"
+        app:layout_constraintBottom_toBottomOf="@id/calculator_selector_layout"
+        app:layout_constraintLeft_toRightOf="@id/calculator_selector_layout"
+        app:layout_constraintRight_toRightOf="@id/control_guideline" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_1"

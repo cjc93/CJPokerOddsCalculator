@@ -31,11 +31,27 @@ public class DataStoreSingleton {
         });
     }
 
+    public void writeBooleanToDataStore(Preferences.Key<Boolean> key, boolean value) {
+        dataStore.updateDataAsync(prefsIn -> {
+            MutablePreferences mutablePreferences = prefsIn.toMutablePreferences();
+            mutablePreferences.set(key, value);
+            return Single.just(mutablePreferences);
+        });
+    }
+
     public String getDataFromDataStoreIfExist(Preferences.Key<String> key) {
         if (dataStore.data().map(prefs -> prefs.contains(key)).blockingFirst()) {
             return dataStore.data().map(prefs -> prefs.get(key)).blockingFirst();
         } else {
             return null;
+        }
+    }
+
+    public boolean getBooleanDataFromDataStore(Preferences.Key<Boolean> key, boolean defaultValue) {
+        if (dataStore.data().map(prefs -> prefs.contains(key)).blockingFirst()) {
+            return Boolean.TRUE.equals(dataStore.data().map(prefs -> prefs.get(key)).blockingFirst());
+        } else {
+            return defaultValue;
         }
     }
 

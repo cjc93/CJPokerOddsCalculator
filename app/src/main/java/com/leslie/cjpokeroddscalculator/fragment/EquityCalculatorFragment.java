@@ -6,6 +6,7 @@ import static com.leslie.cjpokeroddscalculator.util.AndroidStatic.suitRankDrawab
 import static com.leslie.cjpokeroddscalculator.util.GlobalStatic.suitStrings;
 
 import android.content.res.ColorStateList;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.PopupMenu;
 import com.google.android.material.imageview.ShapeableImageView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.datastore.preferences.core.Preferences;
 import androidx.datastore.preferences.core.PreferencesKeys;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +34,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.common.collect.HashBiMap;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.perf.FirebasePerformance;
 import com.leslie.cjpokeroddscalculator.util.AndroidStatic;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerAdapter;
 import com.leslie.cjpokeroddscalculator.adapter.PlayerRowInteractionListener;
@@ -64,6 +70,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
     public int maxPlayers;
 
     public PlayerAdapter playerAdapter;
+
+    private final Preferences.Key<Boolean> FIREBASE_DATA_COLLECTION_KEY = PreferencesKeys.booleanKey("firebase_data_collection");
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -180,6 +188,8 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
         });
 
         equityCalculatorBinding.buttonUnknown.setOnClickListener(v -> setValueToSelectedCard(""));
+
+        equityCalculatorBinding.menuButton.setOnClickListener(this::showMenu);
 
         equityCalculatorBinding.hideCardSelectorArea.setOnClickListener(v -> viewModel.setSelectedCardPosition(null, null));
 
@@ -407,6 +417,46 @@ public abstract class EquityCalculatorFragment<VM extends EquityCalculatorViewMo
     @Override
     public void onShowRangeSelector(int rowIdx) {
         // Default implementation does nothing, overridden in TexasHoldemFragment
+    }
+
+    private void showMenu(View v) {
+        PopupMenu popup = new PopupMenu(requireContext(), v);
+        popup.getMenuInflater().inflate(R.menu.calculator_menu, popup.getMenu());
+
+        boolean isFirebaseEnabled = ((MainActivity) requireActivity()).dataStore.getBooleanDataFromDataStore(FIREBASE_DATA_COLLECTION_KEY, true);
+        popup.getMenu().findItem(R.id.firebase_data_collection).setChecked(isFirebaseEnabled);
+
+        popup.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.share_app) {
+                shareApp();
+                return true;
+            } else if (itemId == R.id.firebase_data_collection) {
+                boolean newState = !item.isChecked();
+                item.setChecked(newState);
+                toggleFirebaseDataCollection(newState);
+                return true;
+            }
+            return false;
+        });
+        popup.show();
+    }
+
+    private void shareApp() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Poker Calculator: https://play.google.com/store/apps/details?id=" + requireActivity().getPackageName() + "&referrer=utm_source%3Din_app%26utm_medium%3Dshare_button%26utm_campaign%3Duser_referral");
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, "null");
+        startActivity(shareIntent);
+    }
+
+    private void toggleFirebaseDataCollection(boolean enabled) {
+        ((MainActivity) requireActivity()).dataStore.writeBooleanToDataStore(FIREBASE_DATA_COLLECTION_KEY, enabled);
+        FirebaseAnalytics.getInstance(requireContext()).setAnalyticsCollectionEnabled(enabled);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled);
+        FirebasePerformance.getInstance().setPerformanceCollectionEnabled(enabled);
     }
 
 
